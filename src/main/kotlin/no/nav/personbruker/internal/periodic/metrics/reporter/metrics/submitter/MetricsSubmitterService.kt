@@ -9,7 +9,6 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMe
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSessions
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbEventCounterGCPService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbCountingMetricsSession
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbEventCounterOnPremService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbMetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventCounterAivenService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventCounterOnPremService
@@ -19,7 +18,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class MetricsSubmitterService(
-    private val dbEventCounterOnPremService: DbEventCounterOnPremService,
     private val dbEventCounterGCPService: DbEventCounterGCPService,
     private val topicEventCounterServiceOnPrem: TopicEventCounterOnPremService<Nokkel>,
     private val topicEventCounterServiceAiven: TopicEventCounterAivenService<NokkelIntern>,
@@ -33,17 +31,10 @@ class MetricsSubmitterService(
 
     suspend fun submitMetrics() {
         try {
-            val topicSessionsOnPrem = topicEventCounterServiceOnPrem.countAllEventTypesAsync()
             val topicSessionsAiven = topicEventCounterServiceAiven.countAllEventTypesAsync()
-            val dbSessionsOnPrem = dbEventCounterOnPremService.countAllEventTypesAsync()
             val dbSessionsAiven = dbEventCounterGCPService.countAllEventTypesAsync()
 
-            val sessionComparatorOnPrem = SessionComparator(topicSessionsOnPrem, dbSessionsOnPrem)
             val sessionComparatorAiven = SessionComparator(topicSessionsAiven, dbSessionsAiven)
-
-            sessionComparatorOnPrem.eventTypesWithSessionFromBothSources().forEach { eventType ->
-                reportMetricsByEventType(topicSessionsOnPrem, dbSessionsOnPrem, eventType)
-            }
 
             sessionComparatorAiven.eventTypesWithSessionFromBothSources().forEach { eventType ->
                 reportMetricsByEventType(topicSessionsAiven, dbSessionsAiven, eventType)

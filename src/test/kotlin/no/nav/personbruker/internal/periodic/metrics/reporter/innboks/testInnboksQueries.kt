@@ -1,5 +1,5 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.innboks
-
+/*
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.PersistActionResult
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.util.executeBatchPersistQuery
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.util.executePersistQuery
@@ -39,3 +39,6 @@ private fun PreparedStatement.buildStatementForSingleRow(innboks: Innboks) {
 
 fun Connection.deleteAllInnboks() =
         prepareStatement("""DELETE FROM INNBOKS""").execute()
+
+
+ */

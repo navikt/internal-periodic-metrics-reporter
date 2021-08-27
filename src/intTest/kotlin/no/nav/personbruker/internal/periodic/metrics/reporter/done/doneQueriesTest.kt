@@ -1,5 +1,6 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.done
-
+/*
+//TODO skriv om til å hente fra handler og ikke db
 import kotlinx.coroutines.runBlocking
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.H2Database
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.util.countTotalNumberOfEvents
@@ -40,3 +41,6 @@ class doneQueriesTest {
         } `should be equal to` allEvents.size.toLong()
     }
 }
+
+
+ */

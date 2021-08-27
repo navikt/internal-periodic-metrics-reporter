@@ -1,5 +1,5 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.beskjed
-
+/*
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.ListPersistActionResult
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.PersistActionResult
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.util.executeBatchPersistQuery
@@ -50,3 +50,5 @@ private fun PreparedStatement.buildStatementForSingleRow(beskjed: Beskjed) {
     setObject(11, beskjed.synligFremTil, Types.TIMESTAMP)
     setBoolean(12, beskjed.aktiv)
 }
+
+ */

@@ -1,5 +1,5 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.done
-
+/*
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.ListPersistActionResult
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.util.executeBatchPersistQuery
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.util.toBatchPersistResult
@@ -29,3 +29,5 @@ private fun PreparedStatement.buildStatementForSingleRow(doneEvent: Done) {
         setString(4, doneEvent.eventId)
         setString(5, doneEvent.grupperingsId)
 }
+
+ */

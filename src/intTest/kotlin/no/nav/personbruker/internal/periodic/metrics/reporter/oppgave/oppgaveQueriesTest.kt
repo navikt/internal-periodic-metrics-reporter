@@ -1,11 +1,10 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.oppgave
-
+/*
+//TODO skriv om til å hente fra handler og ikke db
 import kotlinx.coroutines.runBlocking
-import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.H2Database
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.util.countTotalNumberOfEvents
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.util.countTotalNumberOfEventsByActiveStatus
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
-import org.amshove.kluent.`should be equal to`
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 
@@ -75,3 +74,5 @@ class oppgaveQueriesTest {
     }
 
 }
+
+ */

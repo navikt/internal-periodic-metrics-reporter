@@ -2,7 +2,6 @@ package no.nav.personbruker.internal.periodic.metrics.reporter.config
 
 import no.nav.brukernotifikasjon.schemas.Nokkel
 import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
-import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.Database
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka.polling.PeriodicConsumerCheck
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.ActivityHealthDecider
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.ActivityHealthService
@@ -12,9 +11,7 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.D
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.ProducerNameResolver
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.ProducerNameScrubber
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbCountingMetricsProbe
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbEventCounterOnPremService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbMetricsReporter
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.MetricsRepository
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventCounterAivenService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventCounterOnPremService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventTypeCounter
@@ -35,15 +32,13 @@ class ApplicationContext {
 
     val dbEventCountingMetricsProbe = DbCountingMetricsProbe()
     val metricsReporter = resolveMetricsReporter(environment)
+    
+    //val metricsRepositoryOnPrem = MetricsRepository(databaseOnPrem)
+    //val metricsRepositoryGCP = MetricsRepository(databaseGCP)
+    //val dbEventCounterOnPremService = DbEventCounterOnPremService(dbEventCountingMetricsProbe, metricsRepositoryOnPrem)
+    val dbEventCounterGCPService = DbEventCounterGCPService(dbEventCountingMetricsProbe)
 
-    val databaseOnPrem: Database = PostgresDatabase(environment)
-    val databaseGCP: Database = PostgresDatabase(environment)
-    val metricsRepositoryOnPrem = MetricsRepository(databaseOnPrem)
-    val metricsRepositoryGCP = MetricsRepository(databaseGCP)
-    val dbEventCounterOnPremService = DbEventCounterOnPremService(dbEventCountingMetricsProbe, metricsRepositoryOnPrem)
-    val dbEventCounterGCPService = DbEventCounterGCPService(dbEventCountingMetricsProbe, metricsRepositoryGCP)
-
-    val nameResolver = ProducerNameResolver(databaseOnPrem)
+    val nameResolver = ProducerNameResolver()
     val nameScrubber = ProducerNameScrubber(nameResolver)
     val healthService = HealthService(this)
 
@@ -173,7 +168,6 @@ class ApplicationContext {
     )
 
     val metricsSubmitterService = MetricsSubmitterService(
-        dbEventCounterOnPremService = dbEventCounterOnPremService,
         dbEventCounterGCPService = dbEventCounterGCPService,
         topicEventCounterServiceOnPrem = topicEventCounterServiceOnPrem,
         topicEventCounterServiceAiven = topicEventCounterServiceAiven,

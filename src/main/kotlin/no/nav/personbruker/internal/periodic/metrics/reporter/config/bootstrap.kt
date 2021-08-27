@@ -44,6 +44,5 @@ private fun Application.configureShutdownHook(appContext: ApplicationContext) {
             KafkaConsumerSetup.stopAllKafkaConsumersOnPrem(appContext)
             KafkaConsumerSetup.stopAllKafkaConsumersAiven(appContext)
         }
-        appContext.databaseOnPrem.dataSource.close()
     }
 }

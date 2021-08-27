@@ -7,7 +7,7 @@ import kotlinx.coroutines.runBlocking
 import no.nav.brukernotifikasjon.schemas.Nokkel
 import no.nav.common.KafkaEnvironment
 import no.nav.personbruker.internal.periodic.metrics.reporter.beskjed.AvroBeskjedObjectMother
-import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.kafka.util.KafkaTestUtil
+import no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka.util.KafkaTestUtil
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.Environment
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.Kafka

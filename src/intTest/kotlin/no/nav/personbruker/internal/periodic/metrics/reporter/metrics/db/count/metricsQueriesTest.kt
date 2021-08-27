@@ -1,15 +1,8 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count
 
-import kotlinx.coroutines.runBlocking
-import no.nav.personbruker.internal.periodic.metrics.reporter.beskjed.*
-import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.H2Database
-import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
-import org.amshove.kluent.`should be equal to`
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.Test
-
 internal class metricsQueriesTest {
-
+    //TODO skriv om til å teste gcp versjonen som henter data fra handler
+/*
     private val database = H2Database()
 
     private val beskjed1: Beskjed
@@ -121,4 +114,6 @@ internal class metricsQueriesTest {
         }
     }
 
+
+ */
 }

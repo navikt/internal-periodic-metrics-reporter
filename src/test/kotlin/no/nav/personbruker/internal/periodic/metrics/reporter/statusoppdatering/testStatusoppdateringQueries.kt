@@ -1,3 +1,5 @@
+/*
+//TODO skriv om til å teste gcp versjonen som henter fra handler
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.PersistActionResult
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.util.executeBatchPersistQuery
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.util.executePersistQuery
@@ -40,3 +42,6 @@ private fun PreparedStatement.buildStatementForSingleRow(statusoppdatering: Stat
 fun Connection.deleteAllStatusoppdatering() =
     prepareStatement("""DELETE FROM STATUSOPPDATERING""")
         .use {it.execute()}
+
+
+ */

@@ -1,40 +1,10 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count
 
-import createStatusoppdateringer
-import deleteAllStatusoppdatering
-import io.mockk.coEvery
-import io.mockk.mockk
-import io.mockk.slot
-import kotlinx.coroutines.runBlocking
-import no.nav.personbruker.internal.periodic.metrics.reporter.beskjed.Beskjed
-import no.nav.personbruker.internal.periodic.metrics.reporter.beskjed.BeskjedObjectMother
-import no.nav.personbruker.internal.periodic.metrics.reporter.beskjed.createBeskjeder
-import no.nav.personbruker.internal.periodic.metrics.reporter.beskjed.deleteAllBeskjed
-import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.H2Database
-import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
-import no.nav.personbruker.internal.periodic.metrics.reporter.done.Done
-import no.nav.personbruker.internal.periodic.metrics.reporter.done.DoneObjectMother
-import no.nav.personbruker.internal.periodic.metrics.reporter.done.createDoneEvents
-import no.nav.personbruker.internal.periodic.metrics.reporter.done.deleteAllDone
-import no.nav.personbruker.internal.periodic.metrics.reporter.innboks.Innboks
-import no.nav.personbruker.internal.periodic.metrics.reporter.innboks.InnboksObjectMother
-import no.nav.personbruker.internal.periodic.metrics.reporter.innboks.createInnboksEventer
-import no.nav.personbruker.internal.periodic.metrics.reporter.innboks.deleteAllInnboks
-import no.nav.personbruker.internal.periodic.metrics.reporter.oppgave.Oppgave
-import no.nav.personbruker.internal.periodic.metrics.reporter.oppgave.OppgaveObjectMother
-import no.nav.personbruker.internal.periodic.metrics.reporter.oppgave.createOppgaver
-import no.nav.personbruker.internal.periodic.metrics.reporter.oppgave.deleteAllOppgave
-import no.nav.personbruker.internal.periodic.metrics.reporter.statusoppdatering.Statusoppdatering
-import no.nav.personbruker.internal.periodic.metrics.reporter.statusoppdatering.StatusoppdateringObjectMother
-import org.amshove.kluent.`should be equal to`
-import org.amshove.kluent.`should not be null`
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Test
-
 internal class DbEventCounterOnPremServiceTestIT {
-
+//TODO skriv om til å teste gcp versjon som henter data fra handler
+    /*
     private val database = H2Database()
-    private val repository = MetricsRepository(database)
+    //private val repository = MetricsRepository(database)
 
     @AfterEach
     fun cleanUp() {
@@ -230,4 +200,6 @@ internal class DbEventCounterOnPremServiceTestIT {
         return doneEventer
     }
 
+
+     */
 }

@@ -8,7 +8,6 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSessionsObjectMother
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbEventCounterGCPService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbCountingMetricsSession
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbEventCounterOnPremService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbMetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventCounterAivenService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventCounterOnPremService
@@ -21,16 +20,16 @@ import org.junit.jupiter.api.Test
 
 internal class MetricsSubmitterServiceTest {
 
+    //TODO test gcp versjonen
+    /*
     private val dbMetricsReporter: DbMetricsReporter = mockk(relaxed = true)
     private val kafkaMetricsReporter: TopicMetricsReporter = mockk(relaxed = true)
-    private val dbEventCounterOnPremService: DbEventCounterOnPremService = mockk(relaxed = true)
     private val dbEventCounterGCPService: DbEventCounterGCPService = mockk(relaxed = true)
     private val topicEventCounterServiceOnPrem: TopicEventCounterOnPremService<Nokkel> = mockk(relaxed = true)
     private val topicEventCounterServiceAiven: TopicEventCounterAivenService<NokkelIntern> = mockk(relaxed = true)
 
 
     private val submitter = MetricsSubmitterService(
-        dbEventCounterOnPremService = dbEventCounterOnPremService,
         dbEventCounterGCPService = dbEventCounterGCPService,
         topicEventCounterServiceOnPrem = topicEventCounterServiceOnPrem,
         topicEventCounterServiceAiven = topicEventCounterServiceAiven,
@@ -52,7 +51,6 @@ internal class MetricsSubmitterServiceTest {
 
         coEvery { topicEventCounterServiceOnPrem.countAllEventTypesAsync() } returns topicMetricsSessions
         coEvery { topicEventCounterServiceAiven.countAllEventTypesAsync() } returns topicMetricsInternSessions
-        coEvery { dbEventCounterOnPremService.countAllEventTypesAsync() } returns dbMetricsSessions
         coEvery { dbEventCounterGCPService.countAllEventTypesAsync() } returns dbMetricsInternSessions
 
         runBlocking {
@@ -61,14 +59,12 @@ internal class MetricsSubmitterServiceTest {
 
         coVerify(exactly = 1) { topicEventCounterServiceOnPrem.countAllEventTypesAsync() }
         coVerify(exactly = 1) { topicEventCounterServiceAiven.countAllEventTypesAsync() }
-        coVerify(exactly = 1) { dbEventCounterOnPremService.countAllEventTypesAsync() }
 
         coVerify(exactly = 10) { kafkaMetricsReporter.report(any()) }
         coVerify(exactly = 10) { dbMetricsReporter.report(any()) }
 
         confirmVerified(topicEventCounterServiceOnPrem)
         confirmVerified(topicEventCounterServiceAiven)
-        confirmVerified(dbEventCounterOnPremService)
         confirmVerified(kafkaMetricsReporter)
         confirmVerified(dbMetricsReporter)
     }
@@ -82,7 +78,6 @@ internal class MetricsSubmitterServiceTest {
 
         coEvery { topicEventCounterServiceOnPrem.countAllEventTypesAsync() } returns topicMetricsSessions
         coEvery { topicEventCounterServiceAiven.countAllEventTypesAsync() } returns topicMetricsInternSessions
-        coEvery { dbEventCounterOnPremService.countAllEventTypesAsync() } returns dbMetricsSessions
         coEvery { dbEventCounterGCPService.countAllEventTypesAsync() } returns dbMetricInternSessions
 
         val reportedTopicMetricsForEventTypes = mutableListOf<EventType>()
@@ -128,7 +123,6 @@ internal class MetricsSubmitterServiceTest {
 
         coEvery { topicEventCounterServiceOnPrem.countAllEventTypesAsync() } returns sessionWithCorrectCount andThen simulatedWrongCount andThen sessionWithCorrectCount
         coEvery { topicEventCounterServiceAiven.countAllEventTypesAsync() } returns sessionWithCorrectCount andThen simulatedWrongCount andThen sessionWithCorrectCount
-        coEvery { dbEventCounterOnPremService.countAllEventTypesAsync() } returns dbMetricsSessions
         coEvery { dbEventCounterGCPService.countAllEventTypesAsync() } returns dbMetricInternSessions
 
         runBlocking {
@@ -139,14 +133,12 @@ internal class MetricsSubmitterServiceTest {
 
         coVerify(exactly = 3) { topicEventCounterServiceOnPrem.countAllEventTypesAsync() }
         coVerify(exactly = 3) { topicEventCounterServiceAiven.countAllEventTypesAsync() }
-        coVerify(exactly = 3) { dbEventCounterOnPremService.countAllEventTypesAsync() }
 
         coVerify(exactly = 5 * 2) { kafkaMetricsReporter.report(any()) }
         coVerify(exactly = 5 * 2) { dbMetricsReporter.report(any()) }
 
         confirmVerified(topicEventCounterServiceOnPrem)
         confirmVerified(topicEventCounterServiceAiven)
-        confirmVerified(dbEventCounterOnPremService)
         confirmVerified(kafkaMetricsReporter)
         confirmVerified(dbMetricsReporter)
     }
@@ -159,7 +151,6 @@ internal class MetricsSubmitterServiceTest {
         val dbMetricInternSessions = CountingMetricsSessionsObjectMother.giveMeDatabaseSessionsForAllInternalEventTypes()
         coEvery { topicEventCounterServiceAiven.countAllEventTypesAsync() } returns sessionWithHighestCount andThen sessionWithLowestCount
         coEvery { topicEventCounterServiceOnPrem.countAllEventTypesAsync() } returns sessionWithHighestCount andThen sessionWithLowestCount
-        coEvery { dbEventCounterOnPremService.countAllEventTypesAsync() } returns dbMetricsSessions
         coEvery { dbEventCounterGCPService.countAllEventTypesAsync() } returns dbMetricInternSessions
 
         runBlocking {
@@ -180,7 +171,6 @@ internal class MetricsSubmitterServiceTest {
         val dbMetricsSessions = CountingMetricsSessionsObjectMother.giveMeDatabaseSessionsForAllExternalEventTypes()
         coEvery { topicEventCounterServiceOnPrem.countAllEventTypesAsync() } returns topicMetricsSessions
         coEvery { topicEventCounterServiceAiven.countAllEventTypesAsync() } returns topicMetricsSessions
-        coEvery { dbEventCounterOnPremService.countAllEventTypesAsync() } throws simulatedException andThen dbMetricsSessions
 
         runBlocking {
             submitter.submitMetrics()
@@ -188,15 +178,15 @@ internal class MetricsSubmitterServiceTest {
 
         coVerify(exactly = 1) { topicEventCounterServiceOnPrem.countAllEventTypesAsync() }
         coVerify(exactly = 1) { topicEventCounterServiceAiven.countAllEventTypesAsync() }
-        coVerify(exactly = 1) { dbEventCounterOnPremService.countAllEventTypesAsync() }
 
         coVerify(exactly = 0) { kafkaMetricsReporter.report(any()) }
         coVerify(exactly = 0) { dbMetricsReporter.report(any()) }
 
         confirmVerified(topicEventCounterServiceOnPrem)
         confirmVerified(topicEventCounterServiceAiven)
-        confirmVerified(dbEventCounterOnPremService)
         confirmVerified(kafkaMetricsReporter)
         confirmVerified(dbMetricsReporter)
     }
+
+     */
 }

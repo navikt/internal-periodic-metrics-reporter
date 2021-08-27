@@ -8,8 +8,7 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMe
 import org.slf4j.LoggerFactory
 
 class DbEventCounterGCPService(
-    private val metricsProbe: DbCountingMetricsProbe,
-    private val repository: MetricsRepository
+    private val metricsProbe: DbCountingMetricsProbe
 ) {
 
     private val log = LoggerFactory.getLogger(DbEventCounterGCPService::class.java)

@@ -2,15 +2,14 @@ package no.nav.personbruker.internal.periodic.metrics.reporter.metrics
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.Database
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.getProdusentnavn
+//import no.nav.personbruker.internal.periodic.metrics.reporter.common.database.Database
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.lang.Exception
 import java.time.Duration
 import java.time.LocalDateTime
 
-class ProducerNameResolver(private val database: Database) {
+class ProducerNameResolver() {
 
     private var producerNameAliases: Map<String, String> = emptyMap()
     private var lastRetrievedFromDB: LocalDateTime? = null
@@ -42,7 +41,10 @@ class ProducerNameResolver(private val database: Database) {
                 Math.abs(Duration.between(lastRetrievedFromDB, LocalDateTime.now()).toMinutes()) > PRODUCERNAME_CACHE_IN_MINUTES
     }
 
+    //TODO hent fra handler ikke db
     private suspend fun populateProducerNameCache(): Map<String, String> {
+        return emptyMap()
+       /*
         return try {
             val producers = database.queryWithExceptionTranslation { getProdusentnavn() }
             producers.map { it.systembruker to it.produsentnavn }.toMap()
@@ -50,6 +52,8 @@ class ProducerNameResolver(private val database: Database) {
             log.error("En feil oppstod ved henting av produsentnavn, har ikke oppdatert cache med verdier fra DB.", e)
             producerNameAliases
         }
+
+        */
     }
 }
 

@@ -10,7 +10,8 @@ import org.amshove.kluent.invoking
 import org.junit.jupiter.api.Test
 
 internal class DbEventCounterOnPremServiceTest {
-
+//TODO skriv om til å teste gcp versjonen som henter fra handler
+    /*
     private val metricsProbe : DbCountingMetricsProbe = mockk(relaxed = true)
     private val repository : MetricsRepository = mockk(relaxed = true)
 
@@ -53,4 +54,6 @@ internal class DbEventCounterOnPremServiceTest {
 
     }
 
+
+     */
 }
