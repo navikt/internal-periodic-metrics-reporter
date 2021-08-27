@@ -1,11 +1,14 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: dittnav-periodic-metrics-reporter
-  namespace: personbruker
+  name: internal-periodic-metrics-reporter
+  namespace: min-side
   labels:
-    team: personbruker
+    team: min-side
 spec:
+  envFrom:
+    - secret: internal-periodic-metrics-reporter-secrets
+    - secret: influxdb-credentials
   image: {{version}}
   port: 8080
   liveness:
@@ -22,14 +25,8 @@ spec:
     max: 1
     cpuThresholdPercentage: 50
   ingresses:
-    - "https://dittnav-periodic-metrics-reporter.nais.oera.no"
-  vault:
-    enabled: true
-    paths:
-      - kvPath: /kv/prod/sbs/dittnav-periodic-metrics-reporter/personbruker
-        mountPath: /var/run/secrets/nais.io/vault
-      - kvPath: /serviceuser/data/prod/srvdittnav-p-metrics
-        mountPath: /secret/serviceuser
+    - "https://internal-periodic-metrics-reporter.nais.oera.no"
+  webproxy: true
   resources:
     limits:
       cpu: "3"
@@ -39,3 +36,8 @@ spec:
       memory: 3840Mi
   kafka:
     pool: nav-prod
+  accessPolicy:
+    outbound:
+      external:
+        - host: kafka-schema-registry.nais.adeo.no
+        - host: dittnav-event-handler.nais.oera.no
