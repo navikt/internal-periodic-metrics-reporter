@@ -20,6 +20,6 @@ fun createSensuConfig(environment: Environment) = SensuConfig(
         hostPort = environment.sensuPort,
         clusterName = environment.clusterName,
         namespace = environment.namespace,
-        applicationName = "dittnav-periodic-metrics-reporter",
+        applicationName = "internal-periodic-metrics-reporter",
         eventsTopLevelName = "aggregator-kafka-events"
 )

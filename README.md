@@ -3,7 +3,7 @@
 Denne appen samler periodisk inn metrikker for DittNAV sine apper, og tilgjengeliggjør disse via Influx og Prometheus.
 
 # Kom i gang
-1. Bygge dittnav-periodic-metrics-reporter:
+1. Bygge internal-periodic-metrics-reporter:
     * bygge og kjøre enhetstester: `gradle clean test`
     * bygge og kjøre integrasjonstester: `gradle clean build`
 2. Start appen ved å kjøre kommandoen `gradle runServer`

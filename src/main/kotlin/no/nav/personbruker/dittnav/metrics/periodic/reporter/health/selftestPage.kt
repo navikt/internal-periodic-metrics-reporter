@@ -17,7 +17,7 @@ suspend fun ApplicationCall.buildSelftestPage(healthService: HealthService) = co
         else { HttpStatusCode.OK})
     {
         head {
-            title { +"Selftest dittnav-periodic-metrics-reporter" }
+            title { +"Selftest internal-periodic-metrics-reporter" }
         }
         body {
             var text = if(hasFailedChecks) {
@@ -35,7 +35,7 @@ suspend fun ApplicationCall.buildSelftestPage(healthService: HealthService) = co
             }
             table {
                 thead {
-                    tr { th { +"SELFTEST DITTNAV-PERIODIC-METRICS-REPORTER" } }
+                    tr { th { +"SELFTEST internal-periodic-metrics-reporter" } }
                 }
                 tbody {
                     healthChecks.map {
