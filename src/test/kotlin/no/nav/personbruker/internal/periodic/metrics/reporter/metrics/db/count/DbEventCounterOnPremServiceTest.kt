@@ -1,5 +1,6 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count
 
+import io.ktor.client.*
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
@@ -8,14 +9,15 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.
 import org.amshove.kluent.`should throw`
 import org.amshove.kluent.invoking
 import org.junit.jupiter.api.Test
+import java.net.URL
 
 internal class DbEventCounterOnPremServiceTest {
-//TODO skriv om til å teste gcp versjonen som henter fra handler
-    /*
-    private val metricsProbe : DbCountingMetricsProbe = mockk(relaxed = true)
-    private val repository : MetricsRepository = mockk(relaxed = true)
 
-    private val dbEventCounterService = DbEventCounterOnPremService(metricsProbe, repository)
+    private val metricsProbe : DbCountingMetricsProbe = mockk(relaxed = true)
+    private val client = mockk<HttpClient>(relaxed = true)
+    private val handler_url = URL("https://event_handler_url")
+
+    private val dbEventCounterService = DbEventCounterGCPService(metricsProbe, handler_url, client)
 
     @Test
     internal fun `Should handle exceptions and rethrow as internal exception`() {
@@ -54,6 +56,4 @@ internal class DbEventCounterOnPremServiceTest {
 
     }
 
-
-     */
 }
