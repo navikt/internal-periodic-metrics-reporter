@@ -4,6 +4,7 @@ import no.nav.common.JAASCredential
 import no.nav.common.KafkaEnvironment
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.Environment
 import org.apache.avro.generic.GenericRecord
+import java.net.URL
 
 object KafkaTestUtil {
 
@@ -50,7 +51,8 @@ object KafkaTestUtil {
                 monitorOnPremOppgaveActivity = false,
                 monitorOnPremInnboksActivity = false,
                 monitorOnPremDoneActivity = false,
-                monitorOnPremStatusoppdateringActivity = false
+                monitorOnPremStatusoppdateringActivity = false,
+                eventHandlerURL = URL("https://event_handler_url")
 
         )
     }
