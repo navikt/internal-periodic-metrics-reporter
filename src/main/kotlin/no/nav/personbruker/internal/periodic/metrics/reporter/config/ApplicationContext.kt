@@ -29,6 +29,7 @@ class ApplicationContext {
     private val log = LoggerFactory.getLogger(ApplicationContext::class.java)
 
     val environment = Environment()
+    private val httpClient = HttpClientBuilder.build()
 
     val dbEventCountingMetricsProbe = DbCountingMetricsProbe()
     val metricsReporter = resolveMetricsReporter(environment)
@@ -36,7 +37,7 @@ class ApplicationContext {
     //val metricsRepositoryOnPrem = MetricsRepository(databaseOnPrem)
     //val metricsRepositoryGCP = MetricsRepository(databaseGCP)
     //val dbEventCounterOnPremService = DbEventCounterOnPremService(dbEventCountingMetricsProbe, metricsRepositoryOnPrem)
-    val dbEventCounterGCPService = DbEventCounterGCPService(dbEventCountingMetricsProbe)
+    val dbEventCounterGCPService = DbEventCounterGCPService(dbEventCountingMetricsProbe, environment.eventHandlerURL, httpClient)
 
     val nameResolver = ProducerNameResolver()
     val nameScrubber = ProducerNameScrubber(nameResolver)

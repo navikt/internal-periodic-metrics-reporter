@@ -1,17 +1,25 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count
 
+import io.ktor.client.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
+import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.CountException
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
+import no.nav.personbruker.internal.periodic.metrics.reporter.config.get
+import no.nav.personbruker.internal.periodic.metrics.reporter.config.isOtherEnvironmentThanProd
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSessions
 import org.slf4j.LoggerFactory
+import java.net.URL
 
 class DbEventCounterGCPService(
-    private val metricsProbe: DbCountingMetricsProbe
+        private val metricsProbe: DbCountingMetricsProbe,
+        private val eventHandlerBaseURL: URL,
+        private val client: HttpClient
 ) {
 
     private val log = LoggerFactory.getLogger(DbEventCounterGCPService::class.java)
+    private val pathToEndpoint = "$eventHandlerBaseURL/fetch/grouped/systemuser"
 
     suspend fun countAllEventTypesAsync() : CountingMetricsSessions = withContext(Dispatchers.IO) {
         val beskjeder = async {
@@ -29,9 +37,6 @@ class DbEventCounterGCPService(
         val done = async {
             countDoneEvents()
         }
-        val feilrespons = async {
-            countFeilrespons()
-        }
 
         val sessions = CountingMetricsSessions()
         sessions.put(EventType.BESKJED_INTERN, beskjeder.await())
@@ -39,31 +44,88 @@ class DbEventCounterGCPService(
         sessions.put(EventType.INNBOKS_INTERN, innboks.await())
         sessions.put(EventType.OPPGAVE_INTERN, oppgave.await())
         sessions.put(EventType.STATUSOPPDATERING_INTERN, statusoppdatering.await())
-        sessions.put(EventType.FEILRESPONS, feilrespons.await())
         return@withContext sessions
     }
 
-    fun countBeskjeder(): DbCountingMetricsSession {
-        return DbCountingMetricsSession(EventType.BESKJED_INTERN)
+    suspend fun countBeskjeder(): DbCountingMetricsSession {
+        val eventType = EventType.BESKJED
+        return try {
+            metricsProbe.runWithMetrics(eventType) {
+
+                val grupperPerProdusent = getEventCountFromHandler(eventType)
+                addEventsByProducer(grupperPerProdusent)
+            }
+
+        } catch (e: Exception) {
+            throw CountException("Klarte ikke å hente antall beskjed-eventer fra handler.", e)
+        }
     }
 
-    fun countInnboksEventer(): DbCountingMetricsSession {
-        return DbCountingMetricsSession(EventType.INNBOKS_INTERN)
+    suspend fun countInnboksEventer(): DbCountingMetricsSession {
+        val eventType = EventType.INNBOKS
+        return if (isOtherEnvironmentThanProd()) {
+            try {
+                metricsProbe.runWithMetrics(eventType) {
+                    val grupperPerProdusent = getEventCountFromHandler(eventType)
+                    addEventsByProducer(grupperPerProdusent)
+                }
+
+            } catch (e: Exception) {
+                throw CountException("Klarte ikke å hente antall innboks-eventer fra handler.", e)
+            }
+        } else {
+            DbCountingMetricsSession(eventType)
+        }
     }
 
-    fun countStatusoppdateringer(): DbCountingMetricsSession {
-        return DbCountingMetricsSession(EventType.STATUSOPPDATERING_INTERN)
+    suspend fun countStatusoppdateringer(): DbCountingMetricsSession {
+        val eventType = EventType.STATUSOPPDATERING
+        return if (isOtherEnvironmentThanProd()) {
+            try {
+                metricsProbe.runWithMetrics(eventType) {
+                    val grupperPerProdusent = getEventCountFromHandler(eventType)
+                    addEventsByProducer(grupperPerProdusent)
+                }
+
+            } catch (e: Exception) {
+                throw CountException("Klarte ikke å hente antall statusoppdatering-eventer fra handler.", e)
+            }
+        } else {
+            DbCountingMetricsSession(eventType)
+        }
     }
 
-    fun countOppgaver(): DbCountingMetricsSession {
-        return DbCountingMetricsSession(EventType.OPPGAVE_INTERN)
+    suspend fun countOppgaver(): DbCountingMetricsSession {
+        val eventType = EventType.OPPGAVE
+        return try {
+            metricsProbe.runWithMetrics(eventType) {
+                val grupperPerProdusent = getEventCountFromHandler(eventType)
+                addEventsByProducer(grupperPerProdusent)
+            }
+
+        } catch (e: Exception) {
+            throw CountException("Klarte ikke å hente antall oppgave-eventer fra  handler.", e)
+        }
     }
 
-    fun countDoneEvents(): DbCountingMetricsSession {
-        return DbCountingMetricsSession(EventType.DONE_INTERN)
+    suspend fun countDoneEvents(): DbCountingMetricsSession {
+        val eventType = EventType.DONE
+        return try {
+            metricsProbe.runWithMetrics(eventType) {
+                val grupperPerProdusent = getEventCountFromHandler(eventType)
+                addEventsByProducer(grupperPerProdusent)
+            }
+
+        } catch (e: Exception) {
+            throw CountException("Klarte ikke å hente antall done-eventer fra handler.", e)
+        }
     }
 
-    fun countFeilrespons(): DbCountingMetricsSession {
-        return DbCountingMetricsSession(EventType.FEILRESPONS)
+    private suspend fun getEventCountFromHandler(eventtype: EventType): Map<String, Int> {
+        try {
+            return client.get(URL("$pathToEndpoint/${eventtype.eventType}"))
+        } catch (e: Exception) {
+            return mapOf("systemuser_unavailable" to 0)
+        }
     }
 }

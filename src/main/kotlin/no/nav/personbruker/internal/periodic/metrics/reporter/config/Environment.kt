@@ -4,6 +4,7 @@ import no.nav.personbruker.dittnav.common.util.config.BooleanEnvVar.getEnvVarAsB
 import no.nav.personbruker.dittnav.common.util.config.IntEnvVar.getEnvVarAsInt
 import no.nav.personbruker.dittnav.common.util.config.LongEnvVar.getEnvVarAsLong
 import no.nav.personbruker.dittnav.common.util.config.StringEnvVar.getEnvVar
+import java.net.URL
 
 data class Environment(val bootstrapServers: String = getEnvVar("KAFKA_BOOTSTRAP_SERVERS"),
                        val schemaRegistryUrl: String = getEnvVar("KAFKA_SCHEMAREGISTRY_SERVERS"),
@@ -37,7 +38,8 @@ data class Environment(val bootstrapServers: String = getEnvVar("KAFKA_BOOTSTRAP
                        val monitorOnPremOppgaveActivity: Boolean = getEnvVarAsBoolean("MONITOR_ON_PREM_OPPGAVE_ACTIVITY"),
                        val monitorOnPremInnboksActivity: Boolean = getEnvVarAsBoolean("MONITOR_ON_PREM_INNBOKS_ACTIVITY"),
                        val monitorOnPremDoneActivity: Boolean = getEnvVarAsBoolean("MONITOR_ON_PREM_DONE_ACTIVITY"),
-                       val monitorOnPremStatusoppdateringActivity: Boolean = getEnvVarAsBoolean("MONITOR_ON_PREM_STATUSOPPDATERING_ACTIVITY")
+                       val monitorOnPremStatusoppdateringActivity: Boolean = getEnvVarAsBoolean("MONITOR_ON_PREM_STATUSOPPDATERING_ACTIVITY"),
+                       val eventHandlerURL: URL = URL(getEnvVar("EVENT_HANDLER_URL").trimEnd('/'))
 )
 
 fun isOtherEnvironmentThanProd() = System.getenv("NAIS_CLUSTER_NAME") != "prod-sbs"
