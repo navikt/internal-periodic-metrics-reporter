@@ -1,27 +1,23 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count
 
-import io.ktor.client.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
+import no.nav.personbruker.internal.periodic.metrics.reporter.common.HandlerConsumer
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.CountException
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
-import no.nav.personbruker.internal.periodic.metrics.reporter.config.get
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.isOtherEnvironmentThanProd
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSessions
 import org.slf4j.LoggerFactory
-import java.net.URL
 
 class DbEventCounterGCPService(
         private val metricsProbe: DbCountingMetricsProbe,
-        private val eventHandlerBaseURL: URL,
-        private val client: HttpClient
+        private val handlerConsumer: HandlerConsumer
 ) {
 
     private val log = LoggerFactory.getLogger(DbEventCounterGCPService::class.java)
-    private val pathToEndpoint = "$eventHandlerBaseURL/fetch/grouped/systemuser"
 
-    suspend fun countAllEventTypesAsync() : CountingMetricsSessions = withContext(Dispatchers.IO) {
+    suspend fun countAllEventTypesAsync(): CountingMetricsSessions = withContext(Dispatchers.IO) {
         val beskjeder = async {
             countBeskjeder()
         }
@@ -52,7 +48,7 @@ class DbEventCounterGCPService(
         return try {
             metricsProbe.runWithMetrics(eventType) {
 
-                val grupperPerProdusent = getEventCountFromHandler(eventType)
+                val grupperPerProdusent = handlerConsumer.getEventCount(eventType)
                 addEventsByProducer(grupperPerProdusent)
             }
 
@@ -66,7 +62,7 @@ class DbEventCounterGCPService(
         return if (isOtherEnvironmentThanProd()) {
             try {
                 metricsProbe.runWithMetrics(eventType) {
-                    val grupperPerProdusent = getEventCountFromHandler(eventType)
+                    val grupperPerProdusent = handlerConsumer.getEventCount(eventType)
                     addEventsByProducer(grupperPerProdusent)
                 }
 
@@ -83,7 +79,7 @@ class DbEventCounterGCPService(
         return if (isOtherEnvironmentThanProd()) {
             try {
                 metricsProbe.runWithMetrics(eventType) {
-                    val grupperPerProdusent = getEventCountFromHandler(eventType)
+                    val grupperPerProdusent = handlerConsumer.getEventCount(eventType)
                     addEventsByProducer(grupperPerProdusent)
                 }
 
@@ -99,7 +95,7 @@ class DbEventCounterGCPService(
         val eventType = EventType.OPPGAVE
         return try {
             metricsProbe.runWithMetrics(eventType) {
-                val grupperPerProdusent = getEventCountFromHandler(eventType)
+                val grupperPerProdusent = handlerConsumer.getEventCount(eventType)
                 addEventsByProducer(grupperPerProdusent)
             }
 
@@ -112,7 +108,7 @@ class DbEventCounterGCPService(
         val eventType = EventType.DONE
         return try {
             metricsProbe.runWithMetrics(eventType) {
-                val grupperPerProdusent = getEventCountFromHandler(eventType)
+                val grupperPerProdusent = handlerConsumer.getEventCount(eventType)
                 addEventsByProducer(grupperPerProdusent)
             }
 
@@ -121,11 +117,4 @@ class DbEventCounterGCPService(
         }
     }
 
-    private suspend fun getEventCountFromHandler(eventtype: EventType): Map<String, Int> {
-        try {
-            return client.get(URL("$pathToEndpoint/${eventtype.eventType}"))
-        } catch (e: Exception) {
-            return mapOf("systemuser_unavailable" to 0)
-        }
-    }
 }

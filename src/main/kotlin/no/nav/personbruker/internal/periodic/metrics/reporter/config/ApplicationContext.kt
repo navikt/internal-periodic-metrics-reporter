@@ -2,6 +2,7 @@ package no.nav.personbruker.internal.periodic.metrics.reporter.config
 
 import no.nav.brukernotifikasjon.schemas.Nokkel
 import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
+import no.nav.personbruker.internal.periodic.metrics.reporter.common.HandlerConsumer
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka.polling.PeriodicConsumerCheck
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.ActivityHealthDecider
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.ActivityHealthService
@@ -30,14 +31,11 @@ class ApplicationContext {
 
     val environment = Environment()
     private val httpClient = HttpClientBuilder.build()
+    private val handlerConsumer = HandlerConsumer(httpClient, environment.eventHandlerURL)
 
     val dbEventCountingMetricsProbe = DbCountingMetricsProbe()
     val metricsReporter = resolveMetricsReporter(environment)
-    
-    //val metricsRepositoryOnPrem = MetricsRepository(databaseOnPrem)
-    //val metricsRepositoryGCP = MetricsRepository(databaseGCP)
-    //val dbEventCounterOnPremService = DbEventCounterOnPremService(dbEventCountingMetricsProbe, metricsRepositoryOnPrem)
-    val dbEventCounterGCPService = DbEventCounterGCPService(dbEventCountingMetricsProbe, environment.eventHandlerURL, httpClient)
+    val dbEventCounterGCPService = DbEventCounterGCPService(dbEventCountingMetricsProbe, handlerConsumer)
 
     val nameResolver = ProducerNameResolver()
     val nameScrubber = ProducerNameScrubber(nameResolver)
