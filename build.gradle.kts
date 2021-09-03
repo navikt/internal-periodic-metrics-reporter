@@ -13,7 +13,7 @@ plugins {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "13"
+    kotlinOptions.jvmTarget = "12"
 }
 
 repositories {
@@ -66,6 +66,8 @@ dependencies {
     testImplementation(Kafka.Apache.streams)
     testImplementation(Kluent.kluent)
     testImplementation(Kafka.Confluent.schemaRegistry)
+    testImplementation(Ktor.clientMock)
+    testImplementation(Ktor.clientMockJvm)
     testImplementation(Mockk.mockk)
     testImplementation(NAV.kafkaEmbedded)
     testImplementation("io.kotest:kotest-runner-junit5:4.3.1")

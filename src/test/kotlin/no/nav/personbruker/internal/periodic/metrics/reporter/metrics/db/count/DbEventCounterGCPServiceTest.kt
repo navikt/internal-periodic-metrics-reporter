@@ -11,7 +11,7 @@ import org.amshove.kluent.invoking
 import org.junit.jupiter.api.Test
 import java.net.URL
 
-internal class DbEventCounterOnPremServiceTest {
+internal class DbEventCounterGCPServiceTest {
 
     private val metricsProbe : DbCountingMetricsProbe = mockk(relaxed = true)
     private val client = mockk<HttpClient>(relaxed = true)

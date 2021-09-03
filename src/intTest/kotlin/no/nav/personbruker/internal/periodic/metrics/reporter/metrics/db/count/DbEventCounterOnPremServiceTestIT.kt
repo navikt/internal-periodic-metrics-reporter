@@ -1,58 +1,39 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count
 
+import io.mockk.coEvery
+import io.mockk.mockk
+import io.mockk.slot
+import kotlinx.coroutines.runBlocking
+import no.nav.personbruker.internal.periodic.metrics.reporter.common.getClientWith
+import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
+import no.nav.personbruker.internal.periodic.metrics.reporter.config.HttpClientBuilder
+import org.amshove.kluent.`should be equal to`
+import org.junit.jupiter.api.Test
+import java.net.URL
+
 internal class DbEventCounterOnPremServiceTestIT {
 //TODO skriv om til å teste gcp versjon som henter data fra handler
-    /*
-    private val database = H2Database()
-    //private val repository = MetricsRepository(database)
 
-    @AfterEach
-    fun cleanUp() {
-        runBlocking {
-            database.dbQuery {
-                deleteAllBeskjed()
-                deleteAllInnboks()
-                deleteAllOppgave()
-                deleteAllDone()
-                deleteAllStatusoppdatering()
-            }
-        }
-    }
-
-    @Test
-    fun `Should count all in common counting metrics session`() {
-        val beskjeder = createBeskjedEventer()
-        val innboksEventer = createInnboksEventer()
-        val oppgaver = createOppgaveEventer()
-        val statusoppdateringer = createStatusoppdateringEventer()
-        createDoneEventInWaitingTable()
-
-        val metricsProbe = mockk<DbCountingMetricsProbe>(relaxed = true)
-        initMetricsSession(metricsProbe, EventType.BESKJED)
-        initMetricsSession(metricsProbe, EventType.INNBOKS)
-        initMetricsSession(metricsProbe, EventType.OPPGAVE)
-        initMetricsSession(metricsProbe, EventType.DONE)
-        initMetricsSession(metricsProbe, EventType.STATUSOPPDATERING)
-        val service = DbEventCounterOnPremService(metricsProbe, repository)
-
-        val countingMetricsSessions = runBlocking {
-            service.countAllEventTypesAsync()
-        }
-
-        countingMetricsSessions.`should not be null`()
-        countingMetricsSessions.getForType(EventType.BESKJED).getNumberOfUniqueEvents() `should be equal to` beskjeder.size
-        countingMetricsSessions.getForType(EventType.INNBOKS).getNumberOfUniqueEvents() `should be equal to` innboksEventer.size
-        countingMetricsSessions.getForType(EventType.OPPGAVE).getNumberOfUniqueEvents() `should be equal to` oppgaver.size
-        countingMetricsSessions.getForType(EventType.STATUSOPPDATERING).getNumberOfUniqueEvents() `should be equal to` statusoppdateringer.size
-        countingMetricsSessions.getForType(EventType.DONE).getNumberOfUniqueEvents() `should be equal to` 4
-    }
+    private val pathToEndpoint = URL("https://event-handler/systemuser")
 
     @Test
     fun `Should count beskjed events`() {
-        val beskjeder = createBeskjedEventer()
+      //val client = HttpClientBuilder.build()
+        val systembrukere = listOf("b_systembruker_A", "b_systembruker_B")
+        val result = createResult(systembrukere)
+/*
+        runBlocking {
+            coEvery {
+                client.get(any())
+            }.returns(result)
+        }
+
+
+ */
+        val client = getClientWith(result)
         val metricsProbe = mockk<DbCountingMetricsProbe>(relaxed = true)
         val metricsSession = initMetricsSession(metricsProbe, EventType.BESKJED)
-        val service = DbEventCounterOnPremService(metricsProbe, repository)
+        val service = DbEventCounterGCPService(metricsProbe, pathToEndpoint, client)
 
         runBlocking {
             service.countBeskjeder()
@@ -60,65 +41,66 @@ internal class DbEventCounterOnPremServiceTestIT {
 
         metricsSession.getTotalNumber() `should be equal to` 2
         metricsSession.getProducers().size `should be equal to` 2
-        metricsSession.getNumberOfEventsFor(beskjeder[0].systembruker) `should be equal to` 1
-        metricsSession.getNumberOfEventsFor(beskjeder[1].systembruker) `should be equal to` 1
+        metricsSession.getNumberOfEventsFor(systembrukere[0]) `should be equal to` 1
+        metricsSession.getNumberOfEventsFor(systembrukere[1]) `should be equal to` 1
     }
 
-    @Test
-    fun `Should count innboks events`() {
-        val innboksEventer = createInnboksEventer()
-        val metricsProbe = mockk<DbCountingMetricsProbe>(relaxed = true)
-        val metricsSession = initMetricsSession(metricsProbe, EventType.INNBOKS)
-        val service = DbEventCounterOnPremService(metricsProbe, repository)
+    /*
+        @Test
+        fun `Should count innboks events`() {
+            val innboksEventer = createInnboksEventer()
+            val metricsProbe = mockk<DbCountingMetricsProbe>(relaxed = true)
+            val metricsSession = initMetricsSession(metricsProbe, EventType.INNBOKS)
+            val service = DbEventCounterOnPremService(metricsProbe, repository)
 
-        runBlocking {
-            service.countInnboksEventer()
+            runBlocking {
+                service.countInnboksEventer()
+            }
+
+            metricsSession.getTotalNumber() `should be equal to` 2
+            metricsSession.getProducers().size `should be equal to` 2
+            metricsSession.getNumberOfEventsFor(innboksEventer[0].systembruker) `should be equal to` 1
+            metricsSession.getNumberOfEventsFor(innboksEventer[1].systembruker) `should be equal to` 1
         }
 
-        metricsSession.getTotalNumber() `should be equal to` 2
-        metricsSession.getProducers().size `should be equal to` 2
-        metricsSession.getNumberOfEventsFor(innboksEventer[0].systembruker) `should be equal to` 1
-        metricsSession.getNumberOfEventsFor(innboksEventer[1].systembruker) `should be equal to` 1
-    }
+        @Test
+        fun `Should count oppgave events`() {
+            val oppgaver = createOppgaveEventer()
+            val metricsProbe = mockk<DbCountingMetricsProbe>(relaxed = true)
+            val metricsSession = initMetricsSession(metricsProbe, EventType.OPPGAVE)
+            val service = DbEventCounterOnPremService(metricsProbe, repository)
 
-    @Test
-    fun `Should count oppgave events`() {
-        val oppgaver = createOppgaveEventer()
-        val metricsProbe = mockk<DbCountingMetricsProbe>(relaxed = true)
-        val metricsSession = initMetricsSession(metricsProbe, EventType.OPPGAVE)
-        val service = DbEventCounterOnPremService(metricsProbe, repository)
+            runBlocking {
+                service.countOppgaver()
+            }
 
-        runBlocking {
-            service.countOppgaver()
+            metricsSession.getTotalNumber() `should be equal to` 2
+            metricsSession.getProducers().size `should be equal to` 2
+            metricsSession.getNumberOfEventsFor(oppgaver[0].systembruker) `should be equal to` 1
+            metricsSession.getNumberOfEventsFor(oppgaver[1].systembruker) `should be equal to` 1
         }
 
-        metricsSession.getTotalNumber() `should be equal to` 2
-        metricsSession.getProducers().size `should be equal to` 2
-        metricsSession.getNumberOfEventsFor(oppgaver[0].systembruker) `should be equal to` 1
-        metricsSession.getNumberOfEventsFor(oppgaver[1].systembruker) `should be equal to` 1
-    }
+        @Test
+        fun `Should count done events from the wait table, and include brukernotifikasjoner marked as inactive (done)`() {
+            createBeskjedEventer()
+            createInnboksEventer()
+            createOppgaveEventer()
+            val doneEventer = createDoneEventInWaitingTable()
 
-    @Test
-    fun `Should count done events from the wait table, and include brukernotifikasjoner marked as inactive (done)`() {
-        createBeskjedEventer()
-        createInnboksEventer()
-        createOppgaveEventer()
-        val doneEventer = createDoneEventInWaitingTable()
+            val metricsProbe = mockk<DbCountingMetricsProbe>(relaxed = true)
+            val metricsSession = initMetricsSession(metricsProbe, EventType.DONE)
+            val service = DbEventCounterOnPremService(metricsProbe, repository)
 
-        val metricsProbe = mockk<DbCountingMetricsProbe>(relaxed = true)
-        val metricsSession = initMetricsSession(metricsProbe, EventType.DONE)
-        val service = DbEventCounterOnPremService(metricsProbe, repository)
+            runBlocking {
+                service.countDoneEvents()
+            }
 
-        runBlocking {
-            service.countDoneEvents()
+            metricsSession.getTotalNumber() `should be equal to` 4
+            metricsSession.getProducers().size `should be equal to` 2
+            metricsSession.getNumberOfEventsFor("dummySystembruker") `should be equal to` 3
+            metricsSession.getNumberOfEventsFor(doneEventer[0].systembruker) `should be equal to` 1
         }
-
-        metricsSession.getTotalNumber() `should be equal to` 4
-        metricsSession.getProducers().size `should be equal to` 2
-        metricsSession.getNumberOfEventsFor("dummySystembruker") `should be equal to` 3
-        metricsSession.getNumberOfEventsFor(doneEventer[0].systembruker) `should be equal to` 1
-    }
-
+    */
     private fun initMetricsSession(metricsProbe: DbCountingMetricsProbe, eventType: EventType): DbCountingMetricsSession {
         val metricsSession = DbCountingMetricsSession(eventType)
         `Sorg for at metrics session trigges`(metricsProbe, metricsSession, eventType)
@@ -135,20 +117,15 @@ internal class DbEventCounterOnPremServiceTestIT {
         }
     }
 
-    private fun createBeskjedEventer(): List<Beskjed> {
-        val beskjeder = listOf(
-                BeskjedObjectMother.giveMeAktivBeskjed("321", "567", "systembrukerB"),
-                BeskjedObjectMother.giveMeInaktivBeskjed()
-        )
+    private fun createResult(systembrukere: List<String>): Map<String, Int> {
+        val result = mutableMapOf<String, Int>()
 
-        runBlocking {
-            database.dbQuery {
-                createBeskjeder(beskjeder)
-            }
+        systembrukere.forEach { systembruker ->
+            result.put(systembruker, 1)
         }
-        return beskjeder
+        return result
     }
-
+/*
     private fun createInnboksEventer(): List<Innboks> {
         val innboksEventer = listOf(
                 InnboksObjectMother.giveMeAktivInnboks("213", "678", "systembrukerI"),
@@ -200,6 +177,7 @@ internal class DbEventCounterOnPremServiceTestIT {
         return doneEventer
     }
 
+ */
 
-     */
 }
+
