@@ -17,26 +17,26 @@ class ActivityHealthService(
 
     private val log = LoggerFactory.getLogger(ActivityHealthService::class.java)
 
-    fun assertOnPremTopicActivityHealth(): Boolean {
+    fun assertTopicActivityHealth(): Boolean {
         var healthy = true
 
-        if (monitoringToggles.monitorOnPremBeskjedActivity && !assertServiceHealth(beskjedTopicActivityService, "on-prem beskjed")) {
+        if (monitoringToggles.monitorBeskjedActivity && !assertServiceHealth(beskjedTopicActivityService, "beskjed")) {
             healthy = false
         }
 
-        if (monitoringToggles.monitorOnPremOppgaveActivity && !assertServiceHealth(oppgaveTopicActivityService, "on-prem oppgave")) {
+        if (monitoringToggles.monitorOppgaveActivity && !assertServiceHealth(oppgaveTopicActivityService, "oppgave")) {
             healthy = false
         }
 
-        if (monitoringToggles.monitorOnPremInnboksActivity && !assertServiceHealth(innboksTopicActivityService, "on-prem innboks")) {
+        if (monitoringToggles.monitorInnboksActivity && !assertServiceHealth(innboksTopicActivityService, "innboks")) {
             healthy = false
         }
 
-        if (monitoringToggles.monitorOnPremDoneActivity && !assertServiceHealth(doneTopicActivityService, "on-prem done")) {
+        if (monitoringToggles.monitorDoneActivity && !assertServiceHealth(doneTopicActivityService, "done")) {
             healthy = false
         }
 
-        if (monitoringToggles.monitorOnPremStatusoppdateringActivity && !assertServiceHealth(statusoppdateringTopicActivityService, "on-prem statusoppdatering")) {
+        if (monitoringToggles.monitorStatusoppdateringActivity && !assertServiceHealth(statusoppdateringTopicActivityService, "statusoppdatering")) {
             healthy = false
         }
 
@@ -49,7 +49,7 @@ class ActivityHealthService(
         return if (activityHealthDecider.stateIsHealthy(state)) {
             true
         } else {
-            log.warn("On-prem topic counting for $topicSource looks unhealthy. Recent activity is ${state.recentActivityLevel} and counted zero events ${state.inactivityStreak} times in a row.")
+            log.warn("Topic counting for $topicSource looks unhealthy. Recent activity is ${state.recentActivityLevel} and counted zero events ${state.inactivityStreak} times in a row.")
             false
         }
     }
@@ -71,9 +71,9 @@ class ActivityHealthDecider(
 }
 
 data class ActivityMonitoringToggles(
-        val monitorOnPremBeskjedActivity: Boolean,
-        val monitorOnPremOppgaveActivity: Boolean,
-        val monitorOnPremInnboksActivity: Boolean,
-        val monitorOnPremDoneActivity: Boolean,
-        val monitorOnPremStatusoppdateringActivity: Boolean
+        val monitorBeskjedActivity: Boolean,
+        val monitorOppgaveActivity: Boolean,
+        val monitorInnboksActivity: Boolean,
+        val monitorDoneActivity: Boolean,
+        val monitorStatusoppdateringActivity: Boolean
 )

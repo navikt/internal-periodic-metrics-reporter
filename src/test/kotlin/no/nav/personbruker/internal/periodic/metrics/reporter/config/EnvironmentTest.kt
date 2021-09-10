@@ -11,9 +11,6 @@ internal class EnvironmentTest {
             "KAFKA_SCHEMAREGISTRY_SERVERS" to "schemaregistry_servers",
             "SERVICEUSER_USERNAME" to "username",
             "SERVICEUSER_PASSWORD" to "password",
-            "DB_HOST_ONPREM" to "db_host",
-            "DB_NAME" to "db_name",
-            "DB_MOUNT_PATH" to "db_mount_path",
             "NAIS_CLUSTER_NAME" to "cluster_name",
             "NAIS_NAMESPACE" to "namespace",
             "SENSU_HOST" to "sensu_host",
@@ -54,13 +51,5 @@ internal class EnvironmentTest {
             Environment().deltaCountingEnabled `should be equal to` true
         }
     }
-
-    @Test
-    fun `DB_HOST og DB_NAME benyttes til utledning av dbUser, dbReadonly, dbUrl`() {
-        withEnvironment(envVars) {
-            Environment().dbUserOnPrem `should be equal to` "db_name-user"
-            Environment().dbReadOnlyUserOnPrem `should be equal to` "db_name-readonly"
-            Environment().dbUrlOnPrem `should be equal to` "jdbc:postgresql://db_host/db_name"
-        }
-    }
+    
 }

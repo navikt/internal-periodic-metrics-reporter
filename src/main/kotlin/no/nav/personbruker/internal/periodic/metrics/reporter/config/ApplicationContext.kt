@@ -11,7 +11,6 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.D
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbEventCounterGCPService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbMetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventCounterAivenService
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventCounterOnPremService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventTypeCounter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicMetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.activity.TopicActivityService
@@ -39,18 +38,11 @@ class ApplicationContext {
     val dbMetricsReporter = DbMetricsReporter(metricsReporter)
     val kafkaMetricsReporter = TopicMetricsReporter(metricsReporter)
 
-    val beskjedKafkaPropsOnPrem = Kafka.counterConsumerOnPremProps(environment, EventType.BESKJED)
     val beskjedKafkaPropsAiven = Kafka.counterConsumerAivenProps(environment, EventType.BESKJED_INTERN)
-    var beskjedCountOnPremConsumer = initializeCountConsumerOnPrem(beskjedKafkaPropsOnPrem, Kafka.beskjedTopicNameOnPrem)
     var beskjedCountAivenConsumer = initializeCountConsumerAiven(beskjedKafkaPropsAiven, Kafka.beskjedTopicNameAiven)
     val beskjedTopicActivityService = TopicActivityService(environment.activityHistoryLength)
     val beskjedAivenTopicActivityService = TopicActivityService(environment.activityHistoryLength)
-    val beskjedCounterOnPrem = TopicEventTypeCounter(
-            beskjedCountOnPremConsumer,
-            beskjedTopicActivityService,
-            EventType.BESKJED,
-            environment.deltaCountingEnabled
-    )
+
     val beskjedCounterAiven = TopicEventTypeCounter(
             beskjedCountAivenConsumer,
             beskjedAivenTopicActivityService,
@@ -58,18 +50,11 @@ class ApplicationContext {
             environment.deltaCountingEnabled
     )
 
-    val oppgaveKafkaPropsOnPrem = Kafka.counterConsumerOnPremProps(environment, EventType.OPPGAVE)
     val oppgaveKafkaPropsAiven = Kafka.counterConsumerAivenProps(environment, EventType.OPPGAVE_INTERN)
-    var oppgaveCountOnPremConsumer = initializeCountConsumerOnPrem(oppgaveKafkaPropsOnPrem, Kafka.oppgaveTopicNameOnPrem)
     var oppgaveCountAivenConsumer = initializeCountConsumerAiven(oppgaveKafkaPropsAiven, Kafka.oppgaveTopicNameAiven)
     val oppgaveTopicActivityService = TopicActivityService(environment.activityHistoryLength)
     val oppgaveAivenTopicActivityService = TopicActivityService(environment.activityHistoryLength)
-    val oppgaveCounterOnPrem = TopicEventTypeCounter(
-            oppgaveCountOnPremConsumer,
-            oppgaveTopicActivityService,
-            EventType.OPPGAVE,
-            environment.deltaCountingEnabled
-    )
+
     val oppgaveCounterAiven = TopicEventTypeCounter(
             oppgaveCountAivenConsumer,
             oppgaveAivenTopicActivityService,
@@ -77,18 +62,11 @@ class ApplicationContext {
             environment.deltaCountingEnabled
     )
 
-    val innboksKafkaPropsOnPrem = Kafka.counterConsumerOnPremProps(environment, EventType.INNBOKS)
     val innboksKafkaPropsAiven = Kafka.counterConsumerAivenProps(environment, EventType.INNBOKS_INTERN)
-    var innboksCountOnPremConsumer = initializeCountConsumerOnPrem(innboksKafkaPropsOnPrem, Kafka.innboksTopicNameOnPrem)
     var innboksCountAivenConsumer = initializeCountConsumerAiven(innboksKafkaPropsAiven, Kafka.innboksTopicNameAiven)
     val innboksTopicActivityService = TopicActivityService(environment.activityHistoryLength)
     val innboksAivenTopicActivityService = TopicActivityService(environment.activityHistoryLength)
-    val innboksCounterOnPrem = TopicEventTypeCounter(
-            innboksCountOnPremConsumer,
-            innboksTopicActivityService,
-            EventType.INNBOKS,
-            environment.deltaCountingEnabled
-    )
+
     val innboksCounterAiven = TopicEventTypeCounter(
             innboksCountAivenConsumer,
             innboksAivenTopicActivityService,
@@ -96,18 +74,11 @@ class ApplicationContext {
             environment.deltaCountingEnabled
     )
 
-    val statusoppdateringKafkaPropsOnPrem = Kafka.counterConsumerOnPremProps(environment, EventType.STATUSOPPDATERING)
     val statusoppdateringKafkaPropsAiven = Kafka.counterConsumerAivenProps(environment, EventType.STATUSOPPDATERING_INTERN)
-    var statusoppdateringCountOnPremConsumer = initializeCountConsumerOnPrem(statusoppdateringKafkaPropsOnPrem, Kafka.statusoppdateringTopicNameOnPrem)
     var statusoppdateringCountAivenConsumer = initializeCountConsumerAiven(statusoppdateringKafkaPropsAiven, Kafka.statusoppdateringTopicNameAiven)
     val statusoppdateringTopicActivityService = TopicActivityService(environment.activityHistoryLength)
     val statusoppdateringAivenTopicActivityService = TopicActivityService(environment.activityHistoryLength)
-    val statusoppdateringCounterOnPrem = TopicEventTypeCounter(
-            statusoppdateringCountOnPremConsumer,
-            statusoppdateringTopicActivityService,
-            EventType.STATUSOPPDATERING,
-            environment.deltaCountingEnabled
-    )
+
     val statusoppdateringCounterAiven = TopicEventTypeCounter(
             statusoppdateringCountAivenConsumer,
             statusoppdateringAivenTopicActivityService,
@@ -115,18 +86,11 @@ class ApplicationContext {
             environment.deltaCountingEnabled
     )
 
-    val doneKafkaPropsOnPrem = Kafka.counterConsumerOnPremProps(environment, EventType.DONE)
     val doneKafkaPropsAiven = Kafka.counterConsumerAivenProps(environment, EventType.DONE_INTERN)
-    var doneCountOnPremConsumer = initializeCountConsumerOnPrem(doneKafkaPropsOnPrem, Kafka.doneTopicNameOnPrem)
     var doneCountAivenConsumer = initializeCountConsumerAiven(doneKafkaPropsAiven, Kafka.doneTopicNameAiven)
     val doneTopicActivityService = TopicActivityService(environment.activityHistoryLength)
     val doneAivenTopicActivityService = TopicActivityService(environment.activityHistoryLength)
-    val doneCounterOnPrem = TopicEventTypeCounter(
-            doneCountOnPremConsumer,
-            doneTopicActivityService,
-            EventType.DONE,
-            environment.deltaCountingEnabled
-    )
+
     val doneCounterAiven = TopicEventTypeCounter(
             doneCountAivenConsumer,
             doneAivenTopicActivityService,
@@ -142,14 +106,6 @@ class ApplicationContext {
             feilresponsAivenTopicActivityService,
             EventType.FEILRESPONS,
             environment.deltaCountingEnabled
-    )
-
-    val topicEventCounterServiceOnPrem = TopicEventCounterOnPremService(
-            beskjedCounter = beskjedCounterOnPrem,
-            innboksCounter = innboksCounterOnPrem,
-            oppgaveCounter = oppgaveCounterOnPrem,
-            statusoppdateringCounter = statusoppdateringCounterOnPrem,
-            doneCounter = doneCounterOnPrem
     )
 
     val topicEventCounterServiceAiven = TopicEventCounterAivenService(
@@ -169,11 +125,11 @@ class ApplicationContext {
     )
 
     val activityHealthServiceConfig = ActivityMonitoringToggles(
-            monitorOnPremBeskjedActivity = environment.monitorOnPremBeskjedActivity,
-            monitorOnPremOppgaveActivity = environment.monitorOnPremOppgaveActivity,
-            monitorOnPremInnboksActivity = environment.monitorOnPremInnboksActivity,
-            monitorOnPremDoneActivity = environment.monitorOnPremDoneActivity,
-            monitorOnPremStatusoppdateringActivity = environment.monitorOnPremStatusoppdateringActivity
+            monitorBeskjedActivity = environment.monitorOnPremBeskjedActivity,
+            monitorOppgaveActivity = environment.monitorOnPremOppgaveActivity,
+            monitorInnboksActivity = environment.monitorOnPremInnboksActivity,
+            monitorDoneActivity = environment.monitorOnPremDoneActivity,
+            monitorStatusoppdateringActivity = environment.monitorOnPremStatusoppdateringActivity
     )
 
     val activityHealthDecider = ActivityHealthDecider(
@@ -198,9 +154,6 @@ class ApplicationContext {
     private fun initializePeriodicConsumerCheck() =
             PeriodicConsumerCheck(this)
 
-    private fun initializeCountConsumerOnPrem(kafkaProps: Properties, topic: String) =
-            KafkaConsumerSetup.setupCountConsumer<Nokkel, GenericRecord>(kafkaProps, topic)
-
     private fun initializeCountConsumerAiven(kafkaProps: Properties, topic: String) =
             KafkaConsumerSetup.setupCountConsumer<Nokkel, GenericRecord>(kafkaProps, topic)
 
@@ -222,43 +175,6 @@ class ApplicationContext {
             log.info("periodicConsumerCheck har blitt reinstansiert.")
         } else {
             log.warn("periodicConsumerCheck kunne ikke bli reinstansiert fordi den fortsatt er aktiv.")
-        }
-    }
-
-    fun reinitializeConsumersOnPrem() {
-        if (beskjedCountOnPremConsumer.isCompleted()) {
-            beskjedCountOnPremConsumer = initializeCountConsumerOnPrem(beskjedKafkaPropsOnPrem, Kafka.beskjedTopicNameOnPrem)
-            log.info("beskjedCountConsumer on-prem har blitt reinstansiert.")
-        } else {
-            log.warn("beskjedCountConsumer on-prem kunne ikke bli reinstansiert fordi den fortsatt er aktiv.")
-        }
-
-        if (oppgaveCountOnPremConsumer.isCompleted()) {
-            oppgaveCountOnPremConsumer = initializeCountConsumerOnPrem(oppgaveKafkaPropsOnPrem, Kafka.oppgaveTopicNameOnPrem)
-            log.info("oppgaveCountConsumer on-prem har blitt reinstansiert.")
-        } else {
-            log.warn("oppgaveCountConsumer on-prem kunne ikke bli reinstansiert fordi den fortsatt er aktiv.")
-        }
-
-        if (innboksCountOnPremConsumer.isCompleted()) {
-            innboksCountOnPremConsumer = initializeCountConsumerOnPrem(innboksKafkaPropsOnPrem, Kafka.innboksTopicNameOnPrem)
-            log.info("innboksCountConsumer on-prem har blitt reinstansiert.")
-        } else {
-            log.warn("innboksCountConsumer on-prem kunne ikke bli reinstansiert fordi den fortsatt er aktiv.")
-        }
-
-        if (statusoppdateringCountOnPremConsumer.isCompleted()) {
-            statusoppdateringCountOnPremConsumer = initializeCountConsumerOnPrem(statusoppdateringKafkaPropsOnPrem, Kafka.statusoppdateringTopicNameOnPrem)
-            log.info("statusoppdateringCountConsumer on-prem har blitt reinstansiert.")
-        } else {
-            log.warn("statusoppdateringCountConsumer on-prem kunne ikke bli reinstansiert fordi den fortsatt er aktiv.")
-        }
-
-        if (doneCountOnPremConsumer.isCompleted()) {
-            doneCountOnPremConsumer = initializeCountConsumerOnPrem(doneKafkaPropsOnPrem, Kafka.doneTopicNameOnPrem)
-            log.info("doneConsumer har blitt reinstansiert.")
-        } else {
-            log.warn("doneConsumer on-prem kunne ikke bli reinstansiert fordi den fortsatt er aktiv.")
         }
     }
 

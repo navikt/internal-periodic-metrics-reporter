@@ -10,12 +10,11 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.exporter.common.TextFormat
-import java.time.Instant
 
 fun Routing.healthApi(healthService: HealthService, activityHealthService: ActivityHealthService) {
 
     get("/internal/isAlive") {
-        if (activityHealthService.assertOnPremTopicActivityHealth()) {
+        if (activityHealthService.assertTopicActivityHealth()) {
             call.respondText(text = "ALIVE", contentType = ContentType.Text.Plain)
         } else {
             call.respondText(text = "DEAD", status = InternalServerError, contentType = ContentType.Text.Plain)

@@ -29,7 +29,6 @@ fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()
 
 private fun Application.configureStartupHook(appContext: ApplicationContext) {
     environment.monitor.subscribe(ApplicationStarted) {
-        KafkaConsumerSetup.startSubscriptionOnAllKafkaConsumersOnPrem(appContext)
         KafkaConsumerSetup.startSubscriptionOnAllKafkaConsumersAiven(appContext)
         appContext.periodicConsumerCheck.start()
         appContext.periodicMetricsSubmitter.start()
@@ -41,7 +40,6 @@ private fun Application.configureShutdownHook(appContext: ApplicationContext) {
         runBlocking {
             appContext.periodicConsumerCheck.stop()
             appContext.periodicMetricsSubmitter.stop()
-            KafkaConsumerSetup.stopAllKafkaConsumersOnPrem(appContext)
             KafkaConsumerSetup.stopAllKafkaConsumersAiven(appContext)
         }
     }

@@ -9,7 +9,7 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import org.amshove.kluent.`should be equal to`
 import org.junit.jupiter.api.Test
 
-internal class DbEventCounterOnPremServiceTestIT {
+internal class EventCounterServiceTestIT {
 
     private val handlerConsumer = mockk<HandlerConsumer>()
 

@@ -44,11 +44,11 @@ internal class ActivityHealthServiceTest {
 
     @Test
     fun `Should only monitor specific topic activity if requested`() {
-        every { config.monitorOnPremBeskjedActivity } returns true
-        every { config.monitorOnPremOppgaveActivity } returns true
-        every { config.monitorOnPremInnboksActivity } returns false
-        every { config.monitorOnPremDoneActivity } returns false
-        every { config.monitorOnPremStatusoppdateringActivity } returns false
+        every { config.monitorBeskjedActivity } returns true
+        every { config.monitorOppgaveActivity } returns true
+        every { config.monitorInnboksActivity } returns false
+        every { config.monitorDoneActivity } returns false
+        every { config.monitorStatusoppdateringActivity } returns false
 
         val healthyActivity = ActivityState(ActivityLevel.HIGH, 0)
 
@@ -58,7 +58,7 @@ internal class ActivityHealthServiceTest {
         every { oppgaveTopicActivityService.getActivityState() } returns healthyActivity
 
 
-        val result = activityHealthService.assertOnPremTopicActivityHealth()
+        val result = activityHealthService.assertTopicActivityHealth()
 
         verify(exactly = 1) { beskjedTopicActivityService.getActivityState() }
         verify(exactly = 1) { oppgaveTopicActivityService.getActivityState() }
@@ -71,11 +71,11 @@ internal class ActivityHealthServiceTest {
 
     @Test
     fun `Should report unhealthy if any one service reports being unhealthy`() {
-        every { config.monitorOnPremBeskjedActivity } returns true
-        every { config.monitorOnPremOppgaveActivity } returns true
-        every { config.monitorOnPremInnboksActivity } returns true
-        every { config.monitorOnPremDoneActivity } returns true
-        every { config.monitorOnPremStatusoppdateringActivity } returns true
+        every { config.monitorBeskjedActivity } returns true
+        every { config.monitorOppgaveActivity } returns true
+        every { config.monitorInnboksActivity } returns true
+        every { config.monitorDoneActivity } returns true
+        every { config.monitorStatusoppdateringActivity } returns true
 
         val threshold = 10
 
@@ -92,7 +92,7 @@ internal class ActivityHealthServiceTest {
         every { statusoppdateringTopicActivityService.getActivityState() } returns healthyActivity
 
 
-        val result = activityHealthService.assertOnPremTopicActivityHealth()
+        val result = activityHealthService.assertTopicActivityHealth()
 
         verify(exactly = 1) { beskjedTopicActivityService.getActivityState() }
         verify(exactly = 1) { oppgaveTopicActivityService.getActivityState() }
