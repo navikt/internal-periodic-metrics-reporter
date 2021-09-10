@@ -124,25 +124,25 @@ internal class DbMetricsReporterTest {
 
         invoking {
             runBlocking {
-                dbMetricsReporter.report(DbCountingMetricsSessionObjectMother.giveMeBeskjedSessionWithOneCountedEvent())
+                dbMetricsReporter.report(DbCountingMetricsSessionObjectMother.giveMeBeskjedInternSessionWithOneCountedEvent())
             }
         } `should throw` MetricsReportingException::class `with message containing` "beskjed"
 
         invoking {
             runBlocking {
-                dbMetricsReporter.report(DbCountingMetricsSessionObjectMother.giveMeDoneSessionWithTwoCountedEvents())
+                dbMetricsReporter.report(DbCountingMetricsSessionObjectMother.giveMeDoneInternSessionWithTwoCountedEvents())
             }
         } `should throw` MetricsReportingException::class `with message containing` "done"
 
         invoking {
             runBlocking {
-                dbMetricsReporter.report(DbCountingMetricsSessionObjectMother.giveMeInnboksSessionWithThreeCountedEvents())
+                dbMetricsReporter.report(DbCountingMetricsSessionObjectMother.giveMeInnboksInternSessionWithThreeCountedEvents())
             }
         } `should throw` MetricsReportingException::class `with message containing` "innboks"
 
         invoking {
             runBlocking {
-                dbMetricsReporter.report(DbCountingMetricsSessionObjectMother.giveMeOppgaveSessionWithFourCountedEvents())
+                dbMetricsReporter.report(DbCountingMetricsSessionObjectMother.giveMeOppgaveInternSessionWithFourCountedEvents())
             }
         } `should throw` MetricsReportingException::class `with message containing` "oppgave"
     }
