@@ -18,11 +18,11 @@ object CountingMetricsSessionsObjectMother {
 
     fun giveMeDatabaseSessionsForAllInternalEventTypes(): CountingMetricsSessions {
         return CountingMetricsSessions().apply {
-            put(EventType.BESKJED_INTERN, DbCountingMetricsSessionObjectMother.giveMeBeskjedInternSessionWithOneCountedEvent())
-            put(EventType.DONE_INTERN, DbCountingMetricsSessionObjectMother.giveMeDoneInternSessionWithTwoCountedEvents())
-            put(EventType.INNBOKS_INTERN, DbCountingMetricsSessionObjectMother.giveMeInnboksInternSessionWithThreeCountedEvents())
-            put(EventType.OPPGAVE_INTERN, DbCountingMetricsSessionObjectMother.giveMeOppgaveInternSessionWithFourCountedEvents())
-            put(EventType.STATUSOPPDATERING_INTERN, DbCountingMetricsSessionObjectMother.giveMeStatusoppdateringInternSessionWithFourCountedEvents())
+            put(EventType.BESKJED, DbCountingMetricsSessionObjectMother.giveMeBeskjedInternSessionWithOneCountedEvent())
+            put(EventType.DONE, DbCountingMetricsSessionObjectMother.giveMeDoneInternSessionWithTwoCountedEvents())
+            put(EventType.INNBOKS, DbCountingMetricsSessionObjectMother.giveMeInnboksInternSessionWithThreeCountedEvents())
+            put(EventType.OPPGAVE, DbCountingMetricsSessionObjectMother.giveMeOppgaveInternSessionWithFourCountedEvents())
+            put(EventType.STATUSOPPDATERING, DbCountingMetricsSessionObjectMother.giveMeStatusoppdateringInternSessionWithFourCountedEvents())
         }
     }
 
@@ -37,11 +37,11 @@ object CountingMetricsSessionsObjectMother {
 
     fun giveMeTopicSessionsForAllInternalEventTypes(): CountingMetricsSessions {
         return CountingMetricsSessions().apply {
-            put(EventType.BESKJED_INTERN, TopicMetricsSessionObjectMother.giveMeBeskjedInternSessionWithTwoCountedEvents())
-            put(EventType.DONE_INTERN, TopicMetricsSessionObjectMother.giveMeDoneInternSessionWithThreeCountedEvent())
-            put(EventType.INNBOKS_INTERN, TopicMetricsSessionObjectMother.giveMeInnboksInternSessionWithFourCountedEvent())
-            put(EventType.OPPGAVE_INTERN, TopicMetricsSessionObjectMother.giveMeOppgaveInternSessionWithFiveCountedEvent())
-            put(EventType.STATUSOPPDATERING_INTERN, TopicMetricsSessionObjectMother.giveMeStatusoppdateringInternSessionWithFiveCountedEvent())
+            put(EventType.BESKJED, TopicMetricsSessionObjectMother.giveMeBeskjedInternSessionWithTwoCountedEvents())
+            put(EventType.DONE, TopicMetricsSessionObjectMother.giveMeDoneInternSessionWithThreeCountedEvent())
+            put(EventType.INNBOKS, TopicMetricsSessionObjectMother.giveMeInnboksInternSessionWithFourCountedEvent())
+            put(EventType.OPPGAVE, TopicMetricsSessionObjectMother.giveMeOppgaveInternSessionWithFiveCountedEvent())
+            put(EventType.STATUSOPPDATERING, TopicMetricsSessionObjectMother.giveMeStatusoppdateringInternSessionWithFiveCountedEvent())
 
         }
     }
@@ -65,7 +65,7 @@ object CountingMetricsSessionsObjectMother {
         }
     }
 
-    fun giveMeTopicSessionsWithSingleEventForAllExternalEventTypes(): CountingMetricsSessions {
+    fun giveMeTopicSessionsWithSingleEventForAllInternalEventTypes(): CountingMetricsSessions {
         return CountingMetricsSessions().apply {
             put(EventType.BESKJED, TopicMetricsSessionObjectMother.giveMeBeskjedSessionWithOneCountedEvent())
             put(EventType.DONE, TopicMetricsSessionObjectMother.giveMeDoneSessionWithOneCountedEvent())

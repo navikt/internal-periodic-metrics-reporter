@@ -25,7 +25,7 @@ object TopicMetricsSessionObjectMother {
     }
 
     fun giveMeBeskjedInternSessionWithTwoCountedEvents(): TopicMetricsSession {
-        val beskjedInternSession = TopicMetricsSession(EventType.BESKJED_INTERN)
+        val beskjedInternSession = TopicMetricsSession(EventType.BESKJED)
         beskjedInternSession.countEvent(UniqueKafkaEventIdentifier("21", "sysBruker", "123"))
         beskjedInternSession.countEvent(UniqueKafkaEventIdentifier("22", "sysBruker", "123"))
         return beskjedInternSession
@@ -52,7 +52,7 @@ object TopicMetricsSessionObjectMother {
     }
 
     fun giveMeDoneInternSessionWithThreeCountedEvent(): TopicMetricsSession {
-        val doneSession = TopicMetricsSession(EventType.DONE_INTERN)
+        val doneSession = TopicMetricsSession(EventType.DONE)
         doneSession.countEvent(UniqueKafkaEventIdentifier("31", "sysBruker", "123"))
         doneSession.countEvent(UniqueKafkaEventIdentifier("32", "sysBruker", "123"))
         doneSession.countEvent(UniqueKafkaEventIdentifier("33", "sysBruker", "123"))
@@ -81,7 +81,7 @@ object TopicMetricsSessionObjectMother {
     }
 
     fun giveMeInnboksInternSessionWithFourCountedEvent(): TopicMetricsSession {
-        val innboksSession = TopicMetricsSession(EventType.INNBOKS_INTERN)
+        val innboksSession = TopicMetricsSession(EventType.INNBOKS)
         innboksSession.countEvent(UniqueKafkaEventIdentifier("41", "sysBruker", "123"))
         innboksSession.countEvent(UniqueKafkaEventIdentifier("42", "sysBruker", "123"))
         innboksSession.countEvent(UniqueKafkaEventIdentifier("43", "sysBruker", "123"))
@@ -112,7 +112,7 @@ object TopicMetricsSessionObjectMother {
     }
 
     fun giveMeOppgaveInternSessionWithFiveCountedEvent(): TopicMetricsSession {
-        val oppgaveSession = TopicMetricsSession(EventType.OPPGAVE_INTERN)
+        val oppgaveSession = TopicMetricsSession(EventType.OPPGAVE)
         oppgaveSession.countEvent(UniqueKafkaEventIdentifier("51", "sysBruker", "123"))
         oppgaveSession.countEvent(UniqueKafkaEventIdentifier("52", "sysBruker", "123"))
         oppgaveSession.countEvent(UniqueKafkaEventIdentifier("53", "sysBruker", "123"))
@@ -144,7 +144,7 @@ object TopicMetricsSessionObjectMother {
     }
 
     fun giveMeStatusoppdateringInternSessionWithFiveCountedEvent(): TopicMetricsSession {
-        val statusoppdateringSession = TopicMetricsSession(EventType.STATUSOPPDATERING_INTERN)
+        val statusoppdateringSession = TopicMetricsSession(EventType.STATUSOPPDATERING)
         statusoppdateringSession.countEvent(UniqueKafkaEventIdentifier("61", "sysBruker", "123"))
         statusoppdateringSession.countEvent(UniqueKafkaEventIdentifier("62", "sysBruker", "123"))
         statusoppdateringSession.countEvent(UniqueKafkaEventIdentifier("63", "sysBruker", "123"))

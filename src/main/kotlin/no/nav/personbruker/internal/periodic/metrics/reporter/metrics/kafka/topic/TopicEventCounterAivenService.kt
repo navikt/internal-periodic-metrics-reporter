@@ -17,41 +17,29 @@ class TopicEventCounterAivenService<K>(
 
         suspend fun countAllEventTypesAsync(): CountingMetricsSessions = coroutineScope {
 
-            val beskjeder = if(isOtherEnvironmentThanProd()) {
-                 beskjedCounter.countEventsAsync()
+            val beskjeder = beskjedCounter.countEventsAsync()
+            val oppgaver = oppgaveCounter.countEventsAsync()
+            val done = doneCounter.countEventsAsync()
+
+            val innboks = if (isOtherEnvironmentThanProd()) {
+                innboksCounter.countEventsAsync()
             } else {
-                async { TopicMetricsSession(EventType.BESKJED_INTERN) }
+                async { TopicMetricsSession(EventType.INNBOKS) }
             }
 
-            val oppgaver = if(isOtherEnvironmentThanProd()) {
-                oppgaveCounter.countEventsAsync()
+            val statusoppdateringer = if(isOtherEnvironmentThanProd()) {
+                statusoppdateringCounter.countEventsAsync()
             } else {
-                async { TopicMetricsSession(EventType.OPPGAVE_INTERN) }
+                async { TopicMetricsSession(EventType.STATUSOPPDATERING) }
             }
-
-            val done = if(isOtherEnvironmentThanProd()) {
-                doneCounter.countEventsAsync()
-            } else {
-                async { TopicMetricsSession(EventType.DONE_INTERN) }
-            }
-
-            val feilrespons = if(isOtherEnvironmentThanProd()) {
-                feilresponsCounter.countEventsAsync()
-            } else {
-                async { TopicMetricsSession(EventType.FEILRESPONS) }
-            }
-
-            val innboks = async { TopicMetricsSession(EventType.INNBOKS_INTERN) }
-            val statusoppdateringer = async { TopicMetricsSession(EventType.STATUSOPPDATERING_INTERN) }
 
             val sessions = CountingMetricsSessions()
 
-            sessions.put(EventType.BESKJED_INTERN, beskjeder.await())
-            sessions.put(EventType.DONE_INTERN, done.await())
-            sessions.put(EventType.INNBOKS_INTERN, innboks.await())
-            sessions.put(EventType.OPPGAVE_INTERN, oppgaver.await())
-            sessions.put(EventType.STATUSOPPDATERING_INTERN, statusoppdateringer.await())
-            sessions.put(EventType.FEILRESPONS, feilrespons.await())
+            sessions.put(EventType.BESKJED, beskjeder.await())
+            sessions.put(EventType.DONE, done.await())
+            sessions.put(EventType.INNBOKS, innboks.await())
+            sessions.put(EventType.OPPGAVE, oppgaver.await())
+            sessions.put(EventType.STATUSOPPDATERING, statusoppdateringer.await())
 
             sessions
         }

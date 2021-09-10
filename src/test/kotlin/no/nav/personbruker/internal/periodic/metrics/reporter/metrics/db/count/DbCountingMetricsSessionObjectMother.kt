@@ -11,7 +11,7 @@ object DbCountingMetricsSessionObjectMother {
     }
 
     fun giveMeBeskjedInternSessionWithOneCountedEvent(): DbCountingMetricsSession {
-        val beskjedInternSession = DbCountingMetricsSession(EventType.BESKJED_INTERN)
+        val beskjedInternSession = DbCountingMetricsSession(EventType.BESKJED)
         beskjedInternSession.addEventsByProducer(mapOf("produsent1" to 1))
         return beskjedInternSession
     }
@@ -24,7 +24,7 @@ object DbCountingMetricsSessionObjectMother {
     }
 
     fun giveMeDoneInternSessionWithTwoCountedEvents(): DbCountingMetricsSession {
-        val doneInternSession = DbCountingMetricsSession(EventType.DONE_INTERN)
+        val doneInternSession = DbCountingMetricsSession(EventType.DONE)
         doneInternSession.addEventsByProducer(mapOf("produsent2" to 21))
         doneInternSession.addEventsByProducer(mapOf("produsent2" to 22))
         return doneInternSession
@@ -39,7 +39,7 @@ object DbCountingMetricsSessionObjectMother {
     }
 
     fun giveMeInnboksInternSessionWithThreeCountedEvents(): DbCountingMetricsSession {
-        val innboksInternSession = DbCountingMetricsSession(EventType.INNBOKS_INTERN)
+        val innboksInternSession = DbCountingMetricsSession(EventType.INNBOKS)
         innboksInternSession.addEventsByProducer(mapOf("produsent3" to 31))
         innboksInternSession.addEventsByProducer(mapOf("produsent3" to 32))
         innboksInternSession.addEventsByProducer(mapOf("produsent3" to 33))
@@ -56,7 +56,7 @@ object DbCountingMetricsSessionObjectMother {
     }
 
     fun giveMeOppgaveInternSessionWithFourCountedEvents(): DbCountingMetricsSession {
-        val oppgaveInternSession = DbCountingMetricsSession(EventType.OPPGAVE_INTERN)
+        val oppgaveInternSession = DbCountingMetricsSession(EventType.OPPGAVE)
         oppgaveInternSession.addEventsByProducer(mapOf("produsent4" to 41))
         oppgaveInternSession.addEventsByProducer(mapOf("produsent4" to 42))
         oppgaveInternSession.addEventsByProducer(mapOf("produsent4" to 43))
@@ -74,7 +74,7 @@ object DbCountingMetricsSessionObjectMother {
     }
 
     fun giveMeStatusoppdateringInternSessionWithFourCountedEvents(): DbCountingMetricsSession {
-        val statusoppdateringInternSession = DbCountingMetricsSession(EventType.STATUSOPPDATERING_INTERN)
+        val statusoppdateringInternSession = DbCountingMetricsSession(EventType.STATUSOPPDATERING)
         statusoppdateringInternSession.addEventsByProducer(mapOf("produsent5" to 51))
         statusoppdateringInternSession.addEventsByProducer(mapOf("produsent5" to 52))
         statusoppdateringInternSession.addEventsByProducer(mapOf("produsent5" to 53))

@@ -168,7 +168,6 @@ class ApplicationContext {
 
     val metricsSubmitterService = MetricsSubmitterService(
         dbEventCounterGCPService = dbEventCounterGCPService,
-        topicEventCounterServiceOnPrem = topicEventCounterServiceOnPrem,
         topicEventCounterServiceAiven = topicEventCounterServiceAiven,
         dbMetricsReporter = dbMetricsReporter,
         kafkaMetricsReporter = kafkaMetricsReporter
@@ -208,7 +207,7 @@ class ApplicationContext {
             KafkaConsumerSetup.setupCountConsumer<Nokkel, GenericRecord>(kafkaProps, topic)
 
     private fun initializeCountConsumerAiven(kafkaProps: Properties, topic: String) =
-            KafkaConsumerSetup.setupCountConsumer<NokkelIntern, GenericRecord>(kafkaProps, topic)
+            KafkaConsumerSetup.setupCountConsumer<Nokkel, GenericRecord>(kafkaProps, topic)
 
     private fun initializePeriodicMetricsSubmitter(): PeriodicMetricsSubmitter =
             PeriodicMetricsSubmitter(metricsSubmitterService, environment.countingIntervalMinutes)

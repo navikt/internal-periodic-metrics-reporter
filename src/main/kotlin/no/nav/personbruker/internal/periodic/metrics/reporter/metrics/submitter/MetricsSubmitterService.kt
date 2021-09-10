@@ -7,11 +7,10 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSession
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSessions
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbEventCounterGCPService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbCountingMetricsSession
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbEventCounterGCPService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbMetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventCounterAivenService
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventCounterOnPremService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicMetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicMetricsSession
 import org.slf4j.Logger
@@ -19,8 +18,7 @@ import org.slf4j.LoggerFactory
 
 class MetricsSubmitterService(
     private val dbEventCounterGCPService: DbEventCounterGCPService,
-    private val topicEventCounterServiceOnPrem: TopicEventCounterOnPremService<Nokkel>,
-    private val topicEventCounterServiceAiven: TopicEventCounterAivenService<NokkelIntern>,
+    private val topicEventCounterServiceAiven: TopicEventCounterAivenService<Nokkel>,
     private val dbMetricsReporter: DbMetricsReporter,
     private val kafkaMetricsReporter: TopicMetricsReporter
 ) {
@@ -58,7 +56,7 @@ class MetricsSubmitterService(
     ) {
         val kafkaEventSession = topicSessions.getForType(eventType)
 
-        if(EventType.FEILRESPONS == eventType) {
+        if (EventType.FEILRESPONS == eventType) {
             kafkaMetricsReporter.report(kafkaEventSession as TopicMetricsSession)
             lastReportedUniqueKafkaEvents[eventType] = kafkaEventSession.getNumberOfUniqueEvents()
         } else if (countedMoreKafkaEventsThanLastCount(kafkaEventSession, eventType)) {
@@ -66,7 +64,7 @@ class MetricsSubmitterService(
             dbMetricsReporter.report(dbSession as DbCountingMetricsSession)
             kafkaMetricsReporter.report(kafkaEventSession as TopicMetricsSession)
             lastReportedUniqueKafkaEvents[eventType] = kafkaEventSession.getNumberOfUniqueEvents()
-        }  else if (!currentAndLastCountWasZero(kafkaEventSession, eventType)) {
+        } else if (!currentAndLastCountWasZero(kafkaEventSession, eventType)) {
             val currentCount = kafkaEventSession.getNumberOfUniqueEvents()
             val previousCount = lastReportedUniqueKafkaEvents.getOrDefault(eventType, 0)
             val msg = "Det har oppstått en tellefeil, rapporterer derfor ikke nye $eventType-metrikker. " +

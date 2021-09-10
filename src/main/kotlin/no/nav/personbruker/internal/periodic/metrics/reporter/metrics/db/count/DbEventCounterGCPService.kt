@@ -35,11 +35,11 @@ class DbEventCounterGCPService(
         }
 
         val sessions = CountingMetricsSessions()
-        sessions.put(EventType.BESKJED_INTERN, beskjeder.await())
-        sessions.put(EventType.DONE_INTERN, done.await())
-        sessions.put(EventType.INNBOKS_INTERN, innboks.await())
-        sessions.put(EventType.OPPGAVE_INTERN, oppgave.await())
-        sessions.put(EventType.STATUSOPPDATERING_INTERN, statusoppdatering.await())
+        sessions.put(EventType.BESKJED, beskjeder.await())
+        sessions.put(EventType.DONE, done.await())
+        sessions.put(EventType.INNBOKS, innboks.await())
+        sessions.put(EventType.OPPGAVE, oppgave.await())
+        sessions.put(EventType.STATUSOPPDATERING, statusoppdatering.await())
         return@withContext sessions
     }
 
