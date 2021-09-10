@@ -1,17 +1,14 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.config
 
 import no.nav.brukernotifikasjon.schemas.Nokkel
-import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.HandlerConsumer
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka.polling.PeriodicConsumerCheck
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.ActivityHealthDecider
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.ActivityHealthService
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.ActivityMonitoringToggles
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.HealthService
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbEventCounterGCPService
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.ProducerNameResolver
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.ProducerNameScrubber
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbCountingMetricsProbe
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbEventCounterGCPService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbMetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventCounterAivenService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventCounterOnPremService
@@ -37,12 +34,10 @@ class ApplicationContext {
     val metricsReporter = resolveMetricsReporter(environment)
     val dbEventCounterGCPService = DbEventCounterGCPService(dbEventCountingMetricsProbe, handlerConsumer)
 
-    val nameResolver = ProducerNameResolver()
-    val nameScrubber = ProducerNameScrubber(nameResolver)
     val healthService = HealthService(this)
 
-    val dbMetricsReporter = DbMetricsReporter(metricsReporter, nameScrubber)
-    val kafkaMetricsReporter = TopicMetricsReporter(metricsReporter, nameScrubber)
+    val dbMetricsReporter = DbMetricsReporter(metricsReporter)
+    val kafkaMetricsReporter = TopicMetricsReporter(metricsReporter)
 
     val beskjedKafkaPropsOnPrem = Kafka.counterConsumerOnPremProps(environment, EventType.BESKJED)
     val beskjedKafkaPropsAiven = Kafka.counterConsumerAivenProps(environment, EventType.BESKJED_INTERN)
@@ -51,16 +46,16 @@ class ApplicationContext {
     val beskjedTopicActivityService = TopicActivityService(environment.activityHistoryLength)
     val beskjedAivenTopicActivityService = TopicActivityService(environment.activityHistoryLength)
     val beskjedCounterOnPrem = TopicEventTypeCounter(
-        beskjedCountOnPremConsumer,
-        beskjedTopicActivityService,
-        EventType.BESKJED,
-        environment.deltaCountingEnabled
+            beskjedCountOnPremConsumer,
+            beskjedTopicActivityService,
+            EventType.BESKJED,
+            environment.deltaCountingEnabled
     )
     val beskjedCounterAiven = TopicEventTypeCounter(
-        beskjedCountAivenConsumer,
-        beskjedAivenTopicActivityService,
-        EventType.BESKJED_INTERN,
-        environment.deltaCountingEnabled
+            beskjedCountAivenConsumer,
+            beskjedAivenTopicActivityService,
+            EventType.BESKJED_INTERN,
+            environment.deltaCountingEnabled
     )
 
     val oppgaveKafkaPropsOnPrem = Kafka.counterConsumerOnPremProps(environment, EventType.OPPGAVE)
@@ -143,34 +138,34 @@ class ApplicationContext {
     var feilresponsCountAivenConsumer = initializeCountConsumerAiven(feilresponsKafkaPropsAiven, Kafka.feilresponsTopicNameAiven)
     val feilresponsAivenTopicActivityService = TopicActivityService(environment.activityHistoryLength)
     val feilresponsCounterAiven = TopicEventTypeCounter(
-        feilresponsCountAivenConsumer,
-        feilresponsAivenTopicActivityService,
-        EventType.FEILRESPONS,
-        environment.deltaCountingEnabled
+            feilresponsCountAivenConsumer,
+            feilresponsAivenTopicActivityService,
+            EventType.FEILRESPONS,
+            environment.deltaCountingEnabled
     )
 
     val topicEventCounterServiceOnPrem = TopicEventCounterOnPremService(
-        beskjedCounter = beskjedCounterOnPrem,
-        innboksCounter = innboksCounterOnPrem,
-        oppgaveCounter = oppgaveCounterOnPrem,
-        statusoppdateringCounter = statusoppdateringCounterOnPrem,
-        doneCounter = doneCounterOnPrem
+            beskjedCounter = beskjedCounterOnPrem,
+            innboksCounter = innboksCounterOnPrem,
+            oppgaveCounter = oppgaveCounterOnPrem,
+            statusoppdateringCounter = statusoppdateringCounterOnPrem,
+            doneCounter = doneCounterOnPrem
     )
 
     val topicEventCounterServiceAiven = TopicEventCounterAivenService(
-        beskjedCounter = beskjedCounterAiven,
-        innboksCounter = innboksCounterAiven,
-        oppgaveCounter = oppgaveCounterAiven,
-        statusoppdateringCounter = statusoppdateringCounterAiven,
-        doneCounter = doneCounterAiven,
-        feilresponsCounter = feilresponsCounterAiven
+            beskjedCounter = beskjedCounterAiven,
+            innboksCounter = innboksCounterAiven,
+            oppgaveCounter = oppgaveCounterAiven,
+            statusoppdateringCounter = statusoppdateringCounterAiven,
+            doneCounter = doneCounterAiven,
+            feilresponsCounter = feilresponsCounterAiven
     )
 
     val metricsSubmitterService = MetricsSubmitterService(
-        dbEventCounterGCPService = dbEventCounterGCPService,
-        topicEventCounterServiceAiven = topicEventCounterServiceAiven,
-        dbMetricsReporter = dbMetricsReporter,
-        kafkaMetricsReporter = kafkaMetricsReporter
+            dbEventCounterGCPService = dbEventCounterGCPService,
+            topicEventCounterServiceAiven = topicEventCounterServiceAiven,
+            dbMetricsReporter = dbMetricsReporter,
+            kafkaMetricsReporter = kafkaMetricsReporter
     )
 
     val activityHealthServiceConfig = ActivityMonitoringToggles(

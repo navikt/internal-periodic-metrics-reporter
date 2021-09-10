@@ -5,10 +5,7 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.*
 import org.slf4j.LoggerFactory
 
-class TopicMetricsReporter(
-        private val metricsReporter: MetricsReporter,
-        private val nameScrubber: ProducerNameScrubber
-) {
+class TopicMetricsReporter(private val metricsReporter: MetricsReporter) {
 
     private val log = LoggerFactory.getLogger(TopicMetricsReporter::class.java)
 
@@ -56,10 +53,9 @@ class TopicMetricsReporter(
         session.getProducersWithUniqueEvents().forEach { producerName ->
             val uniqueEvents = session.getNumberOfUniqueEvents(producerName)
             val eventTypeName = session.eventType.toString()
-            val printableAlias = nameScrubber.getPublicAlias(producerName)
 
-            reportEvents(uniqueEvents, eventTypeName, printableAlias, KAFKA_UNIQUE_EVENTS_ON_TOPIC_BY_PRODUCER)
-            PrometheusMetricsCollector.registerUniqueEventsByProducer(uniqueEvents, session.eventType, printableAlias)
+            reportEvents(uniqueEvents, eventTypeName, producerName, KAFKA_UNIQUE_EVENTS_ON_TOPIC_BY_PRODUCER)
+            PrometheusMetricsCollector.registerUniqueEventsByProducer(uniqueEvents, session.eventType, producerName)
         }
     }
 
@@ -67,10 +63,9 @@ class TopicMetricsReporter(
         session.getProducersWithDuplicatedEvents().forEach { producerName ->
             val duplicates = session.getDuplicates(producerName)
             val eventTypeName = session.eventType.toString()
-            val printableAlias = nameScrubber.getPublicAlias(producerName)
 
-            reportEvents(duplicates, eventTypeName, printableAlias, KAFKA_DUPLICATE_EVENTS_ON_TOPIC)
-            PrometheusMetricsCollector.registerDuplicatedEventsOnTopic(duplicates, session.eventType, printableAlias)
+            reportEvents(duplicates, eventTypeName, producerName, KAFKA_DUPLICATE_EVENTS_ON_TOPIC)
+            PrometheusMetricsCollector.registerDuplicatedEventsOnTopic(duplicates, session.eventType, producerName)
         }
     }
 
@@ -78,10 +73,9 @@ class TopicMetricsReporter(
         session.getProducersWithEvents().forEach { producerName ->
             val total = session.getTotalNumber(producerName)
             val eventTypeName = session.eventType.toString()
-            val printableAlias = nameScrubber.getPublicAlias(producerName)
 
-            reportEvents(total, eventTypeName, printableAlias, KAFKA_TOTAL_EVENTS_ON_TOPIC_BY_PRODUCER)
-            PrometheusMetricsCollector.registerTotalNumberOfEventsByProducer(total, session.eventType, printableAlias)
+            reportEvents(total, eventTypeName, producerName, KAFKA_TOTAL_EVENTS_ON_TOPIC_BY_PRODUCER)
+            PrometheusMetricsCollector.registerTotalNumberOfEventsByProducer(total, session.eventType, producerName)
         }
     }
 
@@ -97,8 +91,8 @@ class TopicMetricsReporter(
     private suspend fun reportProcessingTimeEvent(session: TopicMetricsSession) {
         val metricName = KAFKA_COUNT_PROCESSING_TIME
         metricsReporter.registerDataPoint(
-            metricName, counterField(session.getProcessingTime()),
-            createTagMap(session.eventType.eventType)
+                metricName, counterField(session.getProcessingTime()),
+                createTagMap(session.eventType.eventType)
         )
     }
 
@@ -107,13 +101,13 @@ class TopicMetricsReporter(
     private fun counterField(events: Long): Map<String, Long> = listOf("counter" to events).toMap()
 
     private fun createTagMap(eventType: String, producer: String): Map<String, String> =
-        listOf("eventType" to eventType, "producer" to producer).toMap()
+            listOf("eventType" to eventType, "producer" to producer).toMap()
 
     private suspend fun reportEvents(count: Int, eventType: String, metricName: String) {
         metricsReporter.registerDataPoint(metricName, counterField(count), createTagMap(eventType))
     }
 
     private fun createTagMap(eventType: String): Map<String, String> =
-        listOf("eventType" to eventType).toMap()
+            listOf("eventType" to eventType).toMap()
 
 }

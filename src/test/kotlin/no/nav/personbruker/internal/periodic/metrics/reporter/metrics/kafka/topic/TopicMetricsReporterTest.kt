@@ -16,11 +16,8 @@ import org.junit.jupiter.api.Test
 internal class TopicMetricsReporterTest {
 
     private val metricsReporter = mockk<MetricsReporter>(relaxed = true)
-    private val producerNameResolver = mockk<ProducerNameResolver>(relaxed = true)
     private val prometheusCollector = mockkObject(PrometheusMetricsCollector)
-
-    private val nameScrubber = ProducerNameScrubber(producerNameResolver)
-    private val topicMetricsReporter = TopicMetricsReporter(metricsReporter, nameScrubber)
+    private val topicMetricsReporter = TopicMetricsReporter(metricsReporter)
 
     @BeforeEach
     fun cleanup() {
@@ -29,8 +26,6 @@ internal class TopicMetricsReporterTest {
 
     @Test
     fun `Should report correct number of events`() {
-        coEvery { producerNameResolver.getProducerNameAlias(any()) } returns "test-user"
-
         val capturedFieldsForUnique = slot<Map<String, Any>>()
         val capturedFieldsForDuplicated = slot<Map<String, Any>>()
         val capturedFieldsForTotalEvents = slot<Map<String, Any>>()
@@ -71,8 +66,6 @@ internal class TopicMetricsReporterTest {
         val expectedProcessingTimeMs = 100L
         val expectedProcessingTimeNs = expectedProcessingTimeMs * 1000000
 
-        coEvery { producerNameResolver.getProducerNameAlias(any()) } returns "test-user"
-
         val capturedFieldsForProcessingTime = slot<Map<String, Long>>()
 
         coEvery { metricsReporter.registerDataPoint(KAFKA_COUNT_PROCESSING_TIME, capture(capturedFieldsForProcessingTime), any()) } returns Unit
@@ -86,16 +79,13 @@ internal class TopicMetricsReporterTest {
         }
 
         capturedFieldsForProcessingTime.captured["counter"]!!.shouldBeGreaterOrEqualTo(expectedProcessingTimeNs)
-        val fiftyPercentMoreThanExpectedTime  = (expectedProcessingTimeNs * 1.5).toLong()
+        val fiftyPercentMoreThanExpectedTime = (expectedProcessingTimeNs * 1.5).toLong()
         capturedFieldsForProcessingTime.captured["counter"]!!.shouldBeLessThan(fiftyPercentMoreThanExpectedTime)
     }
 
     @Test
     fun `Should replace system name with alias`() {
         val producerName = "sys-t-user"
-        val producerAlias = "test-user"
-
-        coEvery { producerNameResolver.getProducerNameAlias(producerName) } returns producerAlias
 
         val producerNameForPrometheus = slot<String>()
         val capturedTagsForUniqueByProducer = slot<Map<String, String>>()
@@ -122,16 +112,14 @@ internal class TopicMetricsReporterTest {
         verify(exactly = 1) { PrometheusMetricsCollector.registerDuplicatedEventsOnTopic(any(), any(), any()) }
         verify(exactly = 1) { PrometheusMetricsCollector.registerTotalNumberOfEventsByProducer(any(), any(), any()) }
 
-        producerNameForPrometheus.captured `should be equal to` producerAlias
-        capturedTagsForUniqueByProducer.captured["producer"] `should be equal to` producerAlias
-        capturedTagsForTotalByProducer.captured["producer"] `should be equal to` producerAlias
-        capturedTagsForDuplicates.captured["producer"] `should be equal to` producerAlias
+        producerNameForPrometheus.captured `should be equal to` producerName
+        capturedTagsForUniqueByProducer.captured["producer"] `should be equal to` producerName
+        capturedTagsForTotalByProducer.captured["producer"] `should be equal to` producerName
+        capturedTagsForDuplicates.captured["producer"] `should be equal to` producerName
     }
 
     @Test
     fun `Should not report metrics if current count is zero`() {
-        coEvery { producerNameResolver.getProducerNameAlias(any()) } returns "test-user"
-
         val sessionWithoutAnyReportedEventsSimulatesACountError = TopicMetricsSession(EventType.BESKJED)
         runBlocking {
             topicMetricsReporter.report(sessionWithoutAnyReportedEventsSimulatesACountError)

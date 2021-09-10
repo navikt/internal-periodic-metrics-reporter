@@ -2,17 +2,13 @@ package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count
 
 import no.nav.personbruker.dittnav.common.metrics.MetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.MetricsReportingException
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.ProducerNameScrubber
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.PrometheusMetricsCollector
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DB_COUNT_PROCESSING_TIME
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DB_TOTAL_EVENTS_IN_CACHE
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DB_TOTAL_EVENTS_IN_CACHE_BY_PRODUCER
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.PrometheusMetricsCollector
 import org.slf4j.LoggerFactory
 
-class DbMetricsReporter(
-        private val metricsReporter: MetricsReporter,
-        private val nameScrubber: ProducerNameScrubber
-) {
+class DbMetricsReporter(private val metricsReporter: MetricsReporter) {
 
     private val log = LoggerFactory.getLogger(DbMetricsReporter::class.java)
 
@@ -49,13 +45,12 @@ class DbMetricsReporter(
         session.getProducers().forEach { producerName ->
             val numberOfEvents = session.getNumberOfEventsFor(producerName)
             val eventTypeName = session.eventType.toString()
-            val printableAlias = nameScrubber.getPublicAlias(producerName)
 
-            reportEvents(numberOfEvents, eventTypeName, printableAlias, DB_TOTAL_EVENTS_IN_CACHE_BY_PRODUCER)
+            reportEvents(numberOfEvents, eventTypeName, producerName, DB_TOTAL_EVENTS_IN_CACHE_BY_PRODUCER)
             PrometheusMetricsCollector.registerTotalNumberOfEventsInCacheByProducer(
-                numberOfEvents,
-                session.eventType,
-                printableAlias
+                    numberOfEvents,
+                    session.eventType,
+                    producerName
             )
         }
     }
@@ -74,7 +69,7 @@ class DbMetricsReporter(
     private fun counterField(events: Long): Map<String, Long> = listOf("counter" to events).toMap()
 
     private fun createTagMap(eventType: String, producer: String): Map<String, String> =
-        listOf("eventType" to eventType, "producer" to producer).toMap()
+            listOf("eventType" to eventType, "producer" to producer).toMap()
 
     private suspend fun reportEvents(count: Int, eventType: String, metricName: String) {
         metricsReporter.registerDataPoint(metricName, counterField(count), createTagMap(eventType))
@@ -83,12 +78,12 @@ class DbMetricsReporter(
     private suspend fun reportProcessingTimeEvent(session: DbCountingMetricsSession) {
         val metricName = DB_COUNT_PROCESSING_TIME
         metricsReporter.registerDataPoint(
-            metricName, counterField(session.getProcessingTime()),
-            createTagMap(session.eventType.eventType)
+                metricName, counterField(session.getProcessingTime()),
+                createTagMap(session.eventType.eventType)
         )
     }
 
     private fun createTagMap(eventType: String): Map<String, String> =
-        listOf("eventType" to eventType).toMap()
+            listOf("eventType" to eventType).toMap()
 
 }

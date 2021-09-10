@@ -7,24 +7,18 @@ import no.nav.personbruker.dittnav.common.metrics.MetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.`with message containing`
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.MetricsReportingException
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.ProducerNameResolver
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.ProducerNameScrubber
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.PrometheusMetricsCollector
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DB_COUNT_PROCESSING_TIME
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DB_TOTAL_EVENTS_IN_CACHE_BY_PRODUCER
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.PrometheusMetricsCollector
 import org.amshove.kluent.*
-import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 internal class DbMetricsReporterTest {
 
     private val metricsReporter = mockk<MetricsReporter>(relaxed = true)
-    private val producerNameResolver = mockk<ProducerNameResolver>(relaxed = true)
     private val prometheusCollector = mockkObject(PrometheusMetricsCollector)
-
-    private val nameScrubber = ProducerNameScrubber(producerNameResolver)
-    private val dbMetricsReporter = DbMetricsReporter(metricsReporter, nameScrubber)
+    private val dbMetricsReporter = DbMetricsReporter(metricsReporter)
 
     @BeforeEach
     fun cleanup() {
@@ -37,8 +31,6 @@ internal class DbMetricsReporterTest {
             put("produsent1", 1)
             put("produsent2", 2)
         }
-
-        coEvery { producerNameResolver.getProducerNameAlias(any()) } returns "test-user"
 
         val capturedTotalEventsInCacheByProducer = slot<Map<String, Any>>()
 
@@ -69,8 +61,6 @@ internal class DbMetricsReporterTest {
             put("produsent2", 2)
         }
 
-        coEvery { producerNameResolver.getProducerNameAlias(any()) } returns "test-user"
-
         val capturedProcessingTime = slot<Map<String, Long>>()
 
         coEvery { metricsReporter.registerDataPoint(DB_COUNT_PROCESSING_TIME, capture(capturedProcessingTime), any()) } returns Unit
@@ -86,16 +76,13 @@ internal class DbMetricsReporterTest {
         }
 
         capturedProcessingTime.captured["counter"]!!.shouldBeGreaterOrEqualTo(expectedProcessingTimeNs)
-        val twentyPercentMoreThanExpectedTime  = (expectedProcessingTimeNs * 1.2).toLong()
+        val twentyPercentMoreThanExpectedTime = (expectedProcessingTimeNs * 1.2).toLong()
         capturedProcessingTime.captured["counter"]!!.shouldBeLessThan(twentyPercentMoreThanExpectedTime)
     }
 
     @Test
     fun `Should replace system name with alias`() {
         val producerName = "sys-t-user"
-        val producerAlias = "test-user"
-
-        coEvery { producerNameResolver.getProducerNameAlias(producerName) } returns producerAlias
 
         val producerNameForPrometheus = slot<String>()
         val capturedTagsForTotalByProducer = slot<Map<String, String>>()
@@ -113,8 +100,8 @@ internal class DbMetricsReporterTest {
 
         verify(exactly = 1) { PrometheusMetricsCollector.registerTotalNumberOfEventsInCacheByProducer(any(), any(), any()) }
 
-        producerNameForPrometheus.captured `should be equal to` producerAlias
-        capturedTagsForTotalByProducer.captured["producer"] `should be equal to` producerAlias
+        producerNameForPrometheus.captured `should be equal to` producerName
+        capturedTagsForTotalByProducer.captured["producer"] `should be equal to` producerName
     }
 
     @Test
