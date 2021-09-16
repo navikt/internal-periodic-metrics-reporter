@@ -41,11 +41,11 @@ object KafkaTestUtil {
                 lowActivityStreakThreshold = 60,
                 moderateActivityStreakThreshold = 15,
                 highActivityStreakThreshold = 5,
-                monitorOnPremBeskjedActivity = false,
-                monitorOnPremOppgaveActivity = false,
-                monitorOnPremInnboksActivity = false,
-                monitorOnPremDoneActivity = false,
-                monitorOnPremStatusoppdateringActivity = false,
+                monitorBeskjedActivity = false,
+                monitorOppgaveActivity = false,
+                monitorInnboksActivity = false,
+                monitorDoneActivity = false,
+                monitorStatusoppdateringActivity = false,
                 eventHandlerURL = URL("https://event_handler_url")
 
         )

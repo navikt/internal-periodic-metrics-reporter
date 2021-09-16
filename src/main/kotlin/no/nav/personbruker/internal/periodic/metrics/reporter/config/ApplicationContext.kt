@@ -125,11 +125,11 @@ class ApplicationContext {
     )
 
     val activityHealthServiceConfig = ActivityMonitoringToggles(
-            monitorBeskjedActivity = environment.monitorOnPremBeskjedActivity,
-            monitorOppgaveActivity = environment.monitorOnPremOppgaveActivity,
-            monitorInnboksActivity = environment.monitorOnPremInnboksActivity,
-            monitorDoneActivity = environment.monitorOnPremDoneActivity,
-            monitorStatusoppdateringActivity = environment.monitorOnPremStatusoppdateringActivity
+            monitorBeskjedActivity = environment.monitorBeskjedActivity,
+            monitorOppgaveActivity = environment.monitorOppgaveActivity,
+            monitorInnboksActivity = environment.monitorInnboksActivity,
+            monitorDoneActivity = environment.monitorDoneActivity,
+            monitorStatusoppdateringActivity = environment.monitorStatusoppdateringActivity
     )
 
     val activityHealthDecider = ActivityHealthDecider(

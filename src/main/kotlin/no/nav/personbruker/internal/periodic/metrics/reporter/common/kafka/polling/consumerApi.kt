@@ -11,13 +11,13 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.config.KafkaConsum
 fun Routing.consumerApi(appContext: ApplicationContext) {
 
     get("/internal/consumer/start") {
-        val responseText = "Konsumerne har blitt restartet, både on-prem og Aiven."
+        val responseText = "Konsumerne har blitt restartet på Aiven."
         KafkaConsumerSetup.restartConsumersAiven(appContext)
         call.respondText(text = responseText, contentType = ContentType.Text.Plain)
     }
 
     get("/internal/consumer/stop") {
-        val responseText = "Stoppet alle konsumere, både on-prem og Aiven."
+        val responseText = "Stoppet alle konsumere på Aiven."
         KafkaConsumerSetup.stopAllKafkaConsumersAiven(appContext)
         call.respondText(text = responseText, contentType = ContentType.Text.Plain)
     }
