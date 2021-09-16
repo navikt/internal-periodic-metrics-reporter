@@ -1,4 +1,4 @@
-package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count
+package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -10,12 +10,12 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.config.isOtherEnvi
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSessions
 import org.slf4j.LoggerFactory
 
-class DbEventCounterGCPService(
-        private val metricsProbe: DbCountingMetricsProbe,
+class CacheEventCounterGCPService(
+        private val metricsProbe: CacheCountingMetricsProbe,
         private val handlerConsumer: HandlerConsumer
 ) {
 
-    private val log = LoggerFactory.getLogger(DbEventCounterGCPService::class.java)
+    private val log = LoggerFactory.getLogger(CacheEventCounterGCPService::class.java)
 
     suspend fun countAllEventTypesAsync(): CountingMetricsSessions = withContext(Dispatchers.IO) {
         val beskjeder = async {
@@ -43,7 +43,7 @@ class DbEventCounterGCPService(
         return@withContext sessions
     }
 
-    suspend fun countBeskjeder(): DbCountingMetricsSession {
+    suspend fun countBeskjeder(): CacheCountingMetricsSession {
         val eventType = EventType.BESKJED
         return try {
             metricsProbe.runWithMetrics(eventType) {
@@ -57,7 +57,7 @@ class DbEventCounterGCPService(
         }
     }
 
-    suspend fun countInnboksEventer(): DbCountingMetricsSession {
+    suspend fun countInnboksEventer(): CacheCountingMetricsSession {
         val eventType = EventType.INNBOKS
         return if (isOtherEnvironmentThanProd()) {
             try {
@@ -70,11 +70,11 @@ class DbEventCounterGCPService(
                 throw CountException("Klarte ikke å hente antall innboks-eventer fra handler.", e)
             }
         } else {
-            DbCountingMetricsSession(eventType)
+            CacheCountingMetricsSession(eventType)
         }
     }
 
-    suspend fun countStatusoppdateringer(): DbCountingMetricsSession {
+    suspend fun countStatusoppdateringer(): CacheCountingMetricsSession {
         val eventType = EventType.STATUSOPPDATERING
         return if (isOtherEnvironmentThanProd()) {
             try {
@@ -87,11 +87,11 @@ class DbEventCounterGCPService(
                 throw CountException("Klarte ikke å hente antall statusoppdatering-eventer fra handler.", e)
             }
         } else {
-            DbCountingMetricsSession(eventType)
+            CacheCountingMetricsSession(eventType)
         }
     }
 
-    suspend fun countOppgaver(): DbCountingMetricsSession {
+    suspend fun countOppgaver(): CacheCountingMetricsSession {
         val eventType = EventType.OPPGAVE
         return try {
             metricsProbe.runWithMetrics(eventType) {
@@ -104,7 +104,7 @@ class DbEventCounterGCPService(
         }
     }
 
-    suspend fun countDoneEvents(): DbCountingMetricsSession {
+    suspend fun countDoneEvents(): CacheCountingMetricsSession {
         val eventType = EventType.DONE
         return try {
             metricsProbe.runWithMetrics(eventType) {

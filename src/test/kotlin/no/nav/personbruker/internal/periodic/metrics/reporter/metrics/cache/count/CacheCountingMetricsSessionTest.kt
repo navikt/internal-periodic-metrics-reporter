@@ -1,11 +1,11 @@
-package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count
+package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count
 
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.shouldContainAll
 import org.junit.jupiter.api.Test
 
-internal class DbCountingMetricsSessionTest {
+internal class CacheCountingMetricsSessionTest {
 
     val beskjederGruppertPerProdusent = mutableMapOf<String, Int>()
     val produsent1 = "produsent1"
@@ -24,7 +24,7 @@ internal class DbCountingMetricsSessionTest {
 
     @Test
     fun `Skal telle opp riktig totalantall eventer, og rapportere riktig per produsent`() {
-        val session = DbCountingMetricsSession(EventType.BESKJED)
+        val session = CacheCountingMetricsSession(EventType.BESKJED)
         session.addEventsByProducer(beskjederGruppertPerProdusent)
 
         session.getTotalNumber() `should be equal to` (produsent1Antall + produsent2Antall + produsent3Antall)
@@ -40,7 +40,7 @@ internal class DbCountingMetricsSessionTest {
 
     @Test
     fun `Skal telle opp riktig totalantall eventer, hvis eventer legges til flere ganger`() {
-        val session = DbCountingMetricsSession(EventType.BESKJED)
+        val session = CacheCountingMetricsSession(EventType.BESKJED)
         session.addEventsByProducer(beskjederGruppertPerProdusent)
         session.addEventsByProducer(beskjederGruppertPerProdusent)
 

@@ -1,4 +1,4 @@
-package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count
+package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count
 
 import io.mockk.*
 import kotlinx.coroutines.delay
@@ -14,11 +14,11 @@ import org.amshove.kluent.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-internal class DbMetricsReporterTest {
+internal class CacheMetricsReporterTest {
 
     private val metricsReporter = mockk<MetricsReporter>(relaxed = true)
     private val prometheusCollector = mockkObject(PrometheusMetricsCollector)
-    private val dbMetricsReporter = DbMetricsReporter(metricsReporter)
+    private val cacheMetricsReporter = CacheMetricsReporter(metricsReporter)
 
     @BeforeEach
     fun cleanup() {
@@ -36,10 +36,10 @@ internal class DbMetricsReporterTest {
 
         coEvery { metricsReporter.registerDataPoint(DB_TOTAL_EVENTS_IN_CACHE_BY_PRODUCER, capture(capturedTotalEventsInCacheByProducer), any()) } returns Unit
 
-        val session = DbCountingMetricsSession(EventType.BESKJED)
+        val session = CacheCountingMetricsSession(EventType.BESKJED)
         session.addEventsByProducer(dummyCountResultFromDb)
         runBlocking {
-            dbMetricsReporter.report(session)
+            cacheMetricsReporter.report(session)
         }
 
         coVerify(exactly = 4) { metricsReporter.registerDataPoint(any(), any(), any()) }
@@ -65,14 +65,14 @@ internal class DbMetricsReporterTest {
 
         coEvery { metricsReporter.registerDataPoint(DB_COUNT_PROCESSING_TIME, capture(capturedProcessingTime), any()) } returns Unit
 
-        val session = DbCountingMetricsSession(EventType.BESKJED)
+        val session = CacheCountingMetricsSession(EventType.BESKJED)
         session.addEventsByProducer(dummyCountResultFromDb)
         runBlocking {
             delay(expectedProcessingTimeMs)
         }
         session.calculateProcessingTime()
         runBlocking {
-            dbMetricsReporter.report(session)
+            cacheMetricsReporter.report(session)
         }
 
         capturedProcessingTime.captured["counter"]!!.shouldBeGreaterOrEqualTo(expectedProcessingTimeNs)
@@ -90,10 +90,10 @@ internal class DbMetricsReporterTest {
         coEvery { metricsReporter.registerDataPoint(DB_TOTAL_EVENTS_IN_CACHE_BY_PRODUCER, any(), capture(capturedTagsForTotalByProducer)) } returns Unit
         every { PrometheusMetricsCollector.registerTotalNumberOfEventsInCacheByProducer(any(), any(), capture(producerNameForPrometheus)) } returns Unit
 
-        val session = DbCountingMetricsSession(EventType.BESKJED)
+        val session = CacheCountingMetricsSession(EventType.BESKJED)
         session.addEventsByProducer(mapOf(Pair(producerName, 2)))
         runBlocking {
-            dbMetricsReporter.report(session)
+            cacheMetricsReporter.report(session)
         }
 
         coVerify(exactly = 1) { metricsReporter.registerDataPoint(DB_TOTAL_EVENTS_IN_CACHE_BY_PRODUCER, any(), any()) }
@@ -111,25 +111,25 @@ internal class DbMetricsReporterTest {
 
         invoking {
             runBlocking {
-                dbMetricsReporter.report(DbCountingMetricsSessionObjectMother.giveMeBeskjedInternSessionWithOneCountedEvent())
+                cacheMetricsReporter.report(CacheCountingMetricsSessionObjectMother.giveMeBeskjedInternSessionWithOneCountedEvent())
             }
         } `should throw` MetricsReportingException::class `with message containing` "beskjed"
 
         invoking {
             runBlocking {
-                dbMetricsReporter.report(DbCountingMetricsSessionObjectMother.giveMeDoneInternSessionWithTwoCountedEvents())
+                cacheMetricsReporter.report(CacheCountingMetricsSessionObjectMother.giveMeDoneInternSessionWithTwoCountedEvents())
             }
         } `should throw` MetricsReportingException::class `with message containing` "done"
 
         invoking {
             runBlocking {
-                dbMetricsReporter.report(DbCountingMetricsSessionObjectMother.giveMeInnboksInternSessionWithThreeCountedEvents())
+                cacheMetricsReporter.report(CacheCountingMetricsSessionObjectMother.giveMeInnboksInternSessionWithThreeCountedEvents())
             }
         } `should throw` MetricsReportingException::class `with message containing` "innboks"
 
         invoking {
             runBlocking {
-                dbMetricsReporter.report(DbCountingMetricsSessionObjectMother.giveMeOppgaveInternSessionWithFourCountedEvents())
+                cacheMetricsReporter.report(CacheCountingMetricsSessionObjectMother.giveMeOppgaveInternSessionWithFourCountedEvents())
             }
         } `should throw` MetricsReportingException::class `with message containing` "oppgave"
     }

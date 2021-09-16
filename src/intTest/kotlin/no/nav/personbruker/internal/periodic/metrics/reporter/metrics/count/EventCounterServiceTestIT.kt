@@ -1,4 +1,4 @@
-package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count
+package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.count
 
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -6,6 +6,9 @@ import io.mockk.slot
 import kotlinx.coroutines.runBlocking
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.HandlerConsumer
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheCountingMetricsProbe
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheCountingMetricsSession
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheEventCounterGCPService
 import org.amshove.kluent.`should be equal to`
 import org.junit.jupiter.api.Test
 
@@ -19,9 +22,9 @@ internal class EventCounterServiceTestIT {
         val result = createResult(systembrukere)
         coEvery { handlerConsumer.getEventCount(any()) }.returns(result)
 
-        val metricsProbe = mockk<DbCountingMetricsProbe>(relaxed = true)
+        val metricsProbe = mockk<CacheCountingMetricsProbe>(relaxed = true)
         val metricsSession = initMetricsSession(metricsProbe, EventType.BESKJED)
-        val service = DbEventCounterGCPService(metricsProbe, handlerConsumer)
+        val service = CacheEventCounterGCPService(metricsProbe, handlerConsumer)
 
         runBlocking {
             service.countBeskjeder()
@@ -39,9 +42,9 @@ internal class EventCounterServiceTestIT {
         val result = createResult(systembrukere)
         coEvery { handlerConsumer.getEventCount(any()) }.returns(result)
 
-        val metricsProbe = mockk<DbCountingMetricsProbe>(relaxed = true)
+        val metricsProbe = mockk<CacheCountingMetricsProbe>(relaxed = true)
         val metricsSession = initMetricsSession(metricsProbe, EventType.INNBOKS)
-        val service = DbEventCounterGCPService(metricsProbe, handlerConsumer)
+        val service = CacheEventCounterGCPService(metricsProbe, handlerConsumer)
 
         runBlocking {
             service.countInnboksEventer()
@@ -59,9 +62,9 @@ internal class EventCounterServiceTestIT {
         val result = createResult(systembrukere)
         coEvery { handlerConsumer.getEventCount(any()) }.returns(result)
 
-        val metricsProbe = mockk<DbCountingMetricsProbe>(relaxed = true)
+        val metricsProbe = mockk<CacheCountingMetricsProbe>(relaxed = true)
         val metricsSession = initMetricsSession(metricsProbe, EventType.OPPGAVE)
-        val service = DbEventCounterGCPService(metricsProbe, handlerConsumer)
+        val service = CacheEventCounterGCPService(metricsProbe, handlerConsumer)
 
         runBlocking {
             service.countOppgaver()
@@ -79,9 +82,9 @@ internal class EventCounterServiceTestIT {
         val result = createResult(systembrukere)
         coEvery { handlerConsumer.getEventCount(any()) }.returns(result)
 
-        val metricsProbe = mockk<DbCountingMetricsProbe>(relaxed = true)
+        val metricsProbe = mockk<CacheCountingMetricsProbe>(relaxed = true)
         val metricsSession = initMetricsSession(metricsProbe, EventType.DONE)
-        val service = DbEventCounterGCPService(metricsProbe, handlerConsumer)
+        val service = CacheEventCounterGCPService(metricsProbe, handlerConsumer)
 
         runBlocking {
             service.countDoneEvents()
@@ -93,14 +96,14 @@ internal class EventCounterServiceTestIT {
         metricsSession.getNumberOfEventsFor(systembrukere[1]) `should be equal to` 1
     }
 
-    private fun initMetricsSession(metricsProbe: DbCountingMetricsProbe, eventType: EventType): DbCountingMetricsSession {
-        val metricsSession = DbCountingMetricsSession(eventType)
+    private fun initMetricsSession(metricsProbe: CacheCountingMetricsProbe, eventType: EventType): CacheCountingMetricsSession {
+        val metricsSession = CacheCountingMetricsSession(eventType)
         `Sorg for at metrics session trigges`(metricsProbe, metricsSession, eventType)
         return metricsSession
     }
 
-    private fun `Sorg for at metrics session trigges`(metricsProbe: DbCountingMetricsProbe, metricsSession: DbCountingMetricsSession, eventType: EventType) {
-        val slot = slot<suspend DbCountingMetricsSession.() -> Unit>()
+    private fun `Sorg for at metrics session trigges`(metricsProbe: CacheCountingMetricsProbe, metricsSession: CacheCountingMetricsSession, eventType: EventType) {
+        val slot = slot<suspend CacheCountingMetricsSession.() -> Unit>()
         coEvery {
             metricsProbe.runWithMetrics(eventType, capture(slot))
         } coAnswers {

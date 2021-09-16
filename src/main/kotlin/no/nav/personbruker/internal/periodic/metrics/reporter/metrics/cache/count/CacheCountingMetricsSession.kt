@@ -1,9 +1,9 @@
-package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count
+package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count
 
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSession
 
-class DbCountingMetricsSession(val eventType: EventType) : CountingMetricsSession {
+class CacheCountingMetricsSession(val eventType: EventType) : CountingMetricsSession {
 
     private val cachedEventsByProducer = HashMap<String, Int>(50)
 
@@ -40,7 +40,7 @@ class DbCountingMetricsSession(val eventType: EventType) : CountingMetricsSessio
     }
 
     override fun toString(): String {
-        return """DbCountingMetricsSession(
+        return """CacheCountingMetricsSession(
 |                   eventType=$eventType, 
 |                   cachedEventsByProducer=$cachedEventsByProducer
 |                 )""".trimMargin()

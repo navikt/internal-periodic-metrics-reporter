@@ -1,4 +1,4 @@
-package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count
+package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count
 
 data class NumberOfCachedRecords(val beskjedAktive: Long = 0,
                                  val beskjedInaktive: Long = 0,

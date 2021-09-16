@@ -1,15 +1,14 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.submitter
 
 import no.nav.brukernotifikasjon.schemas.Nokkel
-import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.CountException
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.MetricsReportingException
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSession
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSessions
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbCountingMetricsSession
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbEventCounterGCPService
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbMetricsReporter
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheCountingMetricsSession
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheEventCounterGCPService
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheMetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventCounterAivenService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicMetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicMetricsSession
@@ -17,10 +16,10 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class MetricsSubmitterService(
-    private val dbEventCounterGCPService: DbEventCounterGCPService,
-    private val topicEventCounterServiceAiven: TopicEventCounterAivenService<Nokkel>,
-    private val dbMetricsReporter: DbMetricsReporter,
-    private val kafkaMetricsReporter: TopicMetricsReporter
+        private val cacheEventCounterGCPService: CacheEventCounterGCPService,
+        private val topicEventCounterServiceAiven: TopicEventCounterAivenService<Nokkel>,
+        private val cacheMetricsReporter: CacheMetricsReporter,
+        private val kafkaMetricsReporter: TopicMetricsReporter
 ) {
 
     private val log: Logger = LoggerFactory.getLogger(MetricsSubmitterService::class.java)
@@ -30,12 +29,12 @@ class MetricsSubmitterService(
     suspend fun submitMetrics() {
         try {
             val topicSessionsAiven = topicEventCounterServiceAiven.countAllEventTypesAsync()
-            val dbSessionsAiven = dbEventCounterGCPService.countAllEventTypesAsync()
+            val cacheSessions = cacheEventCounterGCPService.countAllEventTypesAsync()
 
-            val sessionComparatorAiven = SessionComparator(topicSessionsAiven, dbSessionsAiven)
+            val sessionComparatorAiven = SessionComparator(topicSessionsAiven, cacheSessions)
 
             sessionComparatorAiven.eventTypesWithSessionFromBothSources().forEach { eventType ->
-                reportMetricsByEventType(topicSessionsAiven, dbSessionsAiven, eventType)
+                reportMetricsByEventType(topicSessionsAiven, cacheSessions, eventType)
             }
 
         } catch (e: CountException) {
@@ -51,7 +50,7 @@ class MetricsSubmitterService(
 
     private suspend fun reportMetricsByEventType(
             topicSessions: CountingMetricsSessions,
-            dbSessions: CountingMetricsSessions,
+            cacheSessions: CountingMetricsSessions,
             eventType: EventType
     ) {
         val kafkaEventSession = topicSessions.getForType(eventType)
@@ -60,8 +59,8 @@ class MetricsSubmitterService(
             kafkaMetricsReporter.report(kafkaEventSession as TopicMetricsSession)
             lastReportedUniqueKafkaEvents[eventType] = kafkaEventSession.getNumberOfUniqueEvents()
         } else if (countedMoreKafkaEventsThanLastCount(kafkaEventSession, eventType)) {
-            val dbSession = dbSessions.getForType(eventType)
-            dbMetricsReporter.report(dbSession as DbCountingMetricsSession)
+            val cacheSession = cacheSessions.getForType(eventType)
+            cacheMetricsReporter.report(cacheSession as CacheCountingMetricsSession)
             kafkaMetricsReporter.report(kafkaEventSession as TopicMetricsSession)
             lastReportedUniqueKafkaEvents[eventType] = kafkaEventSession.getNumberOfUniqueEvents()
         } else if (!currentAndLastCountWasZero(kafkaEventSession, eventType)) {

@@ -1,4 +1,4 @@
-package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count
+package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count
 
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -10,12 +10,12 @@ import org.amshove.kluent.`should throw`
 import org.amshove.kluent.invoking
 import org.junit.jupiter.api.Test
 
-internal class DbEventCounterGCPServiceTest {
+internal class CacheEventCounterGCPServiceTest {
 
-    private val metricsProbe: DbCountingMetricsProbe = mockk(relaxed = true)
+    private val metricsProbe: CacheCountingMetricsProbe = mockk(relaxed = true)
     private val handlerConsumer = mockk<HandlerConsumer>(relaxed = true)
 
-    private val dbEventCounterService = DbEventCounterGCPService(metricsProbe, handlerConsumer)
+    private val cacheEventCounterService = CacheEventCounterGCPService(metricsProbe, handlerConsumer)
 
     @Test
     internal fun `Should handle exceptions and rethrow as internal exception`() {
@@ -24,31 +24,31 @@ internal class DbEventCounterGCPServiceTest {
 
         invoking {
             runBlocking {
-                dbEventCounterService.countBeskjeder()
+                cacheEventCounterService.countBeskjeder()
             }
         } `should throw` CountException::class `with message containing` "beskjed"
 
         invoking {
             runBlocking {
-                dbEventCounterService.countDoneEvents()
+                cacheEventCounterService.countDoneEvents()
             }
         } `should throw` CountException::class `with message containing` "done"
 
         invoking {
             runBlocking {
-                dbEventCounterService.countInnboksEventer()
+                cacheEventCounterService.countInnboksEventer()
             }
         } `should throw` CountException::class `with message containing` "innboks"
 
         invoking {
             runBlocking {
-                dbEventCounterService.countOppgaver()
+                cacheEventCounterService.countOppgaver()
             }
         } `should throw` CountException::class `with message containing` "oppgave"
 
         invoking {
             runBlocking {
-                dbEventCounterService.countStatusoppdateringer()
+                cacheEventCounterService.countStatusoppdateringer()
             }
         } `should throw` CountException::class `with message containing` "statusoppdatering"
 

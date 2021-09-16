@@ -1,4 +1,4 @@
-package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count
+package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count
 
 import no.nav.personbruker.dittnav.common.metrics.MetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.MetricsReportingException
@@ -8,11 +8,11 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DB_TOTAL_E
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.PrometheusMetricsCollector
 import org.slf4j.LoggerFactory
 
-class DbMetricsReporter(private val metricsReporter: MetricsReporter) {
+class CacheMetricsReporter(private val metricsReporter: MetricsReporter) {
 
-    private val log = LoggerFactory.getLogger(DbMetricsReporter::class.java)
+    private val log = LoggerFactory.getLogger(CacheMetricsReporter::class.java)
 
-    suspend fun report(session: DbCountingMetricsSession) {
+    suspend fun report(session: CacheCountingMetricsSession) {
         try {
             reportIfEventsCounted(session)
 
@@ -22,7 +22,7 @@ class DbMetricsReporter(private val metricsReporter: MetricsReporter) {
         }
     }
 
-    private suspend fun reportIfEventsCounted(session: DbCountingMetricsSession) {
+    private suspend fun reportIfEventsCounted(session: CacheCountingMetricsSession) {
         if (session.getProducers().isNotEmpty()) {
             reportTotalEvents(session)
             reportTotalEventsByProducer(session)
@@ -33,7 +33,7 @@ class DbMetricsReporter(private val metricsReporter: MetricsReporter) {
         }
     }
 
-    private suspend fun reportTotalEvents(session: DbCountingMetricsSession) {
+    private suspend fun reportTotalEvents(session: CacheCountingMetricsSession) {
         val numberOfUniqueEvents = session.getTotalNumber()
         val eventTypeName = session.eventType.toString()
 
@@ -41,7 +41,7 @@ class DbMetricsReporter(private val metricsReporter: MetricsReporter) {
         PrometheusMetricsCollector.registerTotalNumberOfEventsInCache(numberOfUniqueEvents, session.eventType)
     }
 
-    private suspend fun reportTotalEventsByProducer(session: DbCountingMetricsSession) {
+    private suspend fun reportTotalEventsByProducer(session: CacheCountingMetricsSession) {
         session.getProducers().forEach { producerName ->
             val numberOfEvents = session.getNumberOfEventsFor(producerName)
             val eventTypeName = session.eventType.toString()
@@ -55,7 +55,7 @@ class DbMetricsReporter(private val metricsReporter: MetricsReporter) {
         }
     }
 
-    private suspend fun reportTimeUsed(session: DbCountingMetricsSession) {
+    private suspend fun reportTimeUsed(session: CacheCountingMetricsSession) {
         reportProcessingTimeEvent(session)
         PrometheusMetricsCollector.registerProcessingTimeInCache(session.getProcessingTime(), session.eventType)
     }
@@ -75,7 +75,7 @@ class DbMetricsReporter(private val metricsReporter: MetricsReporter) {
         metricsReporter.registerDataPoint(metricName, counterField(count), createTagMap(eventType))
     }
 
-    private suspend fun reportProcessingTimeEvent(session: DbCountingMetricsSession) {
+    private suspend fun reportProcessingTimeEvent(session: CacheCountingMetricsSession) {
         val metricName = DB_COUNT_PROCESSING_TIME
         metricsReporter.registerDataPoint(
                 metricName, counterField(session.getProcessingTime()),

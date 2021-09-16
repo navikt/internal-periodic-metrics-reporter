@@ -7,9 +7,9 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.health.ActivityHea
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.ActivityHealthService
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.ActivityMonitoringToggles
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.HealthService
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbCountingMetricsProbe
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbEventCounterGCPService
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.db.count.DbMetricsReporter
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheCountingMetricsProbe
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheEventCounterGCPService
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheMetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventCounterAivenService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventTypeCounter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicMetricsReporter
@@ -29,13 +29,13 @@ class ApplicationContext {
     private val httpClient = HttpClientBuilder.build()
     private val handlerConsumer = HandlerConsumer(httpClient, environment.eventHandlerURL)
 
-    val dbEventCountingMetricsProbe = DbCountingMetricsProbe()
+    val cacheEventCountingMetricsProbe = CacheCountingMetricsProbe()
     val metricsReporter = resolveMetricsReporter(environment)
-    val dbEventCounterGCPService = DbEventCounterGCPService(dbEventCountingMetricsProbe, handlerConsumer)
+    val cacheEventCounterGCPService = CacheEventCounterGCPService(cacheEventCountingMetricsProbe, handlerConsumer)
 
     val healthService = HealthService(this)
 
-    val dbMetricsReporter = DbMetricsReporter(metricsReporter)
+    val cacheMetricsReporter = CacheMetricsReporter(metricsReporter)
     val kafkaMetricsReporter = TopicMetricsReporter(metricsReporter)
 
     val beskjedKafkaPropsAiven = Kafka.counterConsumerAivenProps(environment, EventType.BESKJED_INTERN)
@@ -118,9 +118,9 @@ class ApplicationContext {
     )
 
     val metricsSubmitterService = MetricsSubmitterService(
-            dbEventCounterGCPService = dbEventCounterGCPService,
+            cacheEventCounterGCPService = cacheEventCounterGCPService,
             topicEventCounterServiceAiven = topicEventCounterServiceAiven,
-            dbMetricsReporter = dbMetricsReporter,
+            cacheMetricsReporter = cacheMetricsReporter,
             kafkaMetricsReporter = kafkaMetricsReporter
     )
 
