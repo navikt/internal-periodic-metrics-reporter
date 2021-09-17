@@ -8,17 +8,9 @@ data class UniqueKafkaEventIdentifier(val eventId: String, val appnavn: String, 
 
         fun createInvalidEvent(): UniqueKafkaEventIdentifier {
             return UniqueKafkaEventIdentifier(
-                "undeserializableEvent",
-                "unknownProducer",
-                dummyFnr
-            )
-        }
-
-        fun createEventWithoutValidFnr(eventId: String, appnavn: String): UniqueKafkaEventIdentifier {
-            return UniqueKafkaEventIdentifier(
-                eventId,
-                appnavn,
-                dummyFnr
+                    "undeserializableEvent",
+                    "unknownProducer",
+                    dummyFnr
             )
         }
     }

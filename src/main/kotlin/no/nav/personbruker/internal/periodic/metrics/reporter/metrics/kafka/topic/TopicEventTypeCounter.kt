@@ -81,7 +81,7 @@ class TopicEventTypeCounter<K>(
     companion object {
         fun <K> countBatch(records: ConsumerRecords<K, GenericRecord>, metricsSession: TopicMetricsSession) {
             records.forEach { record ->
-                val event = UniqueKafkaEventIdentifierTransformer.toInternal<K>(record)
+                val event = UniqueKafkaKeyIdentifierTransformer.toInternal<K>(record)
                 metricsSession.countEvent(event)
             }
         }

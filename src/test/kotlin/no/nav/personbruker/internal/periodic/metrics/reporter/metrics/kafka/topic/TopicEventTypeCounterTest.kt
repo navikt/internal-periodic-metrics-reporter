@@ -35,7 +35,7 @@ internal class TopicEventTypeCounterTest {
     @Test
     internal fun `Should calculate processing time`() {
 
-        mockkObject(UniqueKafkaEventIdentifierTransformer)
+        mockkObject(UniqueKafkaKeyIdentifierTransformer)
         mockkObject(TopicEventTypeCounter)
 
         val consumer: Consumer<Nokkel, GenericRecord> = mockk()
