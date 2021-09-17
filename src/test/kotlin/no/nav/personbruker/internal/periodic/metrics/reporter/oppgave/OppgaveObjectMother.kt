@@ -6,12 +6,12 @@ import java.time.ZoneId
 object OppgaveObjectMother {
 
     fun giveMeAktivOppgave(eventId: String, fodselsnummer: String): Oppgave {
-        return giveMeAktivOppgave(eventId, fodselsnummer, "dummySystembruker")
+        return giveMeAktivOppgave(eventId, fodselsnummer, "dummyAppnavn")
     }
 
-    fun giveMeAktivOppgave(eventId: String, fodselsnummer: String, systembruker: String): Oppgave {
+    fun giveMeAktivOppgave(eventId: String, fodselsnummer: String, appnavn: String): Oppgave {
         return Oppgave(
-                systembruker = systembruker,
+                appnavn = appnavn,
                 eventTidspunkt = LocalDateTime.now(ZoneId.of("UTC")),
                 fodselsnummer = fodselsnummer,
                 eventId = eventId,
@@ -25,7 +25,7 @@ object OppgaveObjectMother {
 
     fun giveMeInaktivOppgave(): Oppgave {
         return Oppgave(
-                systembruker = "dummySystembruker",
+                appnavn = "dummyAppnavn",
                 eventTidspunkt = LocalDateTime.now(ZoneId.of("UTC")),
                 fodselsnummer = "123",
                 eventId = "o-2",

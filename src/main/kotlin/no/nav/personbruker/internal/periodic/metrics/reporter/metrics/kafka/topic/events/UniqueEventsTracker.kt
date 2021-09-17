@@ -11,8 +11,8 @@ class UniqueEventsTracker {
     val uniqueEvents: Int get() = uniqueEventsVar
 
     fun addEvent(eventIdentifier: UniqueKafkaEventIdentifier): Boolean {
-        return if (perProducerMap.containsKey(eventIdentifier.systembruker)) {
-            val isUnique = perProducerMap[eventIdentifier.systembruker]!!.addEvent(eventIdentifier)
+        return if (perProducerMap.containsKey(eventIdentifier.appnavn)) {
+            val isUnique = perProducerMap[eventIdentifier.appnavn]!!.addEvent(eventIdentifier)
 
             if (isUnique) {
                 uniqueEventsVar++
@@ -20,7 +20,7 @@ class UniqueEventsTracker {
 
             isUnique
         } else {
-            perProducerMap[eventIdentifier.systembruker] = PerProducerTracker(eventIdentifier)
+            perProducerMap[eventIdentifier.appnavn] = PerProducerTracker(eventIdentifier)
             uniqueEventsVar++
             true
         }

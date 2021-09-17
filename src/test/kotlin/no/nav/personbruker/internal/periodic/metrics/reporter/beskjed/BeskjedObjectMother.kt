@@ -7,14 +7,14 @@ import kotlin.random.Random
 object BeskjedObjectMother {
 
     fun giveMeAktivBeskjed(eventId: String, fodselsnummer: String): Beskjed {
-        val systembruker = "dummySystembruker"
-        return giveMeAktivBeskjed(eventId, fodselsnummer, systembruker)
+        val appnavn = "dummyAppnavn"
+        return giveMeAktivBeskjed(eventId, fodselsnummer, appnavn)
     }
 
-    fun giveMeAktivBeskjed(eventId: String, fodselsnummer: String, systembruker: String): Beskjed {
+    fun giveMeAktivBeskjed(eventId: String, fodselsnummer: String, appnavn: String): Beskjed {
         return Beskjed(
                 uid = Random.nextInt(1, 100).toString(),
-                systembruker = systembruker,
+                appnavn = appnavn,
                 eventTidspunkt = LocalDateTime.now(ZoneId.of("UTC")),
                 synligFremTil = LocalDateTime.now(ZoneId.of("UTC")),
                 fodselsnummer = fodselsnummer,
@@ -30,7 +30,7 @@ object BeskjedObjectMother {
     fun giveMeInaktivBeskjed(): Beskjed {
         return Beskjed(
                 uid = Random.nextInt(1, 100).toString(),
-                systembruker = "dummySystembruker",
+                appnavn = "dummyAppnavn",
                 eventTidspunkt = LocalDateTime.now(ZoneId.of("UTC")),
                 synligFremTil = LocalDateTime.now(ZoneId.of("UTC")),
                 fodselsnummer = "123",

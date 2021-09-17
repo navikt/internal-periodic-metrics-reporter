@@ -18,8 +18,8 @@ internal class EventCounterServiceTestIT {
 
     @Test
     fun `Should count beskjed events`() {
-        val systembrukere = listOf("b_systembruker_A", "b_systembruker_B")
-        val result = createResult(systembrukere)
+        val appnavne = listOf("b_appnavn_A", "b_appnavn_B")
+        val result = createResult(appnavne)
         coEvery { handlerConsumer.getEventCount(any()) }.returns(result)
 
         val metricsProbe = mockk<CacheCountingMetricsProbe>(relaxed = true)
@@ -32,14 +32,14 @@ internal class EventCounterServiceTestIT {
 
         metricsSession.getTotalNumber() `should be equal to` 2
         metricsSession.getProducers().size `should be equal to` 2
-        metricsSession.getNumberOfEventsFor(systembrukere[0]) `should be equal to` 1
-        metricsSession.getNumberOfEventsFor(systembrukere[1]) `should be equal to` 1
+        metricsSession.getNumberOfEventsFor(appnavne[0]) `should be equal to` 1
+        metricsSession.getNumberOfEventsFor(appnavne[1]) `should be equal to` 1
     }
 
     @Test
     fun `Should count innboks events`() {
-        val systembrukere = listOf("i_systembruker_A", "i_systembruker_B")
-        val result = createResult(systembrukere)
+        val appnavne = listOf("i_appnavn_A", "i_appnavn_B")
+        val result = createResult(appnavne)
         coEvery { handlerConsumer.getEventCount(any()) }.returns(result)
 
         val metricsProbe = mockk<CacheCountingMetricsProbe>(relaxed = true)
@@ -52,14 +52,14 @@ internal class EventCounterServiceTestIT {
 
         metricsSession.getTotalNumber() `should be equal to` 2
         metricsSession.getProducers().size `should be equal to` 2
-        metricsSession.getNumberOfEventsFor(systembrukere[0]) `should be equal to` 1
-        metricsSession.getNumberOfEventsFor(systembrukere[1]) `should be equal to` 1
+        metricsSession.getNumberOfEventsFor(appnavne[0]) `should be equal to` 1
+        metricsSession.getNumberOfEventsFor(appnavne[1]) `should be equal to` 1
     }
 
     @Test
     fun `Should count oppgave events`() {
-        val systembrukere = listOf("o_systembruker_A", "o_systembruker_B")
-        val result = createResult(systembrukere)
+        val appnavne = listOf("o_appnavn_A", "o_appnavn_B")
+        val result = createResult(appnavne)
         coEvery { handlerConsumer.getEventCount(any()) }.returns(result)
 
         val metricsProbe = mockk<CacheCountingMetricsProbe>(relaxed = true)
@@ -72,14 +72,14 @@ internal class EventCounterServiceTestIT {
 
         metricsSession.getTotalNumber() `should be equal to` 2
         metricsSession.getProducers().size `should be equal to` 2
-        metricsSession.getNumberOfEventsFor(systembrukere[0]) `should be equal to` 1
-        metricsSession.getNumberOfEventsFor(systembrukere[1]) `should be equal to` 1
+        metricsSession.getNumberOfEventsFor(appnavne[0]) `should be equal to` 1
+        metricsSession.getNumberOfEventsFor(appnavne[1]) `should be equal to` 1
     }
 
     @Test
     fun `Should count done events`() {
-        val systembrukere = listOf("d_systembruker_A", "d_systembruker_B")
-        val result = createResult(systembrukere)
+        val appnavne = listOf("d_appnavn_A", "d_appnavn_B")
+        val result = createResult(appnavne)
         coEvery { handlerConsumer.getEventCount(any()) }.returns(result)
 
         val metricsProbe = mockk<CacheCountingMetricsProbe>(relaxed = true)
@@ -92,8 +92,8 @@ internal class EventCounterServiceTestIT {
 
         metricsSession.getTotalNumber() `should be equal to` 2
         metricsSession.getProducers().size `should be equal to` 2
-        metricsSession.getNumberOfEventsFor(systembrukere[0]) `should be equal to` 1
-        metricsSession.getNumberOfEventsFor(systembrukere[1]) `should be equal to` 1
+        metricsSession.getNumberOfEventsFor(appnavne[0]) `should be equal to` 1
+        metricsSession.getNumberOfEventsFor(appnavne[1]) `should be equal to` 1
     }
 
     private fun initMetricsSession(metricsProbe: CacheCountingMetricsProbe, eventType: EventType): CacheCountingMetricsSession {
@@ -112,11 +112,11 @@ internal class EventCounterServiceTestIT {
         }
     }
 
-    private fun createResult(systembrukere: List<String>): Map<String, Int> {
+    private fun createResult(appnavne: List<String>): Map<String, Int> {
         val result = mutableMapOf<String, Int>()
 
-        systembrukere.forEach { systembruker ->
-            result.put(systembruker, 1)
+        appnavne.forEach { appnavn ->
+            result.put(appnavn, 1)
         }
         return result
     }

@@ -6,22 +6,21 @@ import java.time.Instant
 object AvroOppgaveObjectMother {
 
     private val defaultLopenummer = 1
-    private val defaultFodselsnr = "12345"
     private val defaultEksternVarsling = false
+    private val defaultPreferertKanaler = listOf("SMS")
 
     fun createOppgave(tekst: String): Oppgave {
-        return createOppgave(defaultLopenummer, defaultFodselsnr, tekst)
+        return createOppgave(defaultLopenummer, tekst)
     }
 
-    fun createOppgave(lopenummer: Int, fodselsnummer: String, tekst: String): Oppgave {
+    fun createOppgave(lopenummer: Int, tekst: String): Oppgave {
         return Oppgave(
                 Instant.now().toEpochMilli(),
-                fodselsnummer,
-                "100$lopenummer",
                 tekst,
                 "https://nav.no/systemX/$lopenummer",
                 4,
-                defaultEksternVarsling)
+                defaultEksternVarsling,
+                defaultPreferertKanaler)
     }
 
 }

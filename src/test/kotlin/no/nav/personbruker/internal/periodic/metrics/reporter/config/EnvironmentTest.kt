@@ -23,11 +23,11 @@ internal class EnvironmentTest {
             "KAFKA_SCHEMA_REGISTRY" to "kafka_schema_registry",
             "KAFKA_SCHEMA_REGISTRY_USER" to "kafka_schema_registry_user",
             "KAFKA_SCHEMA_REGISTRY_PASSWORD" to "kafka_shchema_registry_password",
-            "MONITOR_ON_PREM_BESKJED_ACTIVITY" to "true",
-            "MONITOR_ON_PREM_OPPGAVE_ACTIVITY" to "true",
-            "MONITOR_ON_PREM_INNBOKS_ACTIVITY" to "true",
-            "MONITOR_ON_PREM_DONE_ACTIVITY" to "true",
-            "MONITOR_ON_PREM_STATUSOPPDATERING_ACTIVITY" to "true",
+            "MONITOR_BESKJED_ACTIVITY" to "true",
+            "MONITOR_OPPGAVE_ACTIVITY" to "true",
+            "MONITOR_INNBOKS_ACTIVITY" to "true",
+            "MONITOR_DONE_ACTIVITY" to "true",
+            "MONITOR_STATUSOPPDATERING_ACTIVITY" to "true",
             "EVENT_HANDLER_URL" to "https://event_handler_url"
     )
 

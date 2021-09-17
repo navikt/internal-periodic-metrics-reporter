@@ -6,35 +6,33 @@ import java.time.Instant
 object AvroBeskjedObjectMother {
 
     private val defaultLopenummer = 1
-    private val defaultFodselsnr = "12345"
     private val defaultText = "Dette er Beskjed til brukeren"
     private val defaultEksternVarsling = false
+    private val defaultPreferertKanaler = listOf("SMS")
 
     fun createBeskjed(lopenummer: Int): Beskjed {
-        return createBeskjed(lopenummer, defaultFodselsnr, defaultText)
+        return createBeskjed(lopenummer, defaultText)
     }
 
-    fun createBeskjed(lopenummer: Int, fodselsnummer: String, text: String): Beskjed {
+    fun createBeskjed(lopenummer: Int, text: String): Beskjed {
         return Beskjed(
                 Instant.now().toEpochMilli(),
                 Instant.now().toEpochMilli(),
-                fodselsnummer,
-                "100$lopenummer",
                 text,
                 "https://nav.no/systemX/$lopenummer",
                 4,
-                defaultEksternVarsling)
+                defaultEksternVarsling,
+                defaultPreferertKanaler)
     }
 
     fun createBeskjedWithoutSynligFremTilSatt(): Beskjed {
         return Beskjed(
                 Instant.now().toEpochMilli(),
                 null,
-                defaultFodselsnr,
-                "100$defaultLopenummer",
                 defaultText,
                 "https://nav.no/systemX/$defaultLopenummer",
                 4,
-                defaultEksternVarsling)
+                defaultEksternVarsling,
+                defaultPreferertKanaler)
     }
 }

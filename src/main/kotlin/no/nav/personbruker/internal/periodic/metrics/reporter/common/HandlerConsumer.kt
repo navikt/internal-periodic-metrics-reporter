@@ -7,13 +7,13 @@ import java.net.URL
 
 class HandlerConsumer(private val client: HttpClient, eventHandlerBaseURL: URL) {
 
-    private val pathToEndpoint = "${eventHandlerBaseURL.path}/fetch/grouped/systemuser"
+    private val pathToEndpoint = "${eventHandlerBaseURL.path}/fetch/grouped/appnavn"
 
     suspend fun getEventCount(eventtype: EventType): Map<String, Int> {
         try {
             return client.get(URL("$pathToEndpoint/${eventtype.eventType}"))
         } catch (e: Exception) {
-            return mapOf("systemuser_unavailable" to 0)
+            return mapOf("appnavn_unavailable" to 0)
         }
     }
 

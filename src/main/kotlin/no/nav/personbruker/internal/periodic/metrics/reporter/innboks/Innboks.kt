@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 data class Innboks (
         val id: Int?,
-        val systembruker: String,
+        val appnavn: String,
         val eventId: String,
         val eventTidspunkt: LocalDateTime,
         val fodselsnummer: String,
@@ -17,7 +17,7 @@ data class Innboks (
         val aktiv: Boolean
 ) {
     constructor(
-            systembruker: String,
+            appnavn: String,
             eventId: String,
             eventTidspunkt: LocalDateTime,
             fodselsnummer: String,
@@ -29,7 +29,7 @@ data class Innboks (
             aktiv: Boolean
     ) : this(
             null,
-            systembruker,
+            appnavn,
             eventId,
             eventTidspunkt,
             fodselsnummer,
@@ -40,7 +40,7 @@ data class Innboks (
             sistOppdatert,
             aktiv
     ) {
-        validateNonNullFieldMaxLength(systembruker, "systembruker", 100)
+        validateNonNullFieldMaxLength(appnavn, "appnavn", 100)
         validateNonNullFieldMaxLength(eventId, "eventId", 50)
         validateNonNullFieldMaxLength(fodselsnummer, "fodselsnummer", 11)
         validateNonNullFieldMaxLength(grupperingsId, "grupperingsId", 100)
@@ -52,7 +52,7 @@ data class Innboks (
     override fun toString(): String {
         return "Innboks(" +
                 "id=$id, " +
-                "systembruker=***, " +
+                "appnavn=***, " +
                 "eventId=$eventId, " +
                 "eventTidspunkt=$eventTidspunkt, " +
                 "fodselsnummer=***, " +

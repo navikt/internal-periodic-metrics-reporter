@@ -1,6 +1,6 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka
 
-data class UniqueKafkaEventIdentifier(val eventId: String, val systembruker: String, val fodselsnummer: String) {
+data class UniqueKafkaEventIdentifier(val eventId: String, val appnavn: String, val fodselsnummer: String) {
 
     companion object {
 
@@ -14,17 +14,17 @@ data class UniqueKafkaEventIdentifier(val eventId: String, val systembruker: Str
             )
         }
 
-        fun createEventWithoutValidFnr(eventId: String, systembruker: String): UniqueKafkaEventIdentifier {
+        fun createEventWithoutValidFnr(eventId: String, appnavn: String): UniqueKafkaEventIdentifier {
             return UniqueKafkaEventIdentifier(
                 eventId,
-                systembruker,
+                appnavn,
                 dummyFnr
             )
         }
     }
 
     override fun toString(): String {
-        return "UniqueKafkaEventIdentifier(eventId='$eventId', systembruker='$systembruker', fodselsnummer='***')"
+        return "UniqueKafkaEventIdentifier(eventId='$eventId', appnavn='$appnavn', fodselsnummer='***')"
     }
 
 }

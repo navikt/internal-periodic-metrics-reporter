@@ -34,7 +34,7 @@ class TopicMetricsSession : CountingMetricsSession {
     }
 
     fun countEvent(event: UniqueKafkaEventIdentifier) {
-        val produsent = event.systembruker
+        val produsent = event.appnavn
         totalNumberOfEventsByProducer[produsent] = totalNumberOfEventsByProducer.getOrDefault(produsent, 0).inc()
         val wasNewUniqueEvent = uniqueEventsOnTopic.addEvent(event)
         if (wasNewUniqueEvent) {

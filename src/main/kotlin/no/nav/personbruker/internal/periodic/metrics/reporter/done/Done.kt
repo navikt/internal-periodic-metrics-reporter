@@ -5,7 +5,7 @@ import no.nav.brukernotifikasjon.schemas.builders.util.ValidationUtil.validateNo
 import java.time.LocalDateTime
 
 data class Done(
-        val systembruker: String,
+        val appnavn: String,
         val eventId: String,
         val eventTidspunkt: LocalDateTime,
         val fodselsnummer: String,
@@ -13,14 +13,14 @@ data class Done(
 ) {
 
     init {
-        validateNonNullFieldMaxLength(systembruker, "systembruker", 100)
+        validateNonNullFieldMaxLength(appnavn, "appnavn", 100)
         validateNonNullFieldMaxLength(eventId, "eventId", 50)
         validateFodselsnummer(fodselsnummer)
     }
 
     override fun toString(): String {
         return "Done(" +
-                "systembruker=***, " +
+                "appnavn=***, " +
                 "eventId=$eventId, " +
                 "eventTidspunkt=$eventTidspunkt, " +
                 "fodselsnummer=***, " +
@@ -33,7 +33,7 @@ data class Done(
 
         other as Done
 
-        if (systembruker != other.systembruker) return false
+        if (appnavn != other.appnavn) return false
         if (eventId != other.eventId) return false
         if (eventTidspunkt != other.eventTidspunkt) return false
         if (fodselsnummer != other.fodselsnummer) return false
@@ -43,7 +43,7 @@ data class Done(
     }
 
     override fun hashCode(): Int {
-        var result = systembruker.hashCode()
+        var result = appnavn.hashCode()
         result = 31 * result + eventId.hashCode()
         result = 31 * result + eventTidspunkt.hashCode()
         result = 31 * result + fodselsnummer.hashCode()

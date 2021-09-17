@@ -1,8 +1,6 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic
 
 import no.nav.brukernotifikasjon.schemas.Nokkel
-import no.nav.brukernotifikasjon.schemas.internal.NokkelFeilrespons
-import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.UniqueKafkaEventIdentifier
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -25,12 +23,6 @@ object UniqueKafkaEventIdentifierTransformer {
             is Nokkel -> {
                 fromNokkel(key, value)
             }
-            is NokkelIntern -> {
-                fromNokkelIntern(key)
-            }
-            is NokkelFeilrespons -> {
-                fromNokkelFeilrespons(key)
-            }
             else -> {
                 val invalidEvent = UniqueKafkaEventIdentifier.createInvalidEvent()
                 log.warn("Kan ikke telle eventet, fordi kafka-key (Nokkel) er av ukjent type. Transformerer til et dummy-event: $invalidEvent.")
@@ -39,27 +31,12 @@ object UniqueKafkaEventIdentifierTransformer {
         }
     }
 
-    private fun fromNokkelIntern(key: NokkelIntern): UniqueKafkaEventIdentifier {
-        return UniqueKafkaEventIdentifier(
-            key.getEventId(),
-            key.getSystembruker(),
-            key.getFodselsnummer()
-        )
-    }
-
-    private fun fromNokkelFeilrespons(key: NokkelFeilrespons): UniqueKafkaEventIdentifier {
-        return UniqueKafkaEventIdentifier.createEventWithoutValidFnr(
-            key.getEventId(),
-            key.getSystembruker(),
-        )
-    }
-
     private fun fromNokkel(key: Nokkel, value: GenericRecord?): UniqueKafkaEventIdentifier {
         when (value) {
             null -> {
                 val eventWithoutActualFnr = UniqueKafkaEventIdentifier.createEventWithoutValidFnr(
                     key.getEventId(),
-                    key.getSystembruker()
+                    key.getAppnavn()
                 )
                 log.warn("Kan ikke telle eventet, fordi kafka-value (Record) er null. Transformerer til et event med et dummy fødselsnummer: $eventWithoutActualFnr.")
                 return eventWithoutActualFnr
@@ -67,8 +44,8 @@ object UniqueKafkaEventIdentifierTransformer {
             else -> {
                 return UniqueKafkaEventIdentifier(
                     key.getEventId(),
-                    key.getSystembruker(),
-                    value.get("fodselsnummer").toString()
+                    key.getAppnavn(),
+                    key.getFodselsnummer()
                 )
             }
         }

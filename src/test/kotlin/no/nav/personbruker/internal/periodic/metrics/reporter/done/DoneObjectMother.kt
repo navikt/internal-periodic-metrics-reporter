@@ -6,19 +6,19 @@ import java.time.ZoneId
 object DoneObjectMother {
 
     fun giveMeDone(eventId: String): Done {
-        val systembruker = "dummySystembruker"
+        val appnavn = "dummyAppnavn"
         val fodselsnummer = "12345678901"
-        return giveMeDone(eventId, systembruker, fodselsnummer)
+        return giveMeDone(eventId, appnavn, fodselsnummer)
     }
 
-    fun giveMeDone(eventId: String, systembruker: String): Done {
+    fun giveMeDone(eventId: String, appnavn: String): Done {
         val fodselsnummer = "12345678901"
-        return giveMeDone(eventId, systembruker, fodselsnummer)
+        return giveMeDone(eventId, appnavn, fodselsnummer)
     }
 
-    fun giveMeDone(eventId: String, systembruker: String, fodselsnummer: String): Done {
+    fun giveMeDone(eventId: String, appnavn: String, fodselsnummer: String): Done {
         return Done(
-                systembruker,
+                appnavn,
                 eventId,
                 LocalDateTime.now(ZoneId.of("UTC")),
                 fodselsnummer,

@@ -12,7 +12,7 @@ import java.time.ZoneId
 
 class StatusoppdateringTest {
 
-    private val validSystembruker = "dummySystembruker"
+    private val validAppnavn = "dummyAppnavn"
     private val validFodselsnummer = "123"
     private val eventTidspunkt = LocalDateTime.now(ZoneId.of("UTC"))
     private val sistOppdatert = LocalDateTime.now(ZoneId.of("UTC"))
@@ -29,16 +29,16 @@ class StatusoppdateringTest {
         val statusoppdatering = StatusoppdateringObjectMother.giveMeStatusoppdatering("dummyEventId", "123")
         val statusoppdateringAsString = statusoppdatering.toString()
         statusoppdateringAsString `should contain` "fodselsnummer=***"
-        statusoppdateringAsString `should contain` "systembruker=***"
+        statusoppdateringAsString `should contain` "appnavn=***"
         statusoppdateringAsString `should contain` "link=***"
     }
 
     @Test
-    fun `do not allow too long systembruker`() {
-        val tooLongSystembruker = "P".repeat(101)
+    fun `do not allow too long appnavn`() {
+        val tooLongAppnavn = "P".repeat(101)
         invoking {
             Statusoppdatering(
-                systembruker = tooLongSystembruker,
+                appnavn = tooLongAppnavn,
                 eventId = validEventId,
                 eventTidspunkt = eventTidspunkt,
                 fodselsnummer = validFodselsnummer,
@@ -49,7 +49,7 @@ class StatusoppdateringTest {
                 statusGlobal = validStatusGlobal,
                 statusIntern = validStatusIntern,
                 sakstema = validSakstema)
-        } `should throw` FieldValidationException::class `with message containing` "systembruker"
+        } `should throw` FieldValidationException::class `with message containing` "appnavn"
     }
 
     @Test
@@ -57,7 +57,7 @@ class StatusoppdateringTest {
         val tooLongFnr = "1".repeat(12)
         invoking {
             Statusoppdatering(
-                systembruker = validSystembruker,
+                appnavn = validAppnavn,
                 eventId = validEventId,
                 eventTidspunkt = eventTidspunkt,
                 fodselsnummer = tooLongFnr,
@@ -76,7 +76,7 @@ class StatusoppdateringTest {
         val tooLongEventId = "E".repeat(51)
         invoking {
             Statusoppdatering(
-                systembruker = validSystembruker,
+                appnavn = validAppnavn,
                 eventId = tooLongEventId,
                 eventTidspunkt = eventTidspunkt,
                 fodselsnummer = validFodselsnummer,
@@ -95,7 +95,7 @@ class StatusoppdateringTest {
         val tooLongGrupperingsId = "G".repeat(101)
         invoking {
             Statusoppdatering(
-                systembruker = validSystembruker,
+                appnavn = validAppnavn,
                 eventId = validEventId,
                 eventTidspunkt = eventTidspunkt,
                 fodselsnummer = validFodselsnummer,
@@ -114,7 +114,7 @@ class StatusoppdateringTest {
         val tooLongLink = "http://" + "L".repeat(201)
         invoking {
             Statusoppdatering(
-                systembruker = validSystembruker,
+                appnavn = validAppnavn,
                 eventId = validEventId,
                 eventTidspunkt = eventTidspunkt,
                 fodselsnummer = validFodselsnummer,
@@ -133,7 +133,7 @@ class StatusoppdateringTest {
         val invalidLink = "invalidUrl"
         invoking {
             Statusoppdatering(
-                systembruker = validSystembruker,
+                appnavn = validAppnavn,
                 eventId = validEventId,
                 eventTidspunkt = eventTidspunkt,
                 fodselsnummer = validFodselsnummer,
@@ -158,7 +158,7 @@ class StatusoppdateringTest {
         val invalidSikkerhetsnivaa = 2
         invoking {
             Statusoppdatering(
-                systembruker = validSystembruker,
+                appnavn = validAppnavn,
                 eventId = validEventId,
                 eventTidspunkt = eventTidspunkt,
                 fodselsnummer = validFodselsnummer,
@@ -177,7 +177,7 @@ class StatusoppdateringTest {
         val invalidStatusGlobal = "invalidStatusGlobal"
         invoking {
             Statusoppdatering(
-                systembruker = validSystembruker,
+                appnavn = validAppnavn,
                 eventId = validEventId,
                 eventTidspunkt = eventTidspunkt,
                 fodselsnummer = validFodselsnummer,
@@ -195,7 +195,7 @@ class StatusoppdateringTest {
     fun `should allow valid statusGlobal`() {
         val validStatusGlobal = "SENDT"
         Statusoppdatering(
-            systembruker = validSystembruker,
+            appnavn = validAppnavn,
             eventId = validEventId,
             eventTidspunkt = eventTidspunkt,
             fodselsnummer = validFodselsnummer,
@@ -212,7 +212,7 @@ class StatusoppdateringTest {
     fun `should allow valid statusGlobal field`() {
         val validStatusGlobal = "MOTTATT"
         Statusoppdatering(
-            systembruker = validSystembruker,
+            appnavn = validAppnavn,
             eventId = validEventId,
             eventTidspunkt = eventTidspunkt,
             fodselsnummer = validFodselsnummer,
@@ -230,7 +230,7 @@ class StatusoppdateringTest {
         val tooLongStatusIntern = "S".repeat(101)
         invoking {
             Statusoppdatering(
-                systembruker = validSystembruker,
+                appnavn = validAppnavn,
                 eventId = validEventId,
                 eventTidspunkt = eventTidspunkt,
                 fodselsnummer = validFodselsnummer,
@@ -248,7 +248,7 @@ class StatusoppdateringTest {
     fun `should allow statusIntern to be null`() {
         val validNullStatusIntern = null
         Statusoppdatering(
-            systembruker = validSystembruker,
+            appnavn = validAppnavn,
             eventId = validEventId,
             eventTidspunkt = eventTidspunkt,
             fodselsnummer = validFodselsnummer,
@@ -266,7 +266,7 @@ class StatusoppdateringTest {
         val tooLongSakstema = "S".repeat(51)
         invoking {
             Statusoppdatering(
-                systembruker = validSystembruker,
+                appnavn = validAppnavn,
                 eventId = validEventId,
                 eventTidspunkt = eventTidspunkt,
                 fodselsnummer = validFodselsnummer,

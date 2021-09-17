@@ -6,12 +6,12 @@ import java.time.ZoneId
 object InnboksObjectMother {
 
     fun giveMeAktivInnboks(eventId: String, fodselsnummer: String): Innboks {
-        return giveMeAktivInnboks(eventId, fodselsnummer, "dummySystembruker")
+        return giveMeAktivInnboks(eventId, fodselsnummer, "dummyAppnavn")
     }
 
-    fun giveMeAktivInnboks(eventId: String, fodselsnummer: String, systembruker: String): Innboks {
+    fun giveMeAktivInnboks(eventId: String, fodselsnummer: String, appnavn: String): Innboks {
         return Innboks(
-                systembruker,
+                appnavn,
                 eventId,
                 LocalDateTime.now(ZoneId.of("UTC")),
                 fodselsnummer,
@@ -25,7 +25,7 @@ object InnboksObjectMother {
 
     fun giveMeInaktivInnboks(): Innboks {
         return Innboks(
-                "dummySystembruker",
+                "dummyAppnavn",
                 "76543",
                 LocalDateTime.now(ZoneId.of("UTC")),
                 "123",

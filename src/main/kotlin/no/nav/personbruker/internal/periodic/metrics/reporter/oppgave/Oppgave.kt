@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 data class Oppgave(
         val id: Int?,
-        val systembruker: String,
+        val appnavn: String,
         val eventId: String,
         val eventTidspunkt: LocalDateTime,
         val fodselsnummer: String,
@@ -17,7 +17,7 @@ data class Oppgave(
         val aktiv: Boolean
 ) {
     constructor(
-            systembruker: String,
+            appnavn: String,
             eventId: String,
             eventTidspunkt: LocalDateTime,
             fodselsnummer: String,
@@ -28,7 +28,7 @@ data class Oppgave(
             sistOppdatert: LocalDateTime,
             aktiv: Boolean
     ) : this(null,
-            systembruker,
+            appnavn,
             eventId,
             eventTidspunkt,
             fodselsnummer,
@@ -39,7 +39,7 @@ data class Oppgave(
             sistOppdatert,
             aktiv
     ) {
-        validateNonNullFieldMaxLength(systembruker, "systembruker", 100)
+        validateNonNullFieldMaxLength(appnavn, "appnavn", 100)
         validateNonNullFieldMaxLength(eventId, "eventId", 50)
         validateNonNullFieldMaxLength(fodselsnummer, "fodselsnummer", 11)
         validateNonNullFieldMaxLength(grupperingsId, "grupperingsId", 100)
@@ -51,7 +51,7 @@ data class Oppgave(
     override fun toString(): String {
         return "Oppgave(" +
                 "id=$id, " +
-                "systembruker=***, " +
+                "appnavn=***, " +
                 "eventId=$eventId, " +
                 "eventTidspunkt=$eventTidspunkt, " +
                 "fodselsnummer=***, " +

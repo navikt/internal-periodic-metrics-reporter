@@ -11,7 +11,7 @@ import java.time.ZoneId
 
 class OppgaveTest {
 
-    private val validSystembruker = "dummySystembruker"
+    private val validAppnavn = "dummyAppnavn"
     private val validFodselsnummer = "123"
     private val eventTidspunkt = LocalDateTime.now(ZoneId.of("UTC"))
     private val sistOppdatert = LocalDateTime.now(ZoneId.of("UTC"))
@@ -31,11 +31,11 @@ class OppgaveTest {
     }
 
     @Test
-    fun `do not allow too long systembruker`() {
-        val tooLongSystembruker = "P".repeat(101)
+    fun `do not allow too long appnavn`() {
+        val tooLongAppnavn = "P".repeat(101)
         invoking {
             Oppgave(
-                    systembruker = tooLongSystembruker,
+                    appnavn = tooLongAppnavn,
                     eventTidspunkt = eventTidspunkt,
                     fodselsnummer = validFodselsnummer,
                     eventId = validEventId,
@@ -46,7 +46,7 @@ class OppgaveTest {
                     sikkerhetsnivaa = validSikkerhetsnivaa,
                     aktiv = true
             )
-        } `should throw` FieldValidationException::class `with message containing` "systembruker"
+        } `should throw` FieldValidationException::class `with message containing` "appnavn"
     }
 
     @Test
@@ -54,7 +54,7 @@ class OppgaveTest {
         val tooLongFnr = "1".repeat(12)
         invoking {
             Oppgave(
-                    systembruker = validSystembruker,
+                    appnavn = validAppnavn,
                     eventTidspunkt = eventTidspunkt,
                     fodselsnummer = tooLongFnr,
                     eventId = validEventId,
@@ -73,7 +73,7 @@ class OppgaveTest {
         val tooLongEventId = "E".repeat(51)
         invoking {
             Oppgave(
-                    systembruker = validSystembruker,
+                    appnavn = validAppnavn,
                     eventTidspunkt = eventTidspunkt,
                     fodselsnummer = validFodselsnummer,
                     eventId = tooLongEventId,
@@ -91,7 +91,7 @@ class OppgaveTest {
         val tooLongGrupperingsId = "G".repeat(101)
         invoking {
             Oppgave(
-                    systembruker = validSystembruker,
+                    appnavn = validAppnavn,
                     eventTidspunkt = eventTidspunkt,
                     fodselsnummer = validFodselsnummer,
                     eventId = validEventId,
@@ -109,7 +109,7 @@ class OppgaveTest {
         val tooLongText = "T".repeat(501)
         invoking {
             Oppgave(
-                    systembruker = validSystembruker,
+                    appnavn = validAppnavn,
                     eventTidspunkt = eventTidspunkt,
                     fodselsnummer = validFodselsnummer,
                     eventId = validEventId,
@@ -128,7 +128,7 @@ class OppgaveTest {
         invoking {
             Oppgave(
 
-                    systembruker = validSystembruker,
+                    appnavn = validAppnavn,
                     eventTidspunkt = eventTidspunkt,
                     fodselsnummer = validFodselsnummer,
                     eventId = validEventId,
@@ -146,7 +146,7 @@ class OppgaveTest {
         val invalidSikkerhetsnivaa = 2
         invoking {
             Oppgave(
-                    systembruker = validSystembruker,
+                    appnavn = validAppnavn,
                     eventTidspunkt = eventTidspunkt,
                     fodselsnummer = validFodselsnummer,
                     eventId = validEventId,

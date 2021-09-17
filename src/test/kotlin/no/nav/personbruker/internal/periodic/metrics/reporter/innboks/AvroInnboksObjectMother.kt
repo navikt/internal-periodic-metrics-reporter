@@ -6,17 +6,14 @@ import java.time.Instant
 object AvroInnboksObjectMother {
 
     private val defaultLopenummer = 1
-    private val defaultFodselsnummer = "12345"
 
     fun createInnboksWithText(text: String): Innboks {
-        return createInnboks(defaultLopenummer, defaultFodselsnummer, text)
+        return createInnboks(defaultLopenummer, text)
     }
 
-    fun createInnboks(lopenummer: Int, fodselsnummer: String, text: String): Innboks {
+    fun createInnboks(lopenummer: Int, text: String): Innboks {
         return Innboks(
                 Instant.now().toEpochMilli(),
-                fodselsnummer,
-                "100$lopenummer",
                 text,
                 "https://nav.no/systemX/$lopenummer",
                 4)

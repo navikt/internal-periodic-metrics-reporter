@@ -1,20 +1,17 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic
 
-import io.mockk.clearMocks
-import io.mockk.every
-import io.mockk.mockk
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
+import no.nav.brukernotifikasjon.schemas.Nokkel
 import no.nav.common.KafkaEnvironment
-import no.nav.personbruker.internal.periodic.metrics.reporter.beskjed.AvroBeskjedInternObjectMother
+import no.nav.personbruker.internal.periodic.metrics.reporter.beskjed.AvroBeskjedObjectMother
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka.util.KafkaTestUtil
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.Environment
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.Kafka
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.KafkaConsumerSetup
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.activity.TopicActivityService
-import no.nav.personbruker.internal.periodic.metrics.reporter.nokkel.AvroNokkelInternObjectMother
+import no.nav.personbruker.internal.periodic.metrics.reporter.nokkel.AvroNokkelObjectMother
 import org.amshove.kluent.`should be equal to`
 import org.apache.avro.generic.GenericRecord
 import org.junit.jupiter.api.AfterEach
@@ -28,7 +25,7 @@ class TopicEventCounterAivenServiceIT {
     private lateinit var testEnvironment: Environment
     private val topicActivityService =  TopicActivityService(30)
 
-    private val events = (1..5).map { AvroNokkelInternObjectMother.createNokkelIntern(it) to AvroBeskjedInternObjectMother.createBeskjedIntern() }.toMap()
+    private val events = (1..5).map { AvroNokkelObjectMother.createNokkel(it) to AvroBeskjedObjectMother.createBeskjed(it) }.toMap()
 
     @AfterEach
     fun `tear down`() {
@@ -48,7 +45,7 @@ class TopicEventCounterAivenServiceIT {
         `Produser det samme settet av eventer tre ganger`(topic)
 
         val kafkaProps = Kafka.counterConsumerAivenProps(testEnvironment, EventType.BESKJED_INTERN, false)
-        val beskjedInternCountConsumer = KafkaConsumerSetup.setupCountConsumer<NokkelIntern, GenericRecord>(kafkaProps, topic)
+        val beskjedInternCountConsumer = KafkaConsumerSetup.setupCountConsumer<Nokkel, GenericRecord>(kafkaProps, topic)
         beskjedInternCountConsumer.startSubscription()
 
         val topicEventTypeCounter = TopicEventTypeCounter(
@@ -72,7 +69,7 @@ class TopicEventCounterAivenServiceIT {
     @Test
     fun `Ved deltatelling skal metrikkene akkumuleres fra forrige telling`() {
         val kafkaProps = Kafka.counterConsumerAivenProps(testEnvironment, EventType.BESKJED_INTERN, false)
-        val beskjedInternCountConsumer = KafkaConsumerSetup.setupCountConsumer<NokkelIntern, GenericRecord>(kafkaProps, topic)
+        val beskjedInternCountConsumer = KafkaConsumerSetup.setupCountConsumer<Nokkel, GenericRecord>(kafkaProps, topic)
         beskjedInternCountConsumer.startSubscription()
 
         val deltaTopicEventTypeCounter = TopicEventTypeCounter(
@@ -105,12 +102,12 @@ class TopicEventCounterAivenServiceIT {
 
         val kafkaPropsDeltaCounting = Kafka.counterConsumerAivenProps(deltaCountingEnv, EventType.BESKJED_INTERN, false)
         val deltaCountingConsumer =
-            KafkaConsumerSetup.setupCountConsumer<NokkelIntern, GenericRecord>(kafkaPropsDeltaCounting, topic)
+            KafkaConsumerSetup.setupCountConsumer<Nokkel, GenericRecord>(kafkaPropsDeltaCounting, topic)
         deltaCountingConsumer.startSubscription()
 
         val kafkaPropsFromScratchCounting = Kafka.counterConsumerAivenProps(fromScratchCountingEnv, EventType.BESKJED_INTERN, false)
         val fromScratchCountingConsumer =
-            KafkaConsumerSetup.setupCountConsumer<NokkelIntern, GenericRecord>(kafkaPropsFromScratchCounting, topic)
+            KafkaConsumerSetup.setupCountConsumer<Nokkel, GenericRecord>(kafkaPropsFromScratchCounting, topic)
         fromScratchCountingConsumer.startSubscription()
 
         val deltaTopicEventTypeCounter = TopicEventTypeCounter(
@@ -153,7 +150,7 @@ class TopicEventCounterAivenServiceIT {
     fun `Skal telle riktig antall eventer flere ganger paa rad ved bruk av samme kafka-klient`() {
         `Produser det samme settet av eventer tre ganger`(topic)
         val kafkaProps = Kafka.counterConsumerAivenProps(testEnvironment, EventType.BESKJED_INTERN, false)
-        val beskjedCountConsumer = KafkaConsumerSetup.setupCountConsumer<NokkelIntern, GenericRecord>(kafkaProps, topic)
+        val beskjedCountConsumer = KafkaConsumerSetup.setupCountConsumer<Nokkel, GenericRecord>(kafkaProps, topic)
         beskjedCountConsumer.startSubscription()
 
         val topicEventTypeCounter = TopicEventTypeCounter(
@@ -169,7 +166,7 @@ class TopicEventCounterAivenServiceIT {
     }
 
     private fun `tell og verifiser korrekte antall eventer flere ganger paa rad`(
-        topicEventTypeCounter: TopicEventTypeCounter<NokkelIntern>
+        topicEventTypeCounter: TopicEventTypeCounter<Nokkel>
     ) {
         `tell og verifiser korrekt antall eventer`(topicEventTypeCounter)
         `tell og verifiser korrekt antall eventer`(topicEventTypeCounter)
@@ -177,7 +174,7 @@ class TopicEventCounterAivenServiceIT {
     }
 
     private fun `tell og verifiser korrekt antall eventer`(
-        topicEventTypeCounter: TopicEventTypeCounter<NokkelIntern>
+        topicEventTypeCounter: TopicEventTypeCounter<Nokkel>
     ) {
         val metricsSession = runBlocking {
             delay(500)
