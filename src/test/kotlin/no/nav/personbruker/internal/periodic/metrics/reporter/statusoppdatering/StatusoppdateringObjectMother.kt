@@ -10,7 +10,7 @@ object StatusoppdateringObjectMother {
     }
 
     fun giveMeStatusoppdateringWithLink(link: String): Statusoppdatering {
-        return giveMeStatusoppdatering(eventId = "s-1", fodselsnummer = "1234", appnavn = "dummySystemUser", link = link)
+        return giveMeStatusoppdatering(eventId = "s-1", fodselsnummer = "1234", appnavn = "dummyAppnavn", link = link)
     }
 
     fun giveMeStatusoppdatering(eventId: String, fodselsnummer: String, appnavn: String, link: String): Statusoppdatering {

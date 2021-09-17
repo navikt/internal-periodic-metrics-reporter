@@ -71,7 +71,7 @@ internal class TopicMetricsReporterTest {
         coEvery { metricsReporter.registerDataPoint(KAFKA_COUNT_PROCESSING_TIME, capture(capturedFieldsForProcessingTime), any()) } returns Unit
 
         val session = TopicMetricsSession(EventType.BESKJED_INTERN)
-        session.countEvent(UniqueKafkaEventIdentifier("1", "sys-t-user", "123"))
+        session.countEvent(UniqueKafkaEventIdentifier("1", "dummyAppnavn", "123"))
         runBlocking { delay(expectedProcessingTimeMs) }
         session.calculateProcessingTime()
         runBlocking {
@@ -85,7 +85,7 @@ internal class TopicMetricsReporterTest {
 
     @Test
     fun `Should replace system name with alias`() {
-        val producerName = "sys-t-user"
+        val producerName = "dummyAppnavn"
 
         val producerNameForPrometheus = slot<String>()
         val capturedTagsForUniqueByProducer = slot<Map<String, String>>()

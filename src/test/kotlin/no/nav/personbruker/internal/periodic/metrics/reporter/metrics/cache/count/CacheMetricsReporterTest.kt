@@ -82,7 +82,7 @@ internal class CacheMetricsReporterTest {
 
     @Test
     fun `Should replace system name with alias`() {
-        val producerName = "sys-t-user"
+        val producerName = "dummyAppnavn"
 
         val producerNameForPrometheus = slot<String>()
         val capturedTagsForTotalByProducer = slot<Map<String, String>>()

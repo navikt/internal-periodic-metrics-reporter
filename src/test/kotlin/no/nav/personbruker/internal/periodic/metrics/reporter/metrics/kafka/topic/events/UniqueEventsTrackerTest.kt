@@ -34,5 +34,5 @@ internal class UniqueEventsTrackerTest {
     }
 }
 
-private fun createEvent(ident: String, systemBruker: String, eventId: String)
-        = UniqueKafkaEventIdentifier(eventId, systemBruker, ident)
+private fun createEvent(ident: String, appnavn: String, eventId: String)
+        = UniqueKafkaEventIdentifier(eventId, appnavn, ident)
