@@ -17,7 +17,7 @@ class CacheMetricsReporter(private val metricsReporter: MetricsReporter) {
             reportIfEventsCounted(session)
 
         } catch (e: Exception) {
-            val msg = "Klarte ikke å rapportere database-metrikker for ${session.eventType.eventType}"
+            val msg = "Klarte ikke å rapportere cache-metrikker for ${session.eventType.eventType}"
             throw MetricsReportingException(msg, e)
         }
     }
@@ -29,7 +29,7 @@ class CacheMetricsReporter(private val metricsReporter: MetricsReporter) {
             reportTimeUsed(session)
 
         } else {
-            log.info("Ingen eventer ble funnet i databasen for ${session.eventType}.")
+            log.info("Ingen eventer ble funnet i cache for ${session.eventType}.")
         }
     }
 

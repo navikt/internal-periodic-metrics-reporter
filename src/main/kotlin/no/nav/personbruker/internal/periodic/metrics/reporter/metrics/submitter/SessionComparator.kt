@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory
 
 class SessionComparator(
     val topic: CountingMetricsSessions,
-    val database: CountingMetricsSessions
+    val cache: CountingMetricsSessions
 ) {
 
     private val log = LoggerFactory.getLogger(SessionComparator::class.java)
@@ -28,7 +28,7 @@ class SessionComparator(
         return if(internalEventTypes.contains(eventType)) {
             topic.getEventTypesWithSession().contains(eventType)
         } else {
-            topic.getEventTypesWithSession().contains(eventType) && database.getEventTypesWithSession().contains(eventType)
+            topic.getEventTypesWithSession().contains(eventType) && cache.getEventTypesWithSession().contains(eventType)
         }
     }
 
@@ -36,12 +36,12 @@ class SessionComparator(
         when {
             topic.getEventTypesWithSession().contains(eventType) -> {
                 val numberOfEvents = topic.getForType(eventType).getNumberOfUniqueEvents()
-                log.warn("Eventtypen '$eventType' ble kun telt for topic, og ikke i databasen. Fant $numberOfEvents eventer.")
+                log.warn("Eventtypen '$eventType' ble kun telt for topic, og ikke i cache. Fant $numberOfEvents eventer.")
 
             }
-            database.getEventTypesWithSession().contains(eventType) -> {
-                val numberOfEvents = database.getForType(eventType).getNumberOfUniqueEvents()
-                log.warn("Eventtypen '$eventType' ble kun telt for databasen, og ikke på topic. Fant $numberOfEvents eventer.")
+            cache.getEventTypesWithSession().contains(eventType) -> {
+                val numberOfEvents = cache.getForType(eventType).getNumberOfUniqueEvents()
+                log.warn("Eventtypen '$eventType' ble kun telt for cache, og ikke på topic. Fant $numberOfEvents eventer.")
             }
         }
     }
