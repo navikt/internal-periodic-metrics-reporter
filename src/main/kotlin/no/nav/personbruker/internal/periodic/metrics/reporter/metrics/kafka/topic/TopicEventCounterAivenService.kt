@@ -24,22 +24,22 @@ class TopicEventCounterAivenService<K>(
             val innboks = if (isOtherEnvironmentThanProd()) {
                 innboksCounter.countEventsAsync()
             } else {
-                async { TopicMetricsSession(EventType.INNBOKS) }
+                async { TopicMetricsSession(EventType.INNBOKS_INTERN) }
             }
 
             val statusoppdateringer = if(isOtherEnvironmentThanProd()) {
                 statusoppdateringCounter.countEventsAsync()
             } else {
-                async { TopicMetricsSession(EventType.STATUSOPPDATERING) }
+                async { TopicMetricsSession(EventType.STATUSOPPDATERING_INTERN) }
             }
 
             val sessions = CountingMetricsSessions()
 
-            sessions.put(EventType.BESKJED, beskjeder.await())
-            sessions.put(EventType.DONE, done.await())
-            sessions.put(EventType.INNBOKS, innboks.await())
-            sessions.put(EventType.OPPGAVE, oppgaver.await())
-            sessions.put(EventType.STATUSOPPDATERING, statusoppdateringer.await())
+            sessions.put(EventType.BESKJED_INTERN, beskjeder.await())
+            sessions.put(EventType.DONE__INTERN, done.await())
+            sessions.put(EventType.INNBOKS_INTERN, innboks.await())
+            sessions.put(EventType.OPPGAVE_INTERN, oppgaver.await())
+            sessions.put(EventType.STATUSOPPDATERING_INTERN, statusoppdateringer.await())
 
             sessions
         }

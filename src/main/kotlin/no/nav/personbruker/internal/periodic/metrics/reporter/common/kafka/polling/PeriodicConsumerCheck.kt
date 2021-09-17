@@ -44,16 +44,16 @@ class PeriodicConsumerCheck(
         val stoppedConsumers = mutableListOf<EventType>()
 
         if (appContext.beskjedCountAivenConsumer.isStopped()) {
-            stoppedConsumers.add(EventType.BESKJED)
+            stoppedConsumers.add(EventType.BESKJED_INTERN)
         }
         if (appContext.doneCountAivenConsumer.isStopped()) {
-            stoppedConsumers.add(EventType.DONE)
+            stoppedConsumers.add(EventType.DONE__INTERN)
         }
         if (appContext.oppgaveCountAivenConsumer.isStopped()) {
-            stoppedConsumers.add(EventType.OPPGAVE)
+            stoppedConsumers.add(EventType.OPPGAVE_INTERN)
         }
         if(appContext.statusoppdateringCountAivenConsumer.isStopped()) {
-            stoppedConsumers.add(EventType.STATUSOPPDATERING)
+            stoppedConsumers.add(EventType.STATUSOPPDATERING_INTERN)
         }
         if(appContext.feilresponsCountAivenConsumer.isStopped()) {
             stoppedConsumers.add(EventType.FEILRESPONS)

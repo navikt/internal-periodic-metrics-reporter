@@ -38,7 +38,7 @@ internal class TopicMetricsReporterTest {
         coEvery { metricsReporter.registerDataPoint(KAFKA_TOTAL_EVENTS_ON_TOPIC_BY_PRODUCER, capture(capturedFieldsForTotalEventsByProducer), any()) } returns Unit
         coEvery { metricsReporter.registerDataPoint(KAFKA_UNIQUE_EVENTS_ON_TOPIC_BY_PRODUCER, capture(capturedFieldsForUniqueByProducer), any()) } returns Unit
 
-        val session = TopicMetricsSession(EventType.BESKJED)
+        val session = TopicMetricsSession(EventType.BESKJED_INTERN)
         session.countEvent(UniqueKafkaEventIdentifier("1", "producer", "123"))
         session.countEvent(UniqueKafkaEventIdentifier("2", "producer", "123"))
         session.countEvent(UniqueKafkaEventIdentifier("3", "producer", "123"))
@@ -70,7 +70,7 @@ internal class TopicMetricsReporterTest {
 
         coEvery { metricsReporter.registerDataPoint(KAFKA_COUNT_PROCESSING_TIME, capture(capturedFieldsForProcessingTime), any()) } returns Unit
 
-        val session = TopicMetricsSession(EventType.BESKJED)
+        val session = TopicMetricsSession(EventType.BESKJED_INTERN)
         session.countEvent(UniqueKafkaEventIdentifier("1", "sys-t-user", "123"))
         runBlocking { delay(expectedProcessingTimeMs) }
         session.calculateProcessingTime()
@@ -97,7 +97,7 @@ internal class TopicMetricsReporterTest {
         coEvery { metricsReporter.registerDataPoint(KAFKA_TOTAL_EVENTS_ON_TOPIC_BY_PRODUCER, any(), capture(capturedTagsForTotalByProducer)) } returns Unit
         coEvery { metricsReporter.registerDataPoint(KAFKA_UNIQUE_EVENTS_ON_TOPIC_BY_PRODUCER, any(), capture(capturedTagsForUniqueByProducer)) } returns Unit
 
-        val session = TopicMetricsSession(EventType.BESKJED)
+        val session = TopicMetricsSession(EventType.BESKJED_INTERN)
         session.countEvent(UniqueKafkaEventIdentifier("1", producerName, "123"))
         session.countEvent(UniqueKafkaEventIdentifier("1", producerName, "123"))
         runBlocking {
@@ -120,7 +120,7 @@ internal class TopicMetricsReporterTest {
 
     @Test
     fun `Should not report metrics if current count is zero`() {
-        val sessionWithoutAnyReportedEventsSimulatesACountError = TopicMetricsSession(EventType.BESKJED)
+        val sessionWithoutAnyReportedEventsSimulatesACountError = TopicMetricsSession(EventType.BESKJED_INTERN)
         runBlocking {
             topicMetricsReporter.report(sessionWithoutAnyReportedEventsSimulatesACountError)
         }
@@ -142,23 +142,11 @@ internal class TopicMetricsReporterTest {
             runBlocking {
                 topicMetricsReporter.report(TopicMetricsSessionObjectMother.giveMeBeskjedSessionWithOneCountedEvent())
             }
-        } `should throw` MetricsReportingException::class `with message containing` "beskjed"
-
-        invoking {
-            runBlocking {
-                topicMetricsReporter.report(TopicMetricsSessionObjectMother.giveMeBeskjedInternSessionWithOneCountedEvent())
-            }
         } `should throw` MetricsReportingException::class `with message containing` "beskjed_intern"
 
         invoking {
             runBlocking {
                 topicMetricsReporter.report(TopicMetricsSessionObjectMother.giveMeDoneSessionWithOneCountedEvent())
-            }
-        } `should throw` MetricsReportingException::class `with message containing` "done"
-
-        invoking {
-            runBlocking {
-                topicMetricsReporter.report(TopicMetricsSessionObjectMother.giveMeDoneInternSessionWithOneCountedEvent())
             }
         } `should throw` MetricsReportingException::class `with message containing` "done_intern"
 
@@ -166,35 +154,17 @@ internal class TopicMetricsReporterTest {
             runBlocking {
                 topicMetricsReporter.report(TopicMetricsSessionObjectMother.giveMeInnboksSessionWithOneCountedEvent())
             }
-        } `should throw` MetricsReportingException::class `with message containing` "innboks"
-
-        invoking {
-            runBlocking {
-                topicMetricsReporter.report(TopicMetricsSessionObjectMother.giveMeInnboksInternSessionWithOneCountedEvent())
-            }
         } `should throw` MetricsReportingException::class `with message containing` "innboks_intern"
 
         invoking {
             runBlocking {
                 topicMetricsReporter.report(TopicMetricsSessionObjectMother.giveMeOppgaveSessionWithOneCountedEvent())
             }
-        } `should throw` MetricsReportingException::class `with message containing` "oppgave"
-
-        invoking {
-            runBlocking {
-                topicMetricsReporter.report(TopicMetricsSessionObjectMother.giveMeOppgaveInternSessionWithOneCountedEvent())
-            }
         } `should throw` MetricsReportingException::class `with message containing` "oppgave_intern"
 
         invoking {
             runBlocking {
                 topicMetricsReporter.report(TopicMetricsSessionObjectMother.giveMeStatusoppdateringSessionWithOneCountedEvent())
-            }
-        } `should throw` MetricsReportingException::class `with message containing` "statusoppdatering"
-
-        invoking {
-            runBlocking {
-                topicMetricsReporter.report(TopicMetricsSessionObjectMother.giveMeStatusoppdateringInternSessionWithOneCountedEvent())
             }
         } `should throw` MetricsReportingException::class `with message containing` "statusoppdatering_intern"
     }

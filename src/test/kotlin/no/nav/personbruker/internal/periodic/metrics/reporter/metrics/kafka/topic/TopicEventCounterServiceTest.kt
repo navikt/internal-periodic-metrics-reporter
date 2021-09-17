@@ -27,11 +27,11 @@ internal class TopicEventCounterServiceTest {
     private val oppgaveActivityService: TopicActivityService = mockk()
     private val statusoppdateringActivityService: TopicActivityService = mockk()
     private val doneActivityService: TopicActivityService = mockk()
-    private val beskjedCounter = TopicEventTypeCounter(beskjedCountConsumer, beskjedActivityService, EventType.BESKJED, false)
-    private val innboksCounter = TopicEventTypeCounter(innboksCountConsumer, innboksActivityService, EventType.INNBOKS, false)
-    private val oppgaveCounter = TopicEventTypeCounter(oppgaveCountConsumer, oppgaveActivityService, EventType.OPPGAVE, false)
-    private val statusoppdateringCounter = TopicEventTypeCounter(statusoppdateringCountConsumer, statusoppdateringActivityService, EventType.STATUSOPPDATERING, false)
-    private val doneCounter = TopicEventTypeCounter(doneCountConsumer, doneActivityService, EventType.DONE, false)
+    private val beskjedCounter = TopicEventTypeCounter(beskjedCountConsumer, beskjedActivityService, EventType.BESKJED_INTERN, false)
+    private val innboksCounter = TopicEventTypeCounter(innboksCountConsumer, innboksActivityService, EventType.INNBOKS_INTERN, false)
+    private val oppgaveCounter = TopicEventTypeCounter(oppgaveCountConsumer, oppgaveActivityService, EventType.OPPGAVE_INTERN, false)
+    private val statusoppdateringCounter = TopicEventTypeCounter(statusoppdateringCountConsumer, statusoppdateringActivityService, EventType.STATUSOPPDATERING_INTERN, false)
+    private val doneCounter = TopicEventTypeCounter(doneCountConsumer, doneActivityService, EventType.DONE__INTERN, false)
 
     @Test
     internal fun `Should handle exceptions and rethrow as internal exception`() {
@@ -46,31 +46,31 @@ internal class TopicEventCounterServiceTest {
             runBlocking {
                 beskjedCounter.countEventsAsync()
             }
-        } `should throw` CountException::class `with message containing` "beskjed"
+        } `should throw` CountException::class `with message containing` "beskjed_intern"
 
         invoking {
             runBlocking {
                 doneCounter.countEventsAsync()
             }
-        } `should throw` CountException::class `with message containing` "done"
+        } `should throw` CountException::class `with message containing` "done_intern"
 
         invoking {
             runBlocking {
                 innboksCounter.countEventsAsync()
             }
-        } `should throw` CountException::class `with message containing` "innboks"
+        } `should throw` CountException::class `with message containing` "innboks_intern"
 
         invoking {
             runBlocking {
                 oppgaveCounter.countEventsAsync()
             }
-        } `should throw` CountException::class `with message containing` "oppgave"
+        } `should throw` CountException::class `with message containing` "oppgave_intern"
 
         invoking {
             runBlocking {
                 statusoppdateringCounter.countEventsAsync()
             }
-        } `should throw` CountException::class `with message containing` "statusoppdatering"
+        } `should throw` CountException::class `with message containing` "statusoppdatering_intern"
 
     }
 }

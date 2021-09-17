@@ -23,7 +23,7 @@ internal class EventCounterServiceTestIT {
         coEvery { handlerConsumer.getEventCount(any()) }.returns(result)
 
         val metricsProbe = mockk<CacheCountingMetricsProbe>(relaxed = true)
-        val metricsSession = initMetricsSession(metricsProbe, EventType.BESKJED)
+        val metricsSession = initMetricsSession(metricsProbe, EventType.BESKJED_INTERN)
         val service = CacheEventCounterGCPService(metricsProbe, handlerConsumer)
 
         runBlocking {
@@ -43,7 +43,7 @@ internal class EventCounterServiceTestIT {
         coEvery { handlerConsumer.getEventCount(any()) }.returns(result)
 
         val metricsProbe = mockk<CacheCountingMetricsProbe>(relaxed = true)
-        val metricsSession = initMetricsSession(metricsProbe, EventType.INNBOKS)
+        val metricsSession = initMetricsSession(metricsProbe, EventType.INNBOKS_INTERN)
         val service = CacheEventCounterGCPService(metricsProbe, handlerConsumer)
 
         runBlocking {
@@ -63,7 +63,7 @@ internal class EventCounterServiceTestIT {
         coEvery { handlerConsumer.getEventCount(any()) }.returns(result)
 
         val metricsProbe = mockk<CacheCountingMetricsProbe>(relaxed = true)
-        val metricsSession = initMetricsSession(metricsProbe, EventType.OPPGAVE)
+        val metricsSession = initMetricsSession(metricsProbe, EventType.OPPGAVE_INTERN)
         val service = CacheEventCounterGCPService(metricsProbe, handlerConsumer)
 
         runBlocking {
@@ -83,7 +83,7 @@ internal class EventCounterServiceTestIT {
         coEvery { handlerConsumer.getEventCount(any()) }.returns(result)
 
         val metricsProbe = mockk<CacheCountingMetricsProbe>(relaxed = true)
-        val metricsSession = initMetricsSession(metricsProbe, EventType.DONE)
+        val metricsSession = initMetricsSession(metricsProbe, EventType.DONE__INTERN)
         val service = CacheEventCounterGCPService(metricsProbe, handlerConsumer)
 
         runBlocking {

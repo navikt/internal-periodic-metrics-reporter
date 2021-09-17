@@ -35,16 +35,16 @@ class CacheEventCounterGCPService(
         }
 
         val sessions = CountingMetricsSessions()
-        sessions.put(EventType.BESKJED, beskjeder.await())
-        sessions.put(EventType.DONE, done.await())
-        sessions.put(EventType.INNBOKS, innboks.await())
-        sessions.put(EventType.OPPGAVE, oppgave.await())
-        sessions.put(EventType.STATUSOPPDATERING, statusoppdatering.await())
+        sessions.put(EventType.BESKJED_INTERN, beskjeder.await())
+        sessions.put(EventType.DONE__INTERN, done.await())
+        sessions.put(EventType.INNBOKS_INTERN, innboks.await())
+        sessions.put(EventType.OPPGAVE_INTERN, oppgave.await())
+        sessions.put(EventType.STATUSOPPDATERING_INTERN, statusoppdatering.await())
         return@withContext sessions
     }
 
     suspend fun countBeskjeder(): CacheCountingMetricsSession {
-        val eventType = EventType.BESKJED
+        val eventType = EventType.BESKJED_INTERN
         return try {
             metricsProbe.runWithMetrics(eventType) {
 
@@ -53,12 +53,12 @@ class CacheEventCounterGCPService(
             }
 
         } catch (e: Exception) {
-            throw CountException("Klarte ikke å hente antall beskjed-eventer fra handler.", e)
+            throw CountException("Klarte ikke å hente antall ${eventType.eventType} fra handler.", e)
         }
     }
 
     suspend fun countInnboksEventer(): CacheCountingMetricsSession {
-        val eventType = EventType.INNBOKS
+        val eventType = EventType.INNBOKS_INTERN
         return if (isOtherEnvironmentThanProd()) {
             try {
                 metricsProbe.runWithMetrics(eventType) {
@@ -67,7 +67,7 @@ class CacheEventCounterGCPService(
                 }
 
             } catch (e: Exception) {
-                throw CountException("Klarte ikke å hente antall innboks-eventer fra handler.", e)
+                throw CountException("Klarte ikke å hente antall ${eventType.eventType} fra handler.", e)
             }
         } else {
             CacheCountingMetricsSession(eventType)
@@ -75,7 +75,7 @@ class CacheEventCounterGCPService(
     }
 
     suspend fun countStatusoppdateringer(): CacheCountingMetricsSession {
-        val eventType = EventType.STATUSOPPDATERING
+        val eventType = EventType.STATUSOPPDATERING_INTERN
         return if (isOtherEnvironmentThanProd()) {
             try {
                 metricsProbe.runWithMetrics(eventType) {
@@ -84,7 +84,7 @@ class CacheEventCounterGCPService(
                 }
 
             } catch (e: Exception) {
-                throw CountException("Klarte ikke å hente antall statusoppdatering-eventer fra handler.", e)
+                throw CountException("Klarte ikke å hente antall ${eventType.eventType} fra handler.", e)
             }
         } else {
             CacheCountingMetricsSession(eventType)
@@ -92,7 +92,7 @@ class CacheEventCounterGCPService(
     }
 
     suspend fun countOppgaver(): CacheCountingMetricsSession {
-        val eventType = EventType.OPPGAVE
+        val eventType = EventType.OPPGAVE_INTERN
         return try {
             metricsProbe.runWithMetrics(eventType) {
                 val grupperPerProdusent = handlerConsumer.getEventCount(eventType)
@@ -100,12 +100,12 @@ class CacheEventCounterGCPService(
             }
 
         } catch (e: Exception) {
-            throw CountException("Klarte ikke å hente antall oppgave-eventer fra  handler.", e)
+            throw CountException("Klarte ikke å hente antall ${eventType.eventType} fra  handler.", e)
         }
     }
 
     suspend fun countDoneEvents(): CacheCountingMetricsSession {
-        val eventType = EventType.DONE
+        val eventType = EventType.DONE__INTERN
         return try {
             metricsProbe.runWithMetrics(eventType) {
                 val grupperPerProdusent = handlerConsumer.getEventCount(eventType)
@@ -113,7 +113,7 @@ class CacheEventCounterGCPService(
             }
 
         } catch (e: Exception) {
-            throw CountException("Klarte ikke å hente antall done-eventer fra handler.", e)
+            throw CountException("Klarte ikke å hente antall ${eventType.eventType} fra handler.", e)
         }
     }
 

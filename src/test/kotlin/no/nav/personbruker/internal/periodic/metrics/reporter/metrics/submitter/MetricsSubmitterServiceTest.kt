@@ -85,15 +85,15 @@ internal class MetricsSubmitterServiceTest {
             submitter.submitMetrics()
         }
 
-        reportedTopicMetricsForEventTypes `should contain` EventType.INNBOKS //Todo burde denne endres?
-        reportedTopicMetricsForEventTypes `should contain` EventType.BESKJED
-        reportedTopicMetricsForEventTypes `should contain` EventType.DONE
-        reportedTopicMetricsForEventTypes `should contain` EventType.OPPGAVE
+        reportedTopicMetricsForEventTypes `should contain` EventType.INNBOKS_INTERN //Todo burde denne endres?
+        reportedTopicMetricsForEventTypes `should contain` EventType.BESKJED_INTERN
+        reportedTopicMetricsForEventTypes `should contain` EventType.DONE__INTERN
+        reportedTopicMetricsForEventTypes `should contain` EventType.OPPGAVE_INTERN
 
-        reportedCacheMetricsForEventTypes `should contain` EventType.INNBOKS //Todo burde denne endres?
-        reportedCacheMetricsForEventTypes `should contain` EventType.BESKJED
-        reportedCacheMetricsForEventTypes `should contain` EventType.DONE
-        reportedCacheMetricsForEventTypes `should contain` EventType.OPPGAVE
+        reportedCacheMetricsForEventTypes `should contain` EventType.INNBOKS_INTERN //Todo burde denne endres?
+        reportedCacheMetricsForEventTypes `should contain` EventType.BESKJED_INTERN
+        reportedCacheMetricsForEventTypes `should contain` EventType.DONE__INTERN
+        reportedCacheMetricsForEventTypes `should contain` EventType.OPPGAVE_INTERN
     }
 
     @Test

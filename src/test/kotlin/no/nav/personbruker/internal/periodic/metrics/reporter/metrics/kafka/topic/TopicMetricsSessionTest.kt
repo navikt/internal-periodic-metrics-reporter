@@ -97,7 +97,7 @@ internal class TopicMetricsSessionTest {
 
     private fun createAndInitiateBeskjedMetricsSession(): TopicMetricsSession {
 
-        val metricsSession = TopicMetricsSession(EventType.BESKJED)
+        val metricsSession = TopicMetricsSession(EventType.BESKJED_INTERN)
 
         val produsent1Event1 = UniqueKafkaEventIdentifier("b-1", produsent1, "1")
         val produsent2Event1 = UniqueKafkaEventIdentifier("b-11", produsent2, "2")

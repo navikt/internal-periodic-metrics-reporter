@@ -24,7 +24,7 @@ internal class CacheCountingMetricsSessionTest {
 
     @Test
     fun `Skal telle opp riktig totalantall eventer, og rapportere riktig per produsent`() {
-        val session = CacheCountingMetricsSession(EventType.BESKJED)
+        val session = CacheCountingMetricsSession(EventType.BESKJED_INTERN)
         session.addEventsByProducer(beskjederGruppertPerProdusent)
 
         session.getTotalNumber() `should be equal to` (produsent1Antall + produsent2Antall + produsent3Antall)
@@ -40,7 +40,7 @@ internal class CacheCountingMetricsSessionTest {
 
     @Test
     fun `Skal telle opp riktig totalantall eventer, hvis eventer legges til flere ganger`() {
-        val session = CacheCountingMetricsSession(EventType.BESKJED)
+        val session = CacheCountingMetricsSession(EventType.BESKJED_INTERN)
         session.addEventsByProducer(beskjederGruppertPerProdusent)
         session.addEventsByProducer(beskjederGruppertPerProdusent)
 

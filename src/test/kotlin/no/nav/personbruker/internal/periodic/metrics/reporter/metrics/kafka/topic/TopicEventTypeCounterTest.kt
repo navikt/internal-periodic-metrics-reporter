@@ -5,18 +5,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import no.nav.brukernotifikasjon.schemas.Nokkel
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka.Consumer
-import no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka.resetTheGroupIdsOffsetToZero
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.UniqueKafkaEventIdentifier
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.activity.TopicActivityService
-import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should be greater than`
-import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeNull
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.consumer.ConsumerRecords
-import org.apache.kafka.clients.consumer.KafkaConsumer
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Duration
@@ -46,7 +41,7 @@ internal class TopicEventTypeCounterTest {
         val consumer: Consumer<Nokkel, GenericRecord> = mockk()
 
         val deltaCountingEnabled = true
-        val counter = TopicEventTypeCounter(consumer, activityService, EventType.BESKJED, deltaCountingEnabled)
+        val counter = TopicEventTypeCounter(consumer, activityService, EventType.BESKJED_INTERN, deltaCountingEnabled)
 
         every { consumer.kafkaConsumer.poll(any<Duration>()) } returns polledEvents andThen polledNoEvents
         every { activityService.reportEventsFound() } returns Unit

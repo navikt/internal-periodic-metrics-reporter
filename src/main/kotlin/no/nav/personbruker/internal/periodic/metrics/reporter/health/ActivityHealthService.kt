@@ -20,23 +20,23 @@ class ActivityHealthService(
     fun assertTopicActivityHealth(): Boolean {
         var healthy = true
 
-        if (monitoringToggles.monitorBeskjedActivity && !assertServiceHealth(beskjedTopicActivityService, "beskjed")) {
+        if (monitoringToggles.monitorBeskjedActivity && !assertServiceHealth(beskjedTopicActivityService, "beskjed_intern")) {
             healthy = false
         }
 
-        if (monitoringToggles.monitorOppgaveActivity && !assertServiceHealth(oppgaveTopicActivityService, "oppgave")) {
+        if (monitoringToggles.monitorOppgaveActivity && !assertServiceHealth(oppgaveTopicActivityService, "oppgave_intern")) {
             healthy = false
         }
 
-        if (monitoringToggles.monitorInnboksActivity && !assertServiceHealth(innboksTopicActivityService, "innboks")) {
+        if (monitoringToggles.monitorInnboksActivity && !assertServiceHealth(innboksTopicActivityService, "innboks_intern")) {
             healthy = false
         }
 
-        if (monitoringToggles.monitorDoneActivity && !assertServiceHealth(doneTopicActivityService, "done")) {
+        if (monitoringToggles.monitorDoneActivity && !assertServiceHealth(doneTopicActivityService, "done_intern")) {
             healthy = false
         }
 
-        if (monitoringToggles.monitorStatusoppdateringActivity && !assertServiceHealth(statusoppdateringTopicActivityService, "statusoppdatering")) {
+        if (monitoringToggles.monitorStatusoppdateringActivity && !assertServiceHealth(statusoppdateringTopicActivityService, "statusoppdatering_intern")) {
             healthy = false
         }
 

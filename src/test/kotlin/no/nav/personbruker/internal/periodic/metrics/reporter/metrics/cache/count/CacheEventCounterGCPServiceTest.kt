@@ -26,31 +26,31 @@ internal class CacheEventCounterGCPServiceTest {
             runBlocking {
                 cacheEventCounterService.countBeskjeder()
             }
-        } `should throw` CountException::class `with message containing` "beskjed"
+        } `should throw` CountException::class `with message containing` "beskjed_intern"
 
         invoking {
             runBlocking {
                 cacheEventCounterService.countDoneEvents()
             }
-        } `should throw` CountException::class `with message containing` "done"
+        } `should throw` CountException::class `with message containing` "done_intern"
 
         invoking {
             runBlocking {
                 cacheEventCounterService.countInnboksEventer()
             }
-        } `should throw` CountException::class `with message containing` "innboks"
+        } `should throw` CountException::class `with message containing` "innboks_intern"
 
         invoking {
             runBlocking {
                 cacheEventCounterService.countOppgaver()
             }
-        } `should throw` CountException::class `with message containing` "oppgave"
+        } `should throw` CountException::class `with message containing` "oppgave_intern"
 
         invoking {
             runBlocking {
                 cacheEventCounterService.countStatusoppdateringer()
             }
-        } `should throw` CountException::class `with message containing` "statusoppdatering"
+        } `should throw` CountException::class `with message containing` "statusoppdatering_intern"
 
     }
 

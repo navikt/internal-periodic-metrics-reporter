@@ -86,7 +86,7 @@ class ApplicationContext {
             environment.deltaCountingEnabled
     )
 
-    val doneKafkaPropsAiven = Kafka.counterConsumerAivenProps(environment, EventType.DONE_INTERN)
+    val doneKafkaPropsAiven = Kafka.counterConsumerAivenProps(environment, EventType.DONE__INTERN)
     var doneCountAivenConsumer = initializeCountConsumerAiven(doneKafkaPropsAiven, Kafka.doneTopicNameAiven)
     val doneTopicActivityService = TopicActivityService(environment.activityHistoryLength)
     val doneAivenTopicActivityService = TopicActivityService(environment.activityHistoryLength)
@@ -94,7 +94,7 @@ class ApplicationContext {
     val doneCounterAiven = TopicEventTypeCounter(
             doneCountAivenConsumer,
             doneAivenTopicActivityService,
-            EventType.DONE_INTERN,
+            EventType.DONE__INTERN,
             environment.deltaCountingEnabled
     )
 
