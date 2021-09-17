@@ -20,7 +20,6 @@ object KafkaConsumerSetup {
             appContext.beskjedCountAivenConsumer.startSubscription()
             appContext.oppgaveCountAivenConsumer.startSubscription()
             appContext.doneCountAivenConsumer.startSubscription()
-            appContext.feilresponsCountAivenConsumer.startSubscription()
         } else {
             log.info("Er i produksjonsmiljø, unnlater å starte consumere på Aiven.")
         }
@@ -32,7 +31,6 @@ object KafkaConsumerSetup {
             appContext.beskjedCountAivenConsumer.stop()
             appContext.oppgaveCountAivenConsumer.stop()
             appContext.doneCountAivenConsumer.stop()
-            appContext.feilresponsCountAivenConsumer.stop()
         }
         log.info("...ferdig med å stoppe kafka-pollerne på Aiven.")
     }

@@ -55,10 +55,7 @@ class MetricsSubmitterService(
     ) {
         val kafkaEventSession = topicSessions.getForType(eventType)
 
-        if (EventType.FEILRESPONS == eventType) {
-            kafkaMetricsReporter.report(kafkaEventSession as TopicMetricsSession)
-            lastReportedUniqueKafkaEvents[eventType] = kafkaEventSession.getNumberOfUniqueEvents()
-        } else if (countedMoreKafkaEventsThanLastCount(kafkaEventSession, eventType)) {
+        if (countedMoreKafkaEventsThanLastCount(kafkaEventSession, eventType)) {
             val cacheSession = cacheSessions.getForType(eventType)
             cacheMetricsReporter.report(cacheSession as CacheCountingMetricsSession)
             kafkaMetricsReporter.report(kafkaEventSession as TopicMetricsSession)

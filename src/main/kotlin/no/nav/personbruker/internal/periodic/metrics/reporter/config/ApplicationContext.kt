@@ -98,23 +98,12 @@ class ApplicationContext {
             environment.deltaCountingEnabled
     )
 
-    val feilresponsKafkaPropsAiven = Kafka.counterConsumerAivenProps(environment, EventType.FEILRESPONS)
-    var feilresponsCountAivenConsumer = initializeCountConsumerAiven(feilresponsKafkaPropsAiven, Kafka.feilresponsTopicNameAiven)
-    val feilresponsAivenTopicActivityService = TopicActivityService(environment.activityHistoryLength)
-    val feilresponsCounterAiven = TopicEventTypeCounter(
-            feilresponsCountAivenConsumer,
-            feilresponsAivenTopicActivityService,
-            EventType.FEILRESPONS,
-            environment.deltaCountingEnabled
-    )
-
     val topicEventCounterServiceAiven = TopicEventCounterAivenService(
             beskjedCounter = beskjedCounterAiven,
             innboksCounter = innboksCounterAiven,
             oppgaveCounter = oppgaveCounterAiven,
             statusoppdateringCounter = statusoppdateringCounterAiven,
-            doneCounter = doneCounterAiven,
-            feilresponsCounter = feilresponsCounterAiven
+            doneCounter = doneCounterAiven
     )
 
     val metricsSubmitterService = MetricsSubmitterService(
@@ -214,12 +203,6 @@ class ApplicationContext {
             log.warn("doneConsumer på Aiven kunne ikke bli reinstansiert fordi den fortsatt er aktiv.")
         }
 
-        if (feilresponsCountAivenConsumer.isCompleted()) {
-            feilresponsCountAivenConsumer = initializeCountConsumerAiven(feilresponsKafkaPropsAiven, Kafka.feilresponsTopicNameAiven)
-            log.info("feilresponsConsumer på Aiven har blitt reinstansiert.")
-        } else {
-            log.warn("feilresponsConsumer på Aiven kunne ikke bli reinstansiert fordi den fortsatt er aktiv.")
-        }
     }
 }
 

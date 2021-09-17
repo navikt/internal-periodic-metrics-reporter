@@ -55,9 +55,6 @@ class PeriodicConsumerCheck(
         if(appContext.statusoppdateringCountAivenConsumer.isStopped()) {
             stoppedConsumers.add(EventType.STATUSOPPDATERING_INTERN)
         }
-        if(appContext.feilresponsCountAivenConsumer.isStopped()) {
-            stoppedConsumers.add(EventType.FEILRESPONS)
-        }
         return stoppedConsumers
     }
 

@@ -11,8 +11,7 @@ class TopicEventCounterAivenService<K>(
     val innboksCounter: TopicEventTypeCounter<K>,
     val oppgaveCounter: TopicEventTypeCounter<K>,
     val statusoppdateringCounter: TopicEventTypeCounter<K>,
-    val doneCounter: TopicEventTypeCounter<K>,
-    val feilresponsCounter: TopicEventTypeCounter<K>
+    val doneCounter: TopicEventTypeCounter<K>
     ) {
 
         suspend fun countAllEventTypesAsync(): CountingMetricsSessions = coroutineScope {
