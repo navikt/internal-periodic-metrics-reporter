@@ -2,9 +2,9 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: internal-periodic-metrics-reporter
-  namespace: min-side
+  namespace: personbruker
   labels:
-    team: min-side
+    team: personbruker
 spec:
   envFrom:
     - secret: internal-periodic-metrics-reporter-secrets
@@ -25,7 +25,7 @@ spec:
     max: 1
     cpuThresholdPercentage: 50
   ingresses:
-    - "https://internal-periodic-metrics-reporter.dev.nav.no"
+    - "https://internal-periodic-metrics-reporter-gcp.dev.nav.no"
   webproxy: true
   resources:
     limits:
