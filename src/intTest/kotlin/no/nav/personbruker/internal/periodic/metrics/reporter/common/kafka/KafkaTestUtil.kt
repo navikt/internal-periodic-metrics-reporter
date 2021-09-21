@@ -1,4 +1,4 @@
-package no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka.util
+package no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka
 
 import no.nav.common.JAASCredential
 import no.nav.common.KafkaEnvironment
@@ -46,8 +46,12 @@ object KafkaTestUtil {
                 monitorInnboksActivity = false,
                 monitorDoneActivity = false,
                 monitorStatusoppdateringActivity = false,
-                eventHandlerURL = URL("https://event_handler_url")
-
+                eventHandlerURL = URL("https://event_handler_url"),
+                beskjedInternTopicName = KafkaTestTopics.beskjedInternTopicName,
+                oppgaveInternTopicName = KafkaTestTopics.oppgaveInternTopicName,
+                innboksInternTopicName = KafkaTestTopics.innboksInternTopicName,
+                statusoppdateringInternTopicName = KafkaTestTopics.statusoppdateringInternTopicName,
+                doneInternTopicName = KafkaTestTopics.doneInternTopicName
         )
     }
 

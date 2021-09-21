@@ -33,7 +33,12 @@ data class Environment(val bootstrapServers: String = getEnvVar("KAFKA_BOOTSTRAP
                        val monitorInnboksActivity: Boolean = getEnvVarAsBoolean("MONITOR_INNBOKS_ACTIVITY"),
                        val monitorDoneActivity: Boolean = getEnvVarAsBoolean("MONITOR_DONE_ACTIVITY"),
                        val monitorStatusoppdateringActivity: Boolean = getEnvVarAsBoolean("MONITOR_STATUSOPPDATERING_ACTIVITY"),
-                       val eventHandlerURL: URL = URL(getEnvVar("EVENT_HANDLER_URL").trimEnd('/'))
+                       val eventHandlerURL: URL = URL(getEnvVar("EVENT_HANDLER_URL").trimEnd('/')),
+                       val beskjedInternTopicName: String = getEnvVar("INTERN_BESKJED_TOPIC"),
+                       val oppgaveInternTopicName: String = getEnvVar("INTERN_OPPGAVE_TOPIC"),
+                       val innboksInternTopicName: String = getEnvVar("INTERN_INNBOKS_TOPIC"),
+                       val statusoppdateringInternTopicName: String = getEnvVar("INTERN_STATUSOPPDATERING_TOPIC"),
+                       val doneInternTopicName: String = getEnvVar("INTERN_DONE_TOPIC")
 )
 
 fun isOtherEnvironmentThanProd() = System.getenv("NAIS_CLUSTER_NAME") != "prod-gcp"

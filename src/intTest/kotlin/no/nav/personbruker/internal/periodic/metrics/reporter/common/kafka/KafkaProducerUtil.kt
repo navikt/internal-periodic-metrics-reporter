@@ -1,4 +1,4 @@
-package no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka.util
+package no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka
 
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig
 import kotlinx.coroutines.withTimeoutOrNull

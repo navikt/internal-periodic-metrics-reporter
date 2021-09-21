@@ -28,7 +28,12 @@ internal class EnvironmentTest {
             "MONITOR_INNBOKS_ACTIVITY" to "true",
             "MONITOR_DONE_ACTIVITY" to "true",
             "MONITOR_STATUSOPPDATERING_ACTIVITY" to "true",
-            "EVENT_HANDLER_URL" to "https://event_handler_url"
+            "EVENT_HANDLER_URL" to "https://event_handler_url",
+            "INTERN_BESKJED_TOPIC" to "internBeskjedTopic",
+            "INTERN_OPPGAVE_TOPIC" to "internOppgaveTopic",
+            "INTERN_INNBOKS_TOPIC" to "internInnboksTopic",
+            "INTERN_STATUSOPPDATERING_TOPIC" to "internStatusoppdateringTopic",
+            "INTERN_DONE_TOPIC" to "internDoneTopic"
     )
 
     @Test
@@ -51,5 +56,5 @@ internal class EnvironmentTest {
             Environment().deltaCountingEnabled `should be equal to` true
         }
     }
-    
+
 }
