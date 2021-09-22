@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test
 internal class EnvironmentTest {
 
     private val envVars = mapOf(
-            "KAFKA_BOOTSTRAP_SERVERS" to "bootstrap_servers",
-            "KAFKA_SCHEMAREGISTRY_SERVERS" to "schemaregistry_servers",
             "SERVICEUSER_USERNAME" to "username",
             "SERVICEUSER_PASSWORD" to "password",
             "NAIS_CLUSTER_NAME" to "cluster_name",
@@ -17,12 +15,7 @@ internal class EnvironmentTest {
             "SENSU_PORT" to "1",
             "COUNTING_INTERVAL_MINUTES" to "1",
             "KAFKA_BROKERS" to "kafka_brokers",
-            "KAFKA_TRUSTSTORE_PATH" to "kafka_truststore_path",
-            "KAFKA_KEYSTORE_PATH" to "kafka_keystore_path",
-            "KAFKA_CREDSTORE_PASSWORD" to "kafka_credstore_password",
             "KAFKA_SCHEMA_REGISTRY" to "kafka_schema_registry",
-            "KAFKA_SCHEMA_REGISTRY_USER" to "kafka_schema_registry_user",
-            "KAFKA_SCHEMA_REGISTRY_PASSWORD" to "kafka_shchema_registry_password",
             "MONITOR_BESKJED_ACTIVITY" to "true",
             "MONITOR_OPPGAVE_ACTIVITY" to "true",
             "MONITOR_INNBOKS_ACTIVITY" to "true",
@@ -33,7 +26,13 @@ internal class EnvironmentTest {
             "INTERN_OPPGAVE_TOPIC" to "internOppgaveTopic",
             "INTERN_INNBOKS_TOPIC" to "internInnboksTopic",
             "INTERN_STATUSOPPDATERING_TOPIC" to "internStatusoppdateringTopic",
-            "INTERN_DONE_TOPIC" to "internDoneTopic"
+            "INTERN_DONE_TOPIC" to "internDoneTopic",
+            "INFLUXDB_HOST" to "influx_host",
+            "INFLUXDB_PORT" to "1",
+            "INFLUXDB_DATABASE_NAME" to "influx_db",
+            "INFLUXDB_USER" to "influx_user",
+            "INFLUXDB_PASSWORD" to "influx_pw",
+            "INFLUXDB_RETENTION_POLICY" to "influx_retention"
     )
 
     @Test
