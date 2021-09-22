@@ -6,9 +6,7 @@ import no.nav.personbruker.dittnav.common.util.config.LongEnvVar.getEnvVarAsLong
 import no.nav.personbruker.dittnav.common.util.config.StringEnvVar.getEnvVar
 import java.net.URL
 
-data class Environment(val sensuHost: String = getEnvVar("SENSU_HOST"),
-                       val sensuPort: Int = getEnvVarAsInt("SENSU_PORT"),
-                       val username: String = getEnvVar("SERVICEUSER_USERNAME"),
+data class Environment(val username: String = getEnvVar("SERVICEUSER_USERNAME"),
                        val password: String = getEnvVar("SERVICEUSER_PASSWORD"),
                        val clusterName: String = getEnvVar("NAIS_CLUSTER_NAME"),
                        val namespace: String = getEnvVar("NAIS_NAMESPACE"),

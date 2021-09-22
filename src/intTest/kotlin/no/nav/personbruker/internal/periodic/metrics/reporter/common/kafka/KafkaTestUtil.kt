@@ -23,8 +23,6 @@ object KafkaTestUtil {
 
     fun createEnvironmentForEmbeddedKafka(embeddedEnv: KafkaEnvironment): Environment {
         return Environment(
-                sensuHost = "test",
-                sensuPort = 1,
                 username = username,
                 password = password,
                 clusterName = "clusterNameIkkeIBrukHer",

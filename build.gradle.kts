@@ -40,7 +40,7 @@ dependencies {
     implementation("com.github.navikt:brukernotifikasjon-schemas:v2.0.0")
     implementation(DittNAV.Common.utils)
     implementation(DittNAV.Common.influx)
-    implementation(Influxdb.java)
+    implementation(DittNAV.Common.influxdb)
     implementation(Kafka.Apache.clients)
     implementation(Kafka.Confluent.avroSerializer)
     implementation(Ktor.serverNetty)
