@@ -8,8 +8,8 @@ internal class SessionComparatorTest {
 
     @Test
     fun `Should return all sessions from both sources, when they have the same session types`() {
-        val allTopicSessions = CountingMetricsSessionsObjectMother.giveMeDatabaseSessionsForAllInternalEventTypesExceptForInnboks()
-        val allDbSessions = CountingMetricsSessionsObjectMother.giveMeDatabaseSessionsForAllInternalEventTypesExceptForInnboks()
+        val allTopicSessions = CountingMetricsSessionsObjectMother.giveMeCacheSessionsForAllInternalEventTypesExceptForInnboks()
+        val allDbSessions = CountingMetricsSessionsObjectMother.giveMeCacheSessionsForAllInternalEventTypesExceptForInnboks()
 
         val comparator = SessionComparator(allTopicSessions, allDbSessions)
 
@@ -19,8 +19,8 @@ internal class SessionComparatorTest {
 
     @Test
     fun `Should only return sessions present in both sources, if one topic session is missing`() {
-        val oneTopicSessionMissing = CountingMetricsSessionsObjectMother.giveMeDatabaseSessionsForAllInternalEventTypesExceptForInnboks()
-        val allDbSessions = CountingMetricsSessionsObjectMother.giveMeDatabaseSessionsForAllInternalEventTypes()
+        val oneTopicSessionMissing = CountingMetricsSessionsObjectMother.giveMeCacheSessionsForAllInternalEventTypesExceptForInnboks()
+        val allDbSessions = CountingMetricsSessionsObjectMother.giveMeCacheSessionsForAllInternalEventTypes()
 
         val comparator = SessionComparator(oneTopicSessionMissing, allDbSessions)
 
@@ -29,7 +29,7 @@ internal class SessionComparatorTest {
 
     @Test
     fun `Should only return sessions present in both sources, if one database session is missing`() {
-        val oneDbSessionMissing = CountingMetricsSessionsObjectMother.giveMeDatabaseSessionsForAllInternalEventTypesExceptForInnboks()
+        val oneDbSessionMissing = CountingMetricsSessionsObjectMother.giveMeCacheSessionsForAllInternalEventTypesExceptForInnboks()
         val allTopicSessions = CountingMetricsSessionsObjectMother.giveMeTopicSessionsForAllInternalEventTypes()
 
         val comparator = SessionComparator(allTopicSessions, oneDbSessionMissing)
@@ -39,7 +39,7 @@ internal class SessionComparatorTest {
 
     @Test
     fun `Should return sessions of internal eventtypes, if present on topic`() {
-        val dbSessions = CountingMetricsSessionsObjectMother.giveMeDatabaseSessionsForAllInternalEventTypes()
+        val dbSessions = CountingMetricsSessionsObjectMother.giveMeCacheSessionsForAllInternalEventTypes()
         val topicSessions = CountingMetricsSessionsObjectMother.giveMeTopicSessionsForAllInternalEventTypes()
 
         val comparator = SessionComparator(topicSessions, dbSessions)

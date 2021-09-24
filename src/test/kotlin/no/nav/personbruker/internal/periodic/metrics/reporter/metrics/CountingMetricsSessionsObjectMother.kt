@@ -6,7 +6,7 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topi
 
 object CountingMetricsSessionsObjectMother {
 
-    fun giveMeDatabaseSessionsForAllInternalEventTypes(): CountingMetricsSessions {
+    fun giveMeCacheSessionsForAllInternalEventTypes(): CountingMetricsSessions {
         return CountingMetricsSessions().apply {
             put(EventType.BESKJED_INTERN, CacheCountingMetricsSessionObjectMother.giveMeBeskjedInternSessionWithOneCountedEvent())
             put(EventType.DONE__INTERN, CacheCountingMetricsSessionObjectMother.giveMeDoneInternSessionWithTwoCountedEvents())
@@ -17,7 +17,7 @@ object CountingMetricsSessionsObjectMother {
     }
 
 
-    fun giveMeDatabaseSessionsForAllInternalEventTypesExceptForInnboks(): CountingMetricsSessions {
+    fun giveMeCacheSessionsForAllInternalEventTypesExceptForInnboks(): CountingMetricsSessions {
         return CountingMetricsSessions().apply {
             put(EventType.BESKJED_INTERN, CacheCountingMetricsSessionObjectMother.giveMeBeskjedInternSessionWithOneCountedEvent())
             put(EventType.DONE__INTERN, CacheCountingMetricsSessionObjectMother.giveMeDoneInternSessionWithTwoCountedEvents())

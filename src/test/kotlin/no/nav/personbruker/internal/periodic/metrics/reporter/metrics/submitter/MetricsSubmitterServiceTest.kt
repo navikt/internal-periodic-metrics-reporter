@@ -37,7 +37,7 @@ internal class MetricsSubmitterServiceTest {
     @Test
     fun `Should report metrics for both kafka topics and the database cache`() {
         val topicMetricsSessions = CountingMetricsSessionsObjectMother.giveMeTopicSessionsForAllInternalEventTypes()
-        val cacheMetricsSessions = CountingMetricsSessionsObjectMother.giveMeDatabaseSessionsForAllInternalEventTypes()
+        val cacheMetricsSessions = CountingMetricsSessionsObjectMother.giveMeCacheSessionsForAllInternalEventTypes()
 
         coEvery { topicEventCounterServiceAiven.countAllEventTypesAsync() } returns topicMetricsSessions
         coEvery { cacheEventCounterGCPService.countAllEventTypesAsync() } returns cacheMetricsSessions
@@ -58,7 +58,7 @@ internal class MetricsSubmitterServiceTest {
     @Test
     fun `Should not report metrics for event types without metrics session`() {
         val topicMetricsInternSessions = CountingMetricsSessionsObjectMother.giveMeTopicSessionsForAllInternalEventTypes()
-        val cacheMetricInternSessions = CountingMetricsSessionsObjectMother.giveMeDatabaseSessionsForAllInternalEventTypes()
+        val cacheMetricInternSessions = CountingMetricsSessionsObjectMother.giveMeCacheSessionsForAllInternalEventTypes()
 
         coEvery { topicEventCounterServiceAiven.countAllEventTypesAsync() } returns topicMetricsInternSessions
         coEvery { cacheEventCounterGCPService.countAllEventTypesAsync() } returns cacheMetricInternSessions
@@ -101,7 +101,7 @@ internal class MetricsSubmitterServiceTest {
         val sessionWithCorrectCount = CountingMetricsSessionsObjectMother.giveMeTopicSessionsForAllInternalEventTypes()
         val simulatedWrongCount =
                 CountingMetricsSessionsObjectMother.giveMeTopicSessionsWithSingleEventForAllInternalEventTypes()
-        val dbMetricInternSessions = CountingMetricsSessionsObjectMother.giveMeDatabaseSessionsForAllInternalEventTypes()
+        val dbMetricInternSessions = CountingMetricsSessionsObjectMother.giveMeCacheSessionsForAllInternalEventTypes()
 
         coEvery { topicEventCounterServiceAiven.countAllEventTypesAsync() } returns sessionWithCorrectCount andThen simulatedWrongCount andThen sessionWithCorrectCount
         coEvery { cacheEventCounterGCPService.countAllEventTypesAsync() } returns dbMetricInternSessions
