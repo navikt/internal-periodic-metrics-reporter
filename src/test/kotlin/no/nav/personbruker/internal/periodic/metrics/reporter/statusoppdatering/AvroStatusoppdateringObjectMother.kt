@@ -1,6 +1,6 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.statusoppdatering
 
-import no.nav.brukernotifikasjon.schemas.Statusoppdatering
+import no.nav.brukernotifikasjon.schemas.internal.StatusoppdateringIntern
 import java.time.Instant
 
 object AvroStatusoppdateringObjectMother {
@@ -10,12 +10,12 @@ object AvroStatusoppdateringObjectMother {
     private val defaultStatusIntern = "statusIntern"
     private val defaultSakstema = "dummySakstema"
 
-    fun createStatusoppdateringWithStatusGlobal(statusGlobal: String): Statusoppdatering {
+    fun createStatusoppdateringWithStatusGlobal(statusGlobal: String): StatusoppdateringIntern {
         return createStatusoppdatering(statusGlobal, defaultStatusIntern, defaultSakstema)
     }
 
-    fun createStatusoppdatering(statusGlobal: String, statusIntern: String?, sakstema: String): Statusoppdatering {
-        return Statusoppdatering(
+    fun createStatusoppdatering(statusGlobal: String, statusIntern: String?, sakstema: String): StatusoppdateringIntern {
+        return StatusoppdateringIntern(
                 Instant.now().toEpochMilli(),
                 defaultLink,
                 defaultSikkerhetsnivaa,

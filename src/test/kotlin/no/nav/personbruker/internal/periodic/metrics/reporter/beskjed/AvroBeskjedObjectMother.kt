@@ -1,6 +1,6 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.beskjed
 
-import no.nav.brukernotifikasjon.schemas.Beskjed
+import no.nav.brukernotifikasjon.schemas.internal.BeskjedIntern
 import java.time.Instant
 
 object AvroBeskjedObjectMother {
@@ -10,12 +10,12 @@ object AvroBeskjedObjectMother {
     private val defaultEksternVarsling = false
     private val defaultPreferertKanaler = listOf("SMS")
 
-    fun createBeskjed(lopenummer: Int): Beskjed {
+    fun createBeskjed(lopenummer: Int): BeskjedIntern {
         return createBeskjed(lopenummer, defaultText)
     }
 
-    fun createBeskjed(lopenummer: Int, text: String): Beskjed {
-        return Beskjed(
+    fun createBeskjed(lopenummer: Int, text: String): BeskjedIntern {
+        return BeskjedIntern(
                 Instant.now().toEpochMilli(),
                 Instant.now().toEpochMilli(),
                 text,
@@ -25,8 +25,8 @@ object AvroBeskjedObjectMother {
                 defaultPreferertKanaler)
     }
 
-    fun createBeskjedWithoutSynligFremTilSatt(): Beskjed {
-        return Beskjed(
+    fun createBeskjedWithoutSynligFremTilSatt(): BeskjedIntern {
+        return BeskjedIntern(
                 Instant.now().toEpochMilli(),
                 null,
                 defaultText,

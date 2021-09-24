@@ -3,7 +3,7 @@ package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.top
 import io.mockk.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import no.nav.brukernotifikasjon.schemas.Nokkel
+import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka.Consumer
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.UniqueKafkaEventIdentifier
@@ -18,8 +18,8 @@ import java.time.Duration
 
 internal class TopicEventTypeCounterTest {
 
-    private val polledEvents: ConsumerRecords<Nokkel, GenericRecord> = mockk()
-    private val polledNoEvents: ConsumerRecords<Nokkel, GenericRecord> = mockk()
+    private val polledEvents: ConsumerRecords<NokkelIntern, GenericRecord> = mockk()
+    private val polledNoEvents: ConsumerRecords<NokkelIntern, GenericRecord> = mockk()
 
     private val activityService: TopicActivityService = mockk()
 
@@ -38,7 +38,7 @@ internal class TopicEventTypeCounterTest {
         mockkObject(UniqueKafkaKeyIdentifierTransformer)
         mockkObject(TopicEventTypeCounter)
 
-        val consumer: Consumer<Nokkel, GenericRecord> = mockk()
+        val consumer: Consumer<NokkelIntern, GenericRecord> = mockk()
 
         val deltaCountingEnabled = true
         val counter = TopicEventTypeCounter(consumer, activityService, EventType.BESKJED_INTERN, deltaCountingEnabled)

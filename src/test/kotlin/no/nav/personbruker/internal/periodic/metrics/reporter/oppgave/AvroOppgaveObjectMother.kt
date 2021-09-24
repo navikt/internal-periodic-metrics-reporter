@@ -1,6 +1,6 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.oppgave
 
-import no.nav.brukernotifikasjon.schemas.Oppgave
+import no.nav.brukernotifikasjon.schemas.internal.OppgaveIntern
 import java.time.Instant
 
 object AvroOppgaveObjectMother {
@@ -9,12 +9,12 @@ object AvroOppgaveObjectMother {
     private val defaultEksternVarsling = false
     private val defaultPreferertKanaler = listOf("SMS")
 
-    fun createOppgave(tekst: String): Oppgave {
+    fun createOppgave(tekst: String): OppgaveIntern {
         return createOppgave(defaultLopenummer, tekst)
     }
 
-    fun createOppgave(lopenummer: Int, tekst: String): Oppgave {
-        return Oppgave(
+    fun createOppgave(lopenummer: Int, tekst: String): OppgaveIntern {
+        return OppgaveIntern(
                 Instant.now().toEpochMilli(),
                 tekst,
                 "https://nav.no/systemX/$lopenummer",

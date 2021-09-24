@@ -1,6 +1,6 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic
 
-import no.nav.brukernotifikasjon.schemas.Nokkel
+import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.UniqueKafkaEventIdentifier
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -19,7 +19,7 @@ object UniqueKafkaKeyIdentifierTransformer {
                 log.warn("Kan ikke telle eventet, fordi kafka-key (Nokkel) er null. Transformerer til et dummy-event: $invalidEvent.")
                 invalidEvent
             }
-            is Nokkel -> {
+            is NokkelIntern -> {
                 UniqueKafkaEventIdentifier(key.getEventId(), key.getAppnavn(), key.getFodselsnummer())
             }
             else -> {

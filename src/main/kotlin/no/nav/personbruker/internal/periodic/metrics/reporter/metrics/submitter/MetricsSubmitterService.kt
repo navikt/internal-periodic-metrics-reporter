@@ -1,6 +1,6 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.submitter
 
-import no.nav.brukernotifikasjon.schemas.Nokkel
+import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.CountException
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.MetricsReportingException
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory
 
 class MetricsSubmitterService(
         private val cacheEventCounterGCPService: CacheEventCounterGCPService,
-        private val topicEventCounterServiceAiven: TopicEventCounterAivenService<Nokkel>,
+        private val topicEventCounterServiceAiven: TopicEventCounterAivenService<NokkelIntern>,
         private val cacheMetricsReporter: CacheMetricsReporter,
         private val kafkaMetricsReporter: TopicMetricsReporter
 ) {

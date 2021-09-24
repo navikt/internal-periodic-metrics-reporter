@@ -1,6 +1,6 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.config
 
-import no.nav.brukernotifikasjon.schemas.Nokkel
+import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.HandlerConsumer
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka.polling.PeriodicConsumerCheck
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.ActivityHealthDecider
@@ -144,7 +144,7 @@ class ApplicationContext {
             PeriodicConsumerCheck(this)
 
     private fun initializeCountConsumerAiven(kafkaProps: Properties, topic: String) =
-            KafkaConsumerSetup.setupCountConsumer<Nokkel, GenericRecord>(kafkaProps, topic)
+            KafkaConsumerSetup.setupCountConsumer<NokkelIntern, GenericRecord>(kafkaProps, topic)
 
     private fun initializePeriodicMetricsSubmitter(): PeriodicMetricsSubmitter =
             PeriodicMetricsSubmitter(metricsSubmitterService, environment.countingIntervalMinutes)

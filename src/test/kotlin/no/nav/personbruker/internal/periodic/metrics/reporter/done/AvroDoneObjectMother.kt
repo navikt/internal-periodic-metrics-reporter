@@ -1,12 +1,12 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.done
 
-import no.nav.brukernotifikasjon.schemas.Done
+import no.nav.brukernotifikasjon.schemas.internal.DoneIntern
 import java.time.Instant
 
 object AvroDoneObjectMother {
 
-    fun createDone(): Done {
-        return Done(
+    fun createDone(): DoneIntern {
+        return DoneIntern(
                 Instant.now().toEpochMilli()
         )
     }

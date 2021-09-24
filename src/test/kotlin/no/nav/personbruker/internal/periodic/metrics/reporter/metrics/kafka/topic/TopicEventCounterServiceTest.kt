@@ -3,7 +3,7 @@ package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.top
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import no.nav.brukernotifikasjon.schemas.Nokkel
+import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.`with message containing`
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.CountException
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka.Consumer
@@ -17,11 +17,11 @@ import java.time.Duration
 
 internal class TopicEventCounterServiceTest {
 
-    private val beskjedCountConsumer: Consumer<Nokkel, GenericRecord> = mockk(relaxed = true)
-    private val innboksCountConsumer: Consumer<Nokkel, GenericRecord> = mockk(relaxed = true)
-    private val oppgaveCountConsumer: Consumer<Nokkel, GenericRecord> = mockk(relaxed = true)
-    private val statusoppdateringCountConsumer: Consumer<Nokkel, GenericRecord> = mockk(relaxed = true)
-    private val doneCountConsumer: Consumer<Nokkel, GenericRecord> = mockk(relaxed = true)
+    private val beskjedCountConsumer: Consumer<NokkelIntern, GenericRecord> = mockk(relaxed = true)
+    private val innboksCountConsumer: Consumer<NokkelIntern, GenericRecord> = mockk(relaxed = true)
+    private val oppgaveCountConsumer: Consumer<NokkelIntern, GenericRecord> = mockk(relaxed = true)
+    private val statusoppdateringCountConsumer: Consumer<NokkelIntern, GenericRecord> = mockk(relaxed = true)
+    private val doneCountConsumer: Consumer<NokkelIntern, GenericRecord> = mockk(relaxed = true)
     private val beskjedActivityService: TopicActivityService = mockk()
     private val innboksActivityService: TopicActivityService = mockk()
     private val oppgaveActivityService: TopicActivityService = mockk()

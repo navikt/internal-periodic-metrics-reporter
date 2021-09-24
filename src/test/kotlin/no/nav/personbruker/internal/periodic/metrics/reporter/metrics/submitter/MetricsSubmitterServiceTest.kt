@@ -2,7 +2,7 @@ package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.submitter
 
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
-import no.nav.brukernotifikasjon.schemas.Nokkel
+import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSessionsObjectMother
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheCountingMetricsSession
@@ -20,7 +20,7 @@ internal class MetricsSubmitterServiceTest {
     private val cacheMetricsReporter: CacheMetricsReporter = mockk(relaxed = true)
     private val kafkaMetricsReporter: TopicMetricsReporter = mockk(relaxed = true)
     private val cacheEventCounterGCPService: CacheEventCounterGCPService = mockk(relaxed = true)
-    private val topicEventCounterServiceAiven: TopicEventCounterAivenService<Nokkel> = mockk(relaxed = true)
+    private val topicEventCounterServiceAiven: TopicEventCounterAivenService<NokkelIntern> = mockk(relaxed = true)
 
     private val submitter = MetricsSubmitterService(
             cacheEventCounterGCPService = cacheEventCounterGCPService,
