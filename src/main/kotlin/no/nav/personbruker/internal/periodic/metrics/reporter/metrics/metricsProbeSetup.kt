@@ -16,7 +16,7 @@ fun resolveMetricsReporter(environment: Environment): MetricsReporter {
 }
 
 private fun createSensuConfig(environment: Environment) = InfluxConfig(
-        applicationName = "dittnav-event-aggregator",
+        applicationName = "internal-periodic-metrics-reporter",
         hostName = environment.influxdbHost,
         hostPort = environment.influxdbPort,
         databaseName = environment.influxdbName,
