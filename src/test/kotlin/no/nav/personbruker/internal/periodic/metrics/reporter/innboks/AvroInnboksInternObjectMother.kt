@@ -6,6 +6,8 @@ import java.time.Instant
 object AvroInnboksInternObjectMother {
 
     private val defaultLopenummer = 1
+    private val defaultEksternVarsling = false
+    private val defaultPreferertKanaler = listOf("SMS")
 
     fun createInnboksWithText(text: String): InnboksIntern {
         return createInnboks(defaultLopenummer, text)
@@ -16,7 +18,9 @@ object AvroInnboksInternObjectMother {
                 Instant.now().toEpochMilli(),
                 text,
                 "https://nav.no/systemX/$lopenummer",
-                4)
+                4,
+                defaultEksternVarsling,
+                defaultPreferertKanaler)
     }
 
 }
