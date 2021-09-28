@@ -10,12 +10,12 @@ import org.amshove.kluent.`should throw`
 import org.amshove.kluent.invoking
 import org.junit.jupiter.api.Test
 
-internal class CacheEventCounterGCPServiceTest {
+internal class CacheEventCounterServiceTest {
 
     private val metricsProbe: CacheCountingMetricsProbe = mockk(relaxed = true)
     private val handlerConsumer = mockk<HandlerConsumer>(relaxed = true)
 
-    private val cacheEventCounterService = CacheEventCounterGCPService(metricsProbe, handlerConsumer)
+    private val cacheEventCounterService = CacheEventCounterService(metricsProbe, handlerConsumer)
 
     @Test
     internal fun `Should handle exceptions and rethrow as internal exception`() {

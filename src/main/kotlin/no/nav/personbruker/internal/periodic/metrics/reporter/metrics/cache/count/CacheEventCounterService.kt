@@ -10,12 +10,12 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.config.isOtherEnvi
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSessions
 import org.slf4j.LoggerFactory
 
-class CacheEventCounterGCPService(
+class CacheEventCounterService(
         private val metricsProbe: CacheCountingMetricsProbe,
         private val handlerConsumer: HandlerConsumer
 ) {
 
-    private val log = LoggerFactory.getLogger(CacheEventCounterGCPService::class.java)
+    private val log = LoggerFactory.getLogger(CacheEventCounterService::class.java)
 
     suspend fun countAllEventTypesAsync(): CountingMetricsSessions = withContext(Dispatchers.IO) {
         val beskjeder = async {

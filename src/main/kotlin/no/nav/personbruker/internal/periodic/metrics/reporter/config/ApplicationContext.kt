@@ -8,7 +8,7 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.health.ActivityHea
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.ActivityMonitoringToggles
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.HealthService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheCountingMetricsProbe
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheEventCounterGCPService
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheEventCounterService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheMetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventCounterAivenService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventTypeCounter
@@ -31,7 +31,7 @@ class ApplicationContext {
 
     val cacheEventCountingMetricsProbe = CacheCountingMetricsProbe()
     val metricsReporter = resolveMetricsReporter(environment)
-    val cacheEventCounterGCPService = CacheEventCounterGCPService(cacheEventCountingMetricsProbe, handlerConsumer)
+    val cacheEventCounterService = CacheEventCounterService(cacheEventCountingMetricsProbe, handlerConsumer)
 
     val healthService = HealthService(this)
 
@@ -107,7 +107,7 @@ class ApplicationContext {
     )
 
     val metricsSubmitterService = MetricsSubmitterService(
-            cacheEventCounterGCPService = cacheEventCounterGCPService,
+            cacheEventCounterService = cacheEventCounterService,
             topicEventCounterServiceAiven = topicEventCounterServiceAiven,
             cacheMetricsReporter = cacheMetricsReporter,
             kafkaMetricsReporter = kafkaMetricsReporter

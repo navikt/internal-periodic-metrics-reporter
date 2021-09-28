@@ -8,7 +8,7 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.common.HandlerCons
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheCountingMetricsProbe
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheCountingMetricsSession
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheEventCounterGCPService
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheEventCounterService
 import org.amshove.kluent.`should be equal to`
 import org.junit.jupiter.api.Test
 
@@ -24,7 +24,7 @@ internal class EventCounterServiceTestIT {
 
         val metricsProbe = mockk<CacheCountingMetricsProbe>(relaxed = true)
         val metricsSession = initMetricsSession(metricsProbe, EventType.BESKJED_INTERN)
-        val service = CacheEventCounterGCPService(metricsProbe, handlerConsumer)
+        val service = CacheEventCounterService(metricsProbe, handlerConsumer)
 
         runBlocking {
             service.countBeskjeder()
@@ -44,7 +44,7 @@ internal class EventCounterServiceTestIT {
 
         val metricsProbe = mockk<CacheCountingMetricsProbe>(relaxed = true)
         val metricsSession = initMetricsSession(metricsProbe, EventType.INNBOKS_INTERN)
-        val service = CacheEventCounterGCPService(metricsProbe, handlerConsumer)
+        val service = CacheEventCounterService(metricsProbe, handlerConsumer)
 
         runBlocking {
             service.countInnboksEventer()
@@ -64,7 +64,7 @@ internal class EventCounterServiceTestIT {
 
         val metricsProbe = mockk<CacheCountingMetricsProbe>(relaxed = true)
         val metricsSession = initMetricsSession(metricsProbe, EventType.OPPGAVE_INTERN)
-        val service = CacheEventCounterGCPService(metricsProbe, handlerConsumer)
+        val service = CacheEventCounterService(metricsProbe, handlerConsumer)
 
         runBlocking {
             service.countOppgaver()
@@ -84,7 +84,7 @@ internal class EventCounterServiceTestIT {
 
         val metricsProbe = mockk<CacheCountingMetricsProbe>(relaxed = true)
         val metricsSession = initMetricsSession(metricsProbe, EventType.DONE__INTERN)
-        val service = CacheEventCounterGCPService(metricsProbe, handlerConsumer)
+        val service = CacheEventCounterService(metricsProbe, handlerConsumer)
 
         runBlocking {
             service.countDoneEvents()

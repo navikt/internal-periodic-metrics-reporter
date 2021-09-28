@@ -6,7 +6,7 @@ import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSessionsObjectMother
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheCountingMetricsSession
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheEventCounterGCPService
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheEventCounterService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheMetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventCounterAivenService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicMetricsReporter
@@ -20,11 +20,11 @@ internal class MetricsSubmitterServiceTest {
 
     private val cacheMetricsReporter: CacheMetricsReporter = mockk(relaxed = true)
     private val kafkaMetricsReporter: TopicMetricsReporter = mockk(relaxed = true)
-    private val cacheEventCounterGCPService: CacheEventCounterGCPService = mockk(relaxed = true)
+    private val cacheEventCounterService: CacheEventCounterService = mockk(relaxed = true)
     private val topicEventCounterServiceAiven: TopicEventCounterAivenService<NokkelIntern> = mockk(relaxed = true)
 
     private val submitter = MetricsSubmitterService(
-            cacheEventCounterGCPService = cacheEventCounterGCPService,
+            cacheEventCounterService = cacheEventCounterService,
             topicEventCounterServiceAiven = topicEventCounterServiceAiven,
             cacheMetricsReporter = cacheMetricsReporter,
             kafkaMetricsReporter = kafkaMetricsReporter
@@ -41,7 +41,7 @@ internal class MetricsSubmitterServiceTest {
         val cacheMetricsSessions = CountingMetricsSessionsObjectMother.giveMeCacheSessionsForAllInternalEventTypes()
 
         coEvery { topicEventCounterServiceAiven.countAllEventTypesAsync() } returns topicMetricsSessions
-        coEvery { cacheEventCounterGCPService.countAllEventTypesAsync() } returns cacheMetricsSessions
+        coEvery { cacheEventCounterService.countAllEventTypesAsync() } returns cacheMetricsSessions
 
         runBlocking {
             submitter.submitMetrics()
@@ -62,7 +62,7 @@ internal class MetricsSubmitterServiceTest {
         val cacheMetricInternSessions = CountingMetricsSessionsObjectMother.giveMeCacheSessionsForAllInternalEventTypesExceptForInnboks()
 
         coEvery { topicEventCounterServiceAiven.countAllEventTypesAsync() } returns topicMetricsInternSessions
-        coEvery { cacheEventCounterGCPService.countAllEventTypesAsync() } returns cacheMetricInternSessions
+        coEvery { cacheEventCounterService.countAllEventTypesAsync() } returns cacheMetricInternSessions
 
         val reportedTopicMetricsForEventTypes = mutableListOf<EventType>()
         val capturedReportedTopicMetrics = slot<TopicMetricsSession>()
@@ -105,7 +105,7 @@ internal class MetricsSubmitterServiceTest {
         val dbMetricInternSessions = CountingMetricsSessionsObjectMother.giveMeCacheSessionsForAllInternalEventTypes()
 
         coEvery { topicEventCounterServiceAiven.countAllEventTypesAsync() } returns sessionWithCorrectCount andThen simulatedWrongCount andThen sessionWithCorrectCount
-        coEvery { cacheEventCounterGCPService.countAllEventTypesAsync() } returns dbMetricInternSessions
+        coEvery { cacheEventCounterService.countAllEventTypesAsync() } returns dbMetricInternSessions
 
         runBlocking {
             submitter.submitMetrics()

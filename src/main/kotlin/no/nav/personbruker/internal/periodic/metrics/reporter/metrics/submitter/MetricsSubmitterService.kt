@@ -7,7 +7,7 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSession
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSessions
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheCountingMetricsSession
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheEventCounterGCPService
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheEventCounterService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheMetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicEventCounterAivenService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicMetricsReporter
@@ -16,7 +16,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class MetricsSubmitterService(
-        private val cacheEventCounterGCPService: CacheEventCounterGCPService,
+        private val cacheEventCounterService: CacheEventCounterService,
         private val topicEventCounterServiceAiven: TopicEventCounterAivenService<NokkelIntern>,
         private val cacheMetricsReporter: CacheMetricsReporter,
         private val kafkaMetricsReporter: TopicMetricsReporter
@@ -29,7 +29,7 @@ class MetricsSubmitterService(
     suspend fun submitMetrics() {
         try {
             val topicSessionsAiven = topicEventCounterServiceAiven.countAllEventTypesAsync()
-            val cacheSessions = cacheEventCounterGCPService.countAllEventTypesAsync()
+            val cacheSessions = cacheEventCounterService.countAllEventTypesAsync()
 
             val sessionComparatorAiven = SessionComparator(topicSessionsAiven, cacheSessions)
 
