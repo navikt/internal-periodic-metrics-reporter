@@ -81,7 +81,7 @@ internal class CacheMetricsReporterTest {
     }
 
     @Test
-    fun `Should replace system name with alias`() {
+    fun `Should use the provided appname as producername`() {
         val producerName = "dummyAppnavn"
 
         val producerNameForPrometheus = slot<String>()
