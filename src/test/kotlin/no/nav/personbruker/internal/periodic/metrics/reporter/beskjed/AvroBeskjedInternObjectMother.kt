@@ -3,7 +3,7 @@ package no.nav.personbruker.internal.periodic.metrics.reporter.beskjed
 import no.nav.brukernotifikasjon.schemas.internal.BeskjedIntern
 import java.time.Instant
 
-object AvroBeskjedObjectMother {
+object AvroBeskjedInternObjectMother {
 
     private val defaultLopenummer = 1
     private val defaultText = "Dette er Beskjed til brukeren"

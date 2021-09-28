@@ -2,8 +2,8 @@ package no.nav.personbruker.internal.periodic.metrics.reporter.common.objectmoth
 
 import no.nav.brukernotifikasjon.schemas.internal.BeskjedIntern
 import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
-import no.nav.personbruker.internal.periodic.metrics.reporter.beskjed.AvroBeskjedObjectMother
-import no.nav.personbruker.internal.periodic.metrics.reporter.nokkel.AvroNokkelObjectMother.createNokkel
+import no.nav.personbruker.internal.periodic.metrics.reporter.beskjed.AvroBeskjedInternObjectMother
+import no.nav.personbruker.internal.periodic.metrics.reporter.nokkel.AvroNokkelInternObjectMother.createNokkel
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.consumer.ConsumerRecords
@@ -21,7 +21,7 @@ object ConsumerRecordsObjectMother {
     private fun createBeskjedRecords(topicName: String, totalNumber: Int): List<ConsumerRecord<NokkelIntern, BeskjedIntern>> {
         val allRecords = mutableListOf<ConsumerRecord<NokkelIntern, BeskjedIntern>>()
         for (i in 0 until totalNumber) {
-            val schemaRecord = AvroBeskjedObjectMother.createBeskjed(i)
+            val schemaRecord = AvroBeskjedInternObjectMother.createBeskjed(i)
             val nokkel = createNokkel(i)
             allRecords.add(ConsumerRecord(topicName, i, i.toLong(), nokkel, schemaRecord))
         }

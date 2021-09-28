@@ -3,7 +3,7 @@ package no.nav.personbruker.internal.periodic.metrics.reporter.oppgave
 import no.nav.brukernotifikasjon.schemas.internal.OppgaveIntern
 import java.time.Instant
 
-object AvroOppgaveObjectMother {
+object AvroOppgaveInternObjectMother {
 
     private val defaultLopenummer = 1
     private val defaultEksternVarsling = false

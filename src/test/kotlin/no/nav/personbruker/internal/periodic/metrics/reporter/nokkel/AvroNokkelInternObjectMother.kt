@@ -2,7 +2,7 @@ package no.nav.personbruker.internal.periodic.metrics.reporter.nokkel
 
 import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
 
-object AvroNokkelObjectMother {
+object AvroNokkelInternObjectMother {
 
     private val defaultUlid = "01"
     private val defaultFodselsnummer = "1234"

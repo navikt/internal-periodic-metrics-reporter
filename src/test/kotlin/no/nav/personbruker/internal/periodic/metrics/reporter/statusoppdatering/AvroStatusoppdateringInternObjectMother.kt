@@ -3,7 +3,7 @@ package no.nav.personbruker.internal.periodic.metrics.reporter.statusoppdatering
 import no.nav.brukernotifikasjon.schemas.internal.StatusoppdateringIntern
 import java.time.Instant
 
-object AvroStatusoppdateringObjectMother {
+object AvroStatusoppdateringInternObjectMother {
 
     private val defaultLink = "http://dummyLink"
     private val defaultSikkerhetsnivaa = 4

@@ -4,7 +4,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
 import no.nav.common.KafkaEnvironment
-import no.nav.personbruker.internal.periodic.metrics.reporter.beskjed.AvroBeskjedObjectMother
+import no.nav.personbruker.internal.periodic.metrics.reporter.beskjed.AvroBeskjedInternObjectMother
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka.KafkaTestTopics
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka.KafkaTestUtil
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.Environment
@@ -12,7 +12,7 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.Kafka
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.KafkaConsumerSetup
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.activity.TopicActivityService
-import no.nav.personbruker.internal.periodic.metrics.reporter.nokkel.AvroNokkelObjectMother
+import no.nav.personbruker.internal.periodic.metrics.reporter.nokkel.AvroNokkelInternObjectMother
 import org.amshove.kluent.`should be equal to`
 import org.apache.avro.generic.GenericRecord
 import org.junit.jupiter.api.AfterEach
@@ -25,7 +25,7 @@ class TopicEventCounterAivenServiceIT {
     private lateinit var testEnvironment: Environment
     private val topicActivityService = TopicActivityService(30)
 
-    private val events = (1..5).map { AvroNokkelObjectMother.createNokkel(it) to AvroBeskjedObjectMother.createBeskjed(it) }.toMap()
+    private val events = (1..5).map { AvroNokkelInternObjectMother.createNokkel(it) to AvroBeskjedInternObjectMother.createBeskjed(it) }.toMap()
 
     @AfterEach
     fun `tear down`() {

@@ -1,13 +1,13 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic
 
 import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
-import no.nav.personbruker.internal.periodic.metrics.reporter.beskjed.AvroBeskjedObjectMother
+import no.nav.personbruker.internal.periodic.metrics.reporter.beskjed.AvroBeskjedInternObjectMother
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.objectmother.ConsumerRecordsObjectMother
-import no.nav.personbruker.internal.periodic.metrics.reporter.done.AvroDoneObjectMother
-import no.nav.personbruker.internal.periodic.metrics.reporter.innboks.AvroInnboksObjectMother
+import no.nav.personbruker.internal.periodic.metrics.reporter.done.AvroDoneInternObjectMother
+import no.nav.personbruker.internal.periodic.metrics.reporter.innboks.AvroInnboksInternObjectMother
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.UniqueKafkaEventIdentifier
-import no.nav.personbruker.internal.periodic.metrics.reporter.oppgave.AvroOppgaveObjectMother
-import no.nav.personbruker.internal.periodic.metrics.reporter.statusoppdatering.AvroStatusoppdateringObjectMother
+import no.nav.personbruker.internal.periodic.metrics.reporter.oppgave.AvroOppgaveInternObjectMother
+import no.nav.personbruker.internal.periodic.metrics.reporter.statusoppdatering.AvroStatusoppdateringInternObjectMother
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.shouldNotBeNull
 import org.apache.avro.generic.GenericRecord
@@ -26,7 +26,7 @@ internal class UniqueKafkaKeyIdentifierTransformerTest {
     @Test
     fun `Should transform external Beskjed to internal`() {
         val nokkel = NokkelIntern(ulid, eventid, grupperingsId, fodselsnummer, namespace, appnavn, systembruker)
-        val beskjed = AvroBeskjedObjectMother.createBeskjedWithoutSynligFremTilSatt()
+        val beskjed = AvroBeskjedInternObjectMother.createBeskjedWithoutSynligFremTilSatt()
         val original: ConsumerRecord<NokkelIntern, GenericRecord> =
                 ConsumerRecordsObjectMother.createConsumerRecord(nokkel, beskjed)
 
@@ -40,7 +40,7 @@ internal class UniqueKafkaKeyIdentifierTransformerTest {
     @Test
     fun `Should transform external Innboks to internal`() {
         val nokkel = NokkelIntern(ulid, eventid, grupperingsId, fodselsnummer, namespace, appnavn, systembruker)
-        val innboksEvent = AvroInnboksObjectMother.createInnboksWithText("Dummytekst")
+        val innboksEvent = AvroInnboksInternObjectMother.createInnboksWithText("Dummytekst")
         val original: ConsumerRecord<NokkelIntern, GenericRecord> =
                 ConsumerRecordsObjectMother.createConsumerRecord(nokkel, innboksEvent)
 
@@ -54,7 +54,7 @@ internal class UniqueKafkaKeyIdentifierTransformerTest {
     @Test
     fun `Should transform external Oppgave to internal`() {
         val nokkel = NokkelIntern(ulid, eventid, grupperingsId, fodselsnummer, namespace, appnavn, systembruker)
-        val oppgave = AvroOppgaveObjectMother.createOppgave("Dummytekst")
+        val oppgave = AvroOppgaveInternObjectMother.createOppgave("Dummytekst")
         val original: ConsumerRecord<NokkelIntern, GenericRecord> =
                 ConsumerRecordsObjectMother.createConsumerRecord(nokkel, oppgave)
 
@@ -68,7 +68,7 @@ internal class UniqueKafkaKeyIdentifierTransformerTest {
     @Test
     fun `Should transform external Statusoppdatering to internal`() {
         val nokkel = NokkelIntern(ulid, eventid, grupperingsId, fodselsnummer, namespace, appnavn, systembruker)
-        val statusoppdateringEvent = AvroStatusoppdateringObjectMother.createStatusoppdateringWithStatusGlobal("SENDT")
+        val statusoppdateringEvent = AvroStatusoppdateringInternObjectMother.createStatusoppdateringWithStatusGlobal("SENDT")
         val original: ConsumerRecord<NokkelIntern, GenericRecord> =
                 ConsumerRecordsObjectMother.createConsumerRecord(nokkel, statusoppdateringEvent)
 
@@ -82,7 +82,7 @@ internal class UniqueKafkaKeyIdentifierTransformerTest {
     @Test
     fun `Should transform external Done-event to internal`() {
         val nokkel = NokkelIntern(ulid, eventid, grupperingsId, fodselsnummer, namespace, appnavn, systembruker)
-        val done = AvroDoneObjectMother.createDone()
+        val done = AvroDoneInternObjectMother.createDone()
         val original: ConsumerRecord<NokkelIntern, GenericRecord> =
                 ConsumerRecordsObjectMother.createConsumerRecord(nokkel, done)
 
@@ -95,7 +95,7 @@ internal class UniqueKafkaKeyIdentifierTransformerTest {
 
     @Test
     fun `Should handle null as key (NokkelIntern)`() {
-        val done = AvroDoneObjectMother.createDone()
+        val done = AvroDoneInternObjectMother.createDone()
         val recordWithouKey: ConsumerRecord<NokkelIntern, GenericRecord> =
                 ConsumerRecordsObjectMother.createConsumerRecordWithoutNokkel(done)
         val transformed = UniqueKafkaKeyIdentifierTransformer.toInternal(recordWithouKey)

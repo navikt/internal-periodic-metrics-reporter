@@ -3,7 +3,7 @@ package no.nav.personbruker.internal.periodic.metrics.reporter.innboks
 import no.nav.brukernotifikasjon.schemas.internal.InnboksIntern
 import java.time.Instant
 
-object AvroInnboksObjectMother {
+object AvroInnboksInternObjectMother {
 
     private val defaultLopenummer = 1
 
