@@ -46,4 +46,13 @@ object CountingMetricsSessionsObjectMother {
             put(EventType.STATUSOPPDATERING_INTERN, TopicMetricsSessionObjectMother.giveMeStatusoppdateringSessionWithOneCountedEvent())
         }
     }
+
+    fun giveMeTopicSessionsForAllInternalEventTypesExceptForInnboks(): CountingMetricsSessions {
+        return CountingMetricsSessions().apply {
+            put(EventType.BESKJED_INTERN, TopicMetricsSessionObjectMother.giveMeBeskjedSessionWithTwoCountedEvents())
+            put(EventType.DONE__INTERN, TopicMetricsSessionObjectMother.giveMeDoneSessionWithThreeCountedEvent())
+            put(EventType.OPPGAVE_INTERN, TopicMetricsSessionObjectMother.giveMeOppgaveSessionWithFiveCountedEvent())
+            put(EventType.STATUSOPPDATERING_INTERN, TopicMetricsSessionObjectMother.giveMeStatusoppdateringSessionWithFiveCountedEvent())
+        }
+    }
 }

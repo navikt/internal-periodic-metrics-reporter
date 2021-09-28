@@ -12,6 +12,7 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topi
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicMetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicMetricsSession
 import org.amshove.kluent.`should contain`
+import org.amshove.kluent.`should not contain`
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -57,8 +58,8 @@ internal class MetricsSubmitterServiceTest {
 
     @Test
     fun `Should not report metrics for event types without metrics session`() {
-        val topicMetricsInternSessions = CountingMetricsSessionsObjectMother.giveMeTopicSessionsForAllInternalEventTypes()
-        val cacheMetricInternSessions = CountingMetricsSessionsObjectMother.giveMeCacheSessionsForAllInternalEventTypes()
+        val topicMetricsInternSessions = CountingMetricsSessionsObjectMother.giveMeTopicSessionsForAllInternalEventTypesExceptForInnboks()
+        val cacheMetricInternSessions = CountingMetricsSessionsObjectMother.giveMeCacheSessionsForAllInternalEventTypesExceptForInnboks()
 
         coEvery { topicEventCounterServiceAiven.countAllEventTypesAsync() } returns topicMetricsInternSessions
         coEvery { cacheEventCounterGCPService.countAllEventTypesAsync() } returns cacheMetricInternSessions
@@ -85,12 +86,12 @@ internal class MetricsSubmitterServiceTest {
             submitter.submitMetrics()
         }
 
-        reportedTopicMetricsForEventTypes `should contain` EventType.INNBOKS_INTERN //Todo burde denne endres?
+        reportedTopicMetricsForEventTypes `should not contain` EventType.INNBOKS_INTERN
         reportedTopicMetricsForEventTypes `should contain` EventType.BESKJED_INTERN
         reportedTopicMetricsForEventTypes `should contain` EventType.DONE__INTERN
         reportedTopicMetricsForEventTypes `should contain` EventType.OPPGAVE_INTERN
 
-        reportedCacheMetricsForEventTypes `should contain` EventType.INNBOKS_INTERN //Todo burde denne endres?
+        reportedCacheMetricsForEventTypes `should not contain` EventType.INNBOKS_INTERN
         reportedCacheMetricsForEventTypes `should contain` EventType.BESKJED_INTERN
         reportedCacheMetricsForEventTypes `should contain` EventType.DONE__INTERN
         reportedCacheMetricsForEventTypes `should contain` EventType.OPPGAVE_INTERN
