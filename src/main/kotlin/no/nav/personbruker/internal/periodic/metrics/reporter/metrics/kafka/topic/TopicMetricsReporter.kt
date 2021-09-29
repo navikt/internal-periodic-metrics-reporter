@@ -84,8 +84,8 @@ class TopicMetricsReporter(private val metricsReporter: MetricsReporter) {
         PrometheusMetricsCollector.registerProcessingTime(session.getProcessingTime(), session.eventType)
     }
 
-    private suspend fun reportEvents(count: Int, eventType: String, producerAlias: String, metricName: String) {
-        metricsReporter.registerDataPoint(metricName, counterField(count), createTagMap(eventType, producerAlias))
+    private suspend fun reportEvents(count: Int, eventType: String, producerName: String, metricName: String) {
+        metricsReporter.registerDataPoint(metricName, counterField(count), createTagMap(eventType, producerName))
     }
 
     private suspend fun reportProcessingTimeEvent(session: TopicMetricsSession) {

@@ -60,8 +60,8 @@ class CacheMetricsReporter(private val metricsReporter: MetricsReporter) {
         PrometheusMetricsCollector.registerProcessingTimeInCache(session.getProcessingTime(), session.eventType)
     }
 
-    private suspend fun reportEvents(count: Int, eventType: String, producerAlias: String, metricName: String) {
-        metricsReporter.registerDataPoint(metricName, counterField(count), createTagMap(eventType, producerAlias))
+    private suspend fun reportEvents(count: Int, eventType: String, producerName: String, metricName: String) {
+        metricsReporter.registerDataPoint(metricName, counterField(count), createTagMap(eventType, producerName))
     }
 
     private fun counterField(events: Int): Map<String, Int> = listOf("counter" to events).toMap()
