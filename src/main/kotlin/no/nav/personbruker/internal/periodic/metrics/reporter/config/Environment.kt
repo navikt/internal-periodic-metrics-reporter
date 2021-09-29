@@ -36,7 +36,8 @@ data class Environment(val username: String = getEnvVar("SERVICEUSER_USERNAME"),
                        val oppgaveInternTopicName: String = getEnvVar("INTERN_OPPGAVE_TOPIC"),
                        val innboksInternTopicName: String = getEnvVar("INTERN_INNBOKS_TOPIC"),
                        val statusoppdateringInternTopicName: String = getEnvVar("INTERN_STATUSOPPDATERING_TOPIC"),
-                       val doneInternTopicName: String = getEnvVar("INTERN_DONE_TOPIC")
+                       val doneInternTopicName: String = getEnvVar("INTERN_DONE_TOPIC"),
+                       val eventHandlerAppEnvironmentDetails: String = getEnvVar("HANDLER_ENVIRONMENT_DETAILS")
 )
 
 data class SecurityConfig(

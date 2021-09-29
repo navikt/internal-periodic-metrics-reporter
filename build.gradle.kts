@@ -53,6 +53,7 @@ dependencies {
     implementation(Prometheus.common)
     implementation(Prometheus.hotspot)
     implementation(Prometheus.logback)
+    implementation(Tms.KtorTokenSupport.azureExchange)
 
     testImplementation(Junit.api)
     testImplementation(Junit.engine)

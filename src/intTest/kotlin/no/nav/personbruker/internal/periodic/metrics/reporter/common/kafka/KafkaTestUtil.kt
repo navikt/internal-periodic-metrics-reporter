@@ -50,7 +50,8 @@ object KafkaTestUtil {
                 innboksInternTopicName = KafkaTestTopics.innboksInternTopicName,
                 statusoppdateringInternTopicName = KafkaTestTopics.statusoppdateringInternTopicName,
                 doneInternTopicName = KafkaTestTopics.doneInternTopicName,
-                securityConfig = SecurityConfig(enabled = false)
+                securityConfig = SecurityConfig(enabled = false),
+                eventHandlerAppEnvironmentDetails = "cluster_namespace_appname"
         )
     }
 

@@ -1,6 +1,7 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.config
 
 import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
+import no.nav.personbruker.internal.periodic.metrics.reporter.common.AzureTokenFetcher
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.HandlerConsumer
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka.polling.PeriodicConsumerCheck
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.ActivityHealthDecider
@@ -27,7 +28,8 @@ class ApplicationContext {
 
     val environment = Environment()
     private val httpClient = HttpClientBuilder.build()
-    private val handlerConsumer = HandlerConsumer(httpClient, environment.eventHandlerURL)
+    private val azureTokenFetcher = AzureTokenFetcher(environment.eventHandlerAppEnvironmentDetails)
+    private val handlerConsumer = HandlerConsumer(httpClient, azureTokenFetcher, environment.eventHandlerURL)
 
     val cacheEventCountingMetricsProbe = CacheCountingMetricsProbe()
     val metricsReporter = resolveMetricsReporter(environment)
