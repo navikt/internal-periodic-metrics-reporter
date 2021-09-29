@@ -88,12 +88,12 @@ internal class MetricsSubmitterServiceTest {
 
         reportedTopicMetricsForEventTypes `should not contain` EventType.INNBOKS_INTERN
         reportedTopicMetricsForEventTypes `should contain` EventType.BESKJED_INTERN
-        reportedTopicMetricsForEventTypes `should contain` EventType.DONE__INTERN
+        reportedTopicMetricsForEventTypes `should contain` EventType.DONE_INTERN
         reportedTopicMetricsForEventTypes `should contain` EventType.OPPGAVE_INTERN
 
         reportedCacheMetricsForEventTypes `should not contain` EventType.INNBOKS_INTERN
         reportedCacheMetricsForEventTypes `should contain` EventType.BESKJED_INTERN
-        reportedCacheMetricsForEventTypes `should contain` EventType.DONE__INTERN
+        reportedCacheMetricsForEventTypes `should contain` EventType.DONE_INTERN
         reportedCacheMetricsForEventTypes `should contain` EventType.OPPGAVE_INTERN
     }
 

@@ -11,7 +11,7 @@ object CacheCountingMetricsSessionObjectMother {
     }
 
     fun giveMeDoneInternSessionWithTwoCountedEvents(): CacheCountingMetricsSession {
-        val doneInternSession = CacheCountingMetricsSession(EventType.DONE__INTERN)
+        val doneInternSession = CacheCountingMetricsSession(EventType.DONE_INTERN)
         doneInternSession.addEventsByProducer(mapOf("produsent2" to 21))
         doneInternSession.addEventsByProducer(mapOf("produsent2" to 22))
         return doneInternSession

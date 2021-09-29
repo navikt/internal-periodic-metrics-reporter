@@ -47,7 +47,7 @@ class PeriodicConsumerCheck(
             stoppedConsumers.add(EventType.BESKJED_INTERN)
         }
         if (appContext.doneCountAivenConsumer.isStopped()) {
-            stoppedConsumers.add(EventType.DONE__INTERN)
+            stoppedConsumers.add(EventType.DONE_INTERN)
         }
         if (appContext.oppgaveCountAivenConsumer.isStopped()) {
             stoppedConsumers.add(EventType.OPPGAVE_INTERN)

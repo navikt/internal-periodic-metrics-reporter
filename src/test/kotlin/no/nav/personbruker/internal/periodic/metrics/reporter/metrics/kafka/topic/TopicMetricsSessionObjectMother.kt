@@ -26,13 +26,13 @@ object TopicMetricsSessionObjectMother {
     }
 
     fun giveMeDoneSessionWithOneCountedEvent(): TopicMetricsSession {
-        val doneSession = TopicMetricsSession(EventType.DONE__INTERN)
+        val doneSession = TopicMetricsSession(EventType.DONE_INTERN)
         doneSession.countEvent(UniqueKafkaEventIdentifier("21", "dummyAppnavn", "123"))
         return doneSession
     }
 
     fun giveMeDoneSessionWithThreeCountedEvent(): TopicMetricsSession {
-        val doneSession = TopicMetricsSession(EventType.DONE__INTERN)
+        val doneSession = TopicMetricsSession(EventType.DONE_INTERN)
         doneSession.countEvent(UniqueKafkaEventIdentifier("31", "dummyAppnavn", "123"))
         doneSession.countEvent(UniqueKafkaEventIdentifier("32", "dummyAppnavn", "123"))
         doneSession.countEvent(UniqueKafkaEventIdentifier("33", "dummyAppnavn", "123"))
@@ -40,7 +40,7 @@ object TopicMetricsSessionObjectMother {
     }
 
     fun giveMeDoneInternSessionWithThreeCountedEvent(): TopicMetricsSession {
-        val doneSession = TopicMetricsSession(EventType.DONE__INTERN)
+        val doneSession = TopicMetricsSession(EventType.DONE_INTERN)
         doneSession.countEvent(UniqueKafkaEventIdentifier("31", "dummyAppnavn", "123"))
         doneSession.countEvent(UniqueKafkaEventIdentifier("32", "dummyAppnavn", "123"))
         doneSession.countEvent(UniqueKafkaEventIdentifier("33", "dummyAppnavn", "123"))
