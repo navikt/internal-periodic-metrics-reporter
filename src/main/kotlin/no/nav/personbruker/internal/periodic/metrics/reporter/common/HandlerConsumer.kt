@@ -14,7 +14,7 @@ class HandlerConsumer(private val client: HttpClient, private val azureTokenFetc
             val pathToEndpoint = URL("${eventHandlerBaseURL.path}/fetch/grouped/systemuser/${eventtype.eventType}")
             return client.get(pathToEndpoint, azureTokenFetcher)
         } catch (e: Exception) {
-            log.error("Får ikke kontakt med dittnav-event-handler. Setter derfor produsentnavnet til <appnavn_unavailable> og antall event = 0.")
+            log.error("Får ikke kontakt med dittnav-event-handler. Setter derfor produsentnavnet til <appnavn_unavailable> og antall event = 0.", e)
             return mapOf("appnavn_unavailable" to 0)
         }
     }
