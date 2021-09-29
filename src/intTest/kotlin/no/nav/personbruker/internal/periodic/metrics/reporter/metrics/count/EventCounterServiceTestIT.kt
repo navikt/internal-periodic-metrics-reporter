@@ -83,7 +83,7 @@ internal class EventCounterServiceTestIT {
         coEvery { handlerConsumer.getEventCount(any()) }.returns(result)
 
         val metricsProbe = mockk<CacheCountingMetricsProbe>(relaxed = true)
-        val metricsSession = initMetricsSession(metricsProbe, EventType.DONE__INTERN)
+        val metricsSession = initMetricsSession(metricsProbe, EventType.DONE_INTERN)
         val service = CacheEventCounterService(metricsProbe, handlerConsumer)
 
         runBlocking {

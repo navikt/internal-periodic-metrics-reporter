@@ -35,7 +35,7 @@ class TopicEventCounterAivenService<K>(
             val sessions = CountingMetricsSessions()
 
             sessions.put(EventType.BESKJED_INTERN, beskjeder.await())
-            sessions.put(EventType.DONE__INTERN, done.await())
+            sessions.put(EventType.DONE_INTERN, done.await())
             sessions.put(EventType.INNBOKS_INTERN, innboks.await())
             sessions.put(EventType.OPPGAVE_INTERN, oppgaver.await())
             sessions.put(EventType.STATUSOPPDATERING_INTERN, statusoppdateringer.await())

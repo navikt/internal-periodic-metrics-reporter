@@ -36,7 +36,7 @@ class CacheEventCounterService(
 
         val sessions = CountingMetricsSessions()
         sessions.put(EventType.BESKJED_INTERN, beskjeder.await())
-        sessions.put(EventType.DONE__INTERN, done.await())
+        sessions.put(EventType.DONE_INTERN, done.await())
         sessions.put(EventType.INNBOKS_INTERN, innboks.await())
         sessions.put(EventType.OPPGAVE_INTERN, oppgave.await())
         sessions.put(EventType.STATUSOPPDATERING_INTERN, statusoppdatering.await())
@@ -105,7 +105,7 @@ class CacheEventCounterService(
     }
 
     suspend fun countDoneEvents(): CacheCountingMetricsSession {
-        val eventType = EventType.DONE__INTERN
+        val eventType = EventType.DONE_INTERN
         return try {
             metricsProbe.runWithMetrics(eventType) {
                 val grupperPerProdusent = handlerConsumer.getEventCount(eventType)

@@ -31,7 +31,7 @@ internal class TopicEventCounterServiceTest {
     private val innboksCounter = TopicEventTypeCounter(innboksCountConsumer, innboksActivityService, EventType.INNBOKS_INTERN, false)
     private val oppgaveCounter = TopicEventTypeCounter(oppgaveCountConsumer, oppgaveActivityService, EventType.OPPGAVE_INTERN, false)
     private val statusoppdateringCounter = TopicEventTypeCounter(statusoppdateringCountConsumer, statusoppdateringActivityService, EventType.STATUSOPPDATERING_INTERN, false)
-    private val doneCounter = TopicEventTypeCounter(doneCountConsumer, doneActivityService, EventType.DONE__INTERN, false)
+    private val doneCounter = TopicEventTypeCounter(doneCountConsumer, doneActivityService, EventType.DONE_INTERN, false)
 
     @Test
     internal fun `Should handle exceptions and rethrow as internal exception`() {
