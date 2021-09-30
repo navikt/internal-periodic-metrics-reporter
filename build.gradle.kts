@@ -37,25 +37,23 @@ val intTestImplementation by configurations.getting {
 configurations["intTestRuntimeOnly"].extendsFrom(configurations.testRuntimeOnly.get())
 
 dependencies {
-    implementation(Brukernotifikasjon.schemas)
     implementation(Brukernotifikasjon.schemas_internal)
     implementation(DittNAV.Common.utils)
-    implementation(DittNAV.Common.influx)
-    implementation(Hikari.cp)
-    implementation(Influxdb.java)
+    implementation(DittNAV.Common.influxdb)
     implementation(Kafka.Apache.clients)
     implementation(Kafka.Confluent.avroSerializer)
     implementation(Ktor.serverNetty)
     implementation(Ktor.htmlBuilder)
+    implementation(Ktor.clientApache)
+    implementation(Ktor.clientJson)
+    implementation(Ktor.clientJackson)
+    implementation(Jackson.dataTypeJsr310)
     implementation(Logback.classic)
     implementation(Logstash.logbackEncoder)
-    implementation(NAV.vaultJdbc)
-    implementation(Postgresql.postgresql)
     implementation(Prometheus.common)
     implementation(Prometheus.hotspot)
     implementation(Prometheus.logback)
 
-    testImplementation(H2Database.h2)
     testImplementation(Junit.api)
     testImplementation(Junit.engine)
     testImplementation(Kafka.Apache.kafka_2_12)
@@ -67,7 +65,6 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:4.3.1")
     testImplementation("io.kotest:kotest-assertions-core:4.3.1")
     testImplementation("io.kotest:kotest-extensions:4.3.1")
-    testImplementation(ULID.sulkyUlid)
     intTestImplementation(Junit.engine)
 }
 
@@ -92,10 +89,6 @@ tasks {
         }
 
         environment("COUNTING_INTERVAL_MINUTES", "1")
-        environment("DB_HOST_ONPREM", "localhost:5432")
-        environment("DB_NAME_ONPREM", "dittnav-event-cache-preprod")
-        environment("DB_PASSWORD_ONPREM", "testpassword")
-        environment("DB_MOUNT_PATH_ONPREM", "notUsedOnLocalhost")
 
         environment("KAFKA_BROKERS", "localhost:29092")
         environment("KAFKA_TRUSTSTORE_PATH", "/path/to/trust/store")
