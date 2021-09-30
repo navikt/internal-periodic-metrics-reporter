@@ -11,7 +11,9 @@ class HandlerConsumer(private val client: HttpClient, private val azureTokenFetc
 
     suspend fun getEventCount(eventtype: EventType): Map<String, Int> {
         try {
-            val pathToEndpoint = URL("$eventHandlerBaseURL/fetch/grouped/systemuser/${eventtype.eventType}")
+            val pathToEndpoint = URL("$eventHandlerBaseURL/fetch/grouped/systemuser/" +
+                    eventtype.eventType.replace("_intern", ""))
+
             return client.get(pathToEndpoint, azureTokenFetcher)
         } catch (e: Exception) {
             log.error("Får ikke kontakt med dittnav-event-handler. Setter derfor produsentnavnet til <appnavn_unavailable> og antall event = 0.", e)
