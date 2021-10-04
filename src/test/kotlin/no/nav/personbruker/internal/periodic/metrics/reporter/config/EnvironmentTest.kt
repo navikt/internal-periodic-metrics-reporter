@@ -32,7 +32,8 @@ internal class EnvironmentTest {
             "INFLUXDB_DATABASE_NAME" to "influx_db",
             "INFLUXDB_USER" to "influx_user",
             "INFLUXDB_PASSWORD" to "influx_pw",
-            "INFLUXDB_RETENTION_POLICY" to "influx_retention"
+            "INFLUXDB_RETENTION_POLICY" to "influx_retention",
+            "HANDLER_ENVIRONMENT_DETAILS" to "cluster_namespace_appname"
     )
 
     @Test

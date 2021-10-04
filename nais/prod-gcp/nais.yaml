@@ -36,7 +36,14 @@ spec:
       memory: 3840Mi
   kafka:
     pool: nav-prod
+  azure:
+    application:
+      enabled: true
   accessPolicy:
     outbound:
+      rules:
+        - application: "dittnav-event-handler"
+          namespace: "min-side"
+          cluster: "prod-gcp"
       external:
         - host: kafka-schema-registry.nais.adeo.no

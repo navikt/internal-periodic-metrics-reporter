@@ -6,16 +6,17 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.config.get
 import org.slf4j.LoggerFactory
 import java.net.URL
 
-class HandlerConsumer(private val client: HttpClient, eventHandlerBaseURL: URL) {
-
-    private val pathToEndpoint = "${eventHandlerBaseURL.path}/fetch/grouped/systemuser"
+class HandlerConsumer(private val client: HttpClient, private val azureTokenFetcher: AzureTokenFetcher, private val eventHandlerBaseURL: String) {
     private val log = LoggerFactory.getLogger(HandlerConsumer::class.java)
 
     suspend fun getEventCount(eventtype: EventType): Map<String, Int> {
         try {
-            return client.get(URL("$pathToEndpoint/${eventtype.eventType}"))
+            val pathToEndpoint = URL("$eventHandlerBaseURL/fetch/grouped/systemuser/" +
+                    eventtype.eventType.replace("_intern", ""))
+
+            return client.get(pathToEndpoint, azureTokenFetcher)
         } catch (e: Exception) {
-            log.error("Får ikke kontakt med dittnav-event-handler. Setter derfor produsentnavnet til <appnavn_unavailable> og antall event = 0.")
+            log.error("Får ikke kontakt med dittnav-event-handler. Setter derfor produsentnavnet til <appnavn_unavailable> og antall event = 0.", e)
             return mapOf("appnavn_unavailable" to 0)
         }
     }

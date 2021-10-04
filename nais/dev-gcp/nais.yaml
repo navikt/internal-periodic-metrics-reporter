@@ -36,7 +36,14 @@ spec:
       memory: 2560Mi
   kafka:
     pool: nav-dev
+  azure:
+    application:
+      enabled: true
   accessPolicy:
     outbound:
+      rules:
+        - application: "dittnav-event-handler"
+          namespace: "personbruker"
+          cluster: "dev-gcp"
       external:
         - host: kafka-schema-registry.nais-q.adeo.no

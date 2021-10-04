@@ -5,7 +5,6 @@ import no.nav.common.KafkaEnvironment
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.Environment
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.SecurityConfig
 import org.apache.avro.generic.GenericRecord
-import java.net.URL
 
 object KafkaTestUtil {
 
@@ -44,13 +43,14 @@ object KafkaTestUtil {
                 monitorInnboksActivity = false,
                 monitorDoneActivity = false,
                 monitorStatusoppdateringActivity = false,
-                eventHandlerURL = URL("https://event_handler_url"),
+                eventHandlerURL = "https://event_handler_url",
                 beskjedInternTopicName = KafkaTestTopics.beskjedInternTopicName,
                 oppgaveInternTopicName = KafkaTestTopics.oppgaveInternTopicName,
                 innboksInternTopicName = KafkaTestTopics.innboksInternTopicName,
                 statusoppdateringInternTopicName = KafkaTestTopics.statusoppdateringInternTopicName,
                 doneInternTopicName = KafkaTestTopics.doneInternTopicName,
-                securityConfig = SecurityConfig(enabled = false)
+                securityConfig = SecurityConfig(enabled = false),
+                eventHandlerAppEnvironmentDetails = "cluster_namespace_appname"
         )
     }
 

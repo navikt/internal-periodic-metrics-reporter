@@ -4,7 +4,6 @@ import no.nav.personbruker.dittnav.common.util.config.BooleanEnvVar.getEnvVarAsB
 import no.nav.personbruker.dittnav.common.util.config.IntEnvVar.getEnvVarAsInt
 import no.nav.personbruker.dittnav.common.util.config.LongEnvVar.getEnvVarAsLong
 import no.nav.personbruker.dittnav.common.util.config.StringEnvVar.getEnvVar
-import java.net.URL
 
 data class Environment(val username: String = getEnvVar("SERVICEUSER_USERNAME"),
                        val password: String = getEnvVar("SERVICEUSER_PASSWORD"),
@@ -31,12 +30,13 @@ data class Environment(val username: String = getEnvVar("SERVICEUSER_USERNAME"),
                        val monitorInnboksActivity: Boolean = getEnvVarAsBoolean("MONITOR_INNBOKS_ACTIVITY"),
                        val monitorDoneActivity: Boolean = getEnvVarAsBoolean("MONITOR_DONE_ACTIVITY"),
                        val monitorStatusoppdateringActivity: Boolean = getEnvVarAsBoolean("MONITOR_STATUSOPPDATERING_ACTIVITY"),
-                       val eventHandlerURL: URL = URL(getEnvVar("EVENT_HANDLER_URL").trimEnd('/')),
+                       val eventHandlerURL: String = getEnvVar("EVENT_HANDLER_URL"),
                        val beskjedInternTopicName: String = getEnvVar("INTERN_BESKJED_TOPIC"),
                        val oppgaveInternTopicName: String = getEnvVar("INTERN_OPPGAVE_TOPIC"),
                        val innboksInternTopicName: String = getEnvVar("INTERN_INNBOKS_TOPIC"),
                        val statusoppdateringInternTopicName: String = getEnvVar("INTERN_STATUSOPPDATERING_TOPIC"),
-                       val doneInternTopicName: String = getEnvVar("INTERN_DONE_TOPIC")
+                       val doneInternTopicName: String = getEnvVar("INTERN_DONE_TOPIC"),
+                       val eventHandlerAppEnvironmentDetails: String = getEnvVar("HANDLER_ENVIRONMENT_DETAILS")
 )
 
 data class SecurityConfig(
