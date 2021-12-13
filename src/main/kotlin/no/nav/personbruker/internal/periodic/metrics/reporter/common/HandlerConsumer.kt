@@ -20,5 +20,4 @@ class HandlerConsumer(private val client: HttpClient, private val azureTokenFetc
             return mapOf("appnavn_unavailable" to 0)
         }
     }
-
 }
