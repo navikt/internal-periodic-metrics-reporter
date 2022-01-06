@@ -1,13 +1,13 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka
 
-data class UniqueKafkaEventIdentifier(val eventId: String, val appnavn: String, val fodselsnummer: String) {
+data class KafkaEventIdentifier(val eventId: String, val appnavn: String, val fodselsnummer: String) {
 
     companion object {
 
         private const val dummyFnr = "000"
 
-        fun createInvalidEvent(): UniqueKafkaEventIdentifier {
-            return UniqueKafkaEventIdentifier(
+        fun createInvalidEvent(): KafkaEventIdentifier {
+            return KafkaEventIdentifier(
                     "undeserializableEvent",
                     "unknownProducer",
                     dummyFnr

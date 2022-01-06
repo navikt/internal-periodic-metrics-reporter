@@ -9,7 +9,6 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DB_COUNT_PROCESSING_TIME
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DB_TOTAL_EVENTS_IN_CACHE_BY_PRODUCER
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.PrometheusMetricsCollector
 import org.amshove.kluent.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.Test
 internal class CacheMetricsReporterTest {
 
     private val metricsReporter = mockk<MetricsReporter>(relaxed = true)
-    private val prometheusCollector = mockkObject(PrometheusMetricsCollector)
     private val cacheMetricsReporter = CacheMetricsReporter(metricsReporter)
 
     @BeforeEach
@@ -43,10 +41,6 @@ internal class CacheMetricsReporterTest {
         }
 
         coVerify(exactly = 4) { metricsReporter.registerDataPoint(any(), any(), any()) }
-        verify(exactly = 1) { PrometheusMetricsCollector.registerTotalNumberOfEventsInCache(3, any()) }
-        verify(exactly = 1) { PrometheusMetricsCollector.registerTotalNumberOfEventsInCacheByProducer(1, any(), any()) }
-        verify(exactly = 1) { PrometheusMetricsCollector.registerTotalNumberOfEventsInCacheByProducer(2, any(), any()) }
-        verify(exactly = 1) { PrometheusMetricsCollector.registerProcessingTimeInCache(any(), any()) }
 
         capturedTotalEventsInCacheByProducer.captured["counter"] `should be equal to` 1
     }
@@ -84,11 +78,9 @@ internal class CacheMetricsReporterTest {
     fun `Should use the provided appname as producername`() {
         val producerName = "dummyAppnavn"
 
-        val producerNameForPrometheus = slot<String>()
         val capturedTagsForTotalByProducer = slot<Map<String, String>>()
 
         coEvery { metricsReporter.registerDataPoint(DB_TOTAL_EVENTS_IN_CACHE_BY_PRODUCER, any(), capture(capturedTagsForTotalByProducer)) } returns Unit
-        every { PrometheusMetricsCollector.registerTotalNumberOfEventsInCacheByProducer(any(), any(), capture(producerNameForPrometheus)) } returns Unit
 
         val session = CacheCountingMetricsSession(EventType.BESKJED_INTERN)
         session.addEventsByProducer(mapOf(Pair(producerName, 2)))
@@ -98,9 +90,7 @@ internal class CacheMetricsReporterTest {
 
         coVerify(exactly = 1) { metricsReporter.registerDataPoint(DB_TOTAL_EVENTS_IN_CACHE_BY_PRODUCER, any(), any()) }
 
-        verify(exactly = 1) { PrometheusMetricsCollector.registerTotalNumberOfEventsInCacheByProducer(any(), any(), any()) }
 
-        producerNameForPrometheus.captured `should be equal to` producerName
         capturedTagsForTotalByProducer.captured["producer"] `should be equal to` producerName
     }
 

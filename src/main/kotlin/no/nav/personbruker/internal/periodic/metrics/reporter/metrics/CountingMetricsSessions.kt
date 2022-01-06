@@ -26,5 +26,5 @@ class CountingMetricsSessions {
 }
 
 interface CountingMetricsSession {
-    fun getNumberOfUniqueEvents(): Int
+    fun getNumberOfEvents(): Int
 }

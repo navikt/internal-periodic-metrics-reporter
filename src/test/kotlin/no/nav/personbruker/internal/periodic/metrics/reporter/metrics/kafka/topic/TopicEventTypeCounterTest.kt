@@ -6,7 +6,7 @@ import kotlinx.coroutines.runBlocking
 import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.kafka.Consumer
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.UniqueKafkaEventIdentifier
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.KafkaEventIdentifier
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.activity.TopicActivityService
 import org.amshove.kluent.`should be greater than`
 import org.amshove.kluent.shouldNotBeNull
@@ -35,7 +35,7 @@ internal class TopicEventTypeCounterTest {
     @Test
     internal fun `Should calculate processing time`() {
 
-        mockkObject(UniqueKafkaKeyIdentifierTransformer)
+        mockkObject(KafkaKeyIdentifierTransformer)
         mockkObject(TopicEventTypeCounter)
 
         val consumer: Consumer<NokkelIntern, GenericRecord> = mockk()
@@ -52,9 +52,9 @@ internal class TopicEventTypeCounterTest {
         val minimumProcessingTimeInMs: Long = 500
 
         every { TopicEventTypeCounter.countBatch(polledEvents, capture(sessionSlot)) } coAnswers {
-            sessionSlot.captured.countEvent(UniqueKafkaEventIdentifier("1", "test", "123"))
-            sessionSlot.captured.countEvent(UniqueKafkaEventIdentifier("2", "test", "123"))
-            sessionSlot.captured.countEvent(UniqueKafkaEventIdentifier("3", "test", "123"))
+            sessionSlot.captured.countEvent(KafkaEventIdentifier("1", "test", "123"))
+            sessionSlot.captured.countEvent(KafkaEventIdentifier("2", "test", "123"))
+            sessionSlot.captured.countEvent(KafkaEventIdentifier("3", "test", "123"))
             delay(minimumProcessingTimeInMs)
         }
 

@@ -23,8 +23,6 @@ class TopicEventTypeCounter<K>(
         val deltaCountingEnabled: Boolean
 ) {
 
-    private val log = LoggerFactory.getLogger(TopicEventTypeCounter::class.java)
-
     private var previousSession: TopicMetricsSession? = null
 
     private val timeoutConfig = TimeoutConfig(
@@ -81,7 +79,7 @@ class TopicEventTypeCounter<K>(
     companion object {
         fun <K> countBatch(records: ConsumerRecords<K, GenericRecord>, metricsSession: TopicMetricsSession) {
             records.forEach { record ->
-                val event = UniqueKafkaKeyIdentifierTransformer.toInternal<K>(record)
+                val event = KafkaKeyIdentifierTransformer.toInternal<K>(record)
                 metricsSession.countEvent(event)
             }
         }

@@ -35,7 +35,7 @@ class CacheCountingMetricsSession(val eventType: EventType) : CountingMetricsSes
     /**
      * Databasen inneholder kun unike-eventer, derfor er `getTotalNumber == getNumberOfUniqueEvents`.
      */
-    override fun getNumberOfUniqueEvents(): Int {
+    override fun getNumberOfEvents(): Int {
         return getTotalNumber()
     }
 

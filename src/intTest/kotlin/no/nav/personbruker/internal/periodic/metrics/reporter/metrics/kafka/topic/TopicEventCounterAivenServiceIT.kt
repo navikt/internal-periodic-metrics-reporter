@@ -41,8 +41,8 @@ class TopicEventCounterAivenServiceIT {
     }
 
     @Test
-    fun `Skal telle korrekt total antall av eventer og gruppere de som er unike og duplikater`() {
-        `Produser det samme settet av eventer tre ganger`(KafkaTestTopics.beskjedInternTopicName)
+    fun `Skal telle korrekt total antall av eventer`() {
+        `Produser eventer`(KafkaTestTopics.beskjedInternTopicName)
 
         val kafkaProps = Kafka.counterConsumerAivenProps(testEnvironment, EventType.BESKJED_INTERN)
         val beskjedInternCountConsumer = KafkaConsumerSetup.setupCountConsumer<NokkelIntern, GenericRecord>(kafkaProps, KafkaTestTopics.beskjedInternTopicName)
@@ -59,9 +59,7 @@ class TopicEventCounterAivenServiceIT {
             topicEventTypeCounter.countEventsAsync().await()
         }
 
-        metricsSession.getDuplicates() `should be equal to` events.size * 2
-        metricsSession.getTotalNumber() `should be equal to` events.size * 3
-        metricsSession.getNumberOfUniqueEvents() `should be equal to` events.size
+        metricsSession.getNumberOfEvents() `should be equal to` events.size
 
         runBlocking { beskjedInternCountConsumer.stop() }
     }
@@ -78,19 +76,17 @@ class TopicEventCounterAivenServiceIT {
                 eventType = EventType.BESKJED_INTERN,
                 deltaCountingEnabled = true
         )
-        `Produser det samme settet av eventer tre ganger`(KafkaTestTopics.beskjedInternTopicName)
+        `Produser eventer`(KafkaTestTopics.beskjedInternTopicName)
         runBlocking {
             deltaTopicEventTypeCounter.countEventsAsync().await()
         }
 
-        `Produser det samme settet av eventer tre ganger`(KafkaTestTopics.beskjedInternTopicName)
+        `Produser eventer`(KafkaTestTopics.beskjedInternTopicName)
         val metricsSession = runBlocking {
             deltaTopicEventTypeCounter.countEventsAsync().await()
         }
 
-        metricsSession.getDuplicates() `should be equal to` events.size * 5
-        metricsSession.getTotalNumber() `should be equal to` events.size * 6
-        metricsSession.getNumberOfUniqueEvents() `should be equal to` events.size
+        metricsSession.getNumberOfEvents() `should be equal to` events.size * 2
 
         runBlocking { beskjedInternCountConsumer.stop() }
     }
@@ -123,11 +119,11 @@ class TopicEventCounterAivenServiceIT {
                 deltaCountingEnabled = false
         )
 
-        `Produser det samme settet av eventer tre ganger`(KafkaTestTopics.beskjedInternTopicName)
+        `Produser eventer`(KafkaTestTopics.beskjedInternTopicName)
         runBlocking {
             deltaTopicEventTypeCounter.countEventsAsync().await()
         }
-        `Produser det samme settet av eventer tre ganger`(KafkaTestTopics.beskjedInternTopicName)
+        `Produser eventer`(KafkaTestTopics.beskjedInternTopicName)
         val deltaMetricsSession = runBlocking {
             deltaTopicEventTypeCounter.countEventsAsync().await()
         }
@@ -136,9 +132,7 @@ class TopicEventCounterAivenServiceIT {
             fromScratchTopicEventTypeCounter.countEventsAsync().await()
         }
 
-        deltaMetricsSession.getDuplicates() `should be equal to` fromScratchMetricsSession.getDuplicates()
-        deltaMetricsSession.getTotalNumber() `should be equal to` fromScratchMetricsSession.getTotalNumber()
-        deltaMetricsSession.getNumberOfUniqueEvents() `should be equal to` fromScratchMetricsSession.getNumberOfUniqueEvents()
+        deltaMetricsSession.getNumberOfEvents() `should be equal to` fromScratchMetricsSession.getNumberOfEvents()
 
         runBlocking {
             deltaCountingConsumer.stop()
@@ -148,7 +142,7 @@ class TopicEventCounterAivenServiceIT {
 
     @Test
     fun `Skal telle riktig antall eventer flere ganger paa rad ved bruk av samme kafka-klient`() {
-        `Produser det samme settet av eventer tre ganger`(KafkaTestTopics.beskjedInternTopicName)
+        `Produser eventer`(KafkaTestTopics.beskjedInternTopicName)
         val kafkaProps = Kafka.counterConsumerAivenProps(testEnvironment, EventType.BESKJED_INTERN)
         val beskjedCountConsumer = KafkaConsumerSetup.setupCountConsumer<NokkelIntern, GenericRecord>(kafkaProps, KafkaTestTopics.beskjedInternTopicName)
         beskjedCountConsumer.startSubscription()
@@ -181,15 +175,13 @@ class TopicEventCounterAivenServiceIT {
             topicEventTypeCounter.countEventsAsync().await()
         }
 
-        metricsSession.getNumberOfUniqueEvents() `should be equal to` events.size
+        metricsSession.getNumberOfEvents() `should be equal to` events.size
     }
 
-    private fun `Produser det samme settet av eventer tre ganger`(topic: String) {
+    private fun `Produser eventer`(topic: String) {
         runBlocking {
             val fikkProduserBatch1 = KafkaTestUtil.produceEvents(testEnvironment, topic, events)
-            val fikkProduserBatch2 = KafkaTestUtil.produceEvents(testEnvironment, topic, events)
-            val fikkProduserBatch3 = KafkaTestUtil.produceEvents(testEnvironment, topic, events)
-            fikkProduserBatch1 && fikkProduserBatch2 && fikkProduserBatch3
+            fikkProduserBatch1
         } `should be equal to` true
     }
 

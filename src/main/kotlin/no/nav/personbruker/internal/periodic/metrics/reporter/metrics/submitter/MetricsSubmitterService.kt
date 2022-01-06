@@ -24,7 +24,7 @@ class MetricsSubmitterService(
 
     private val log: Logger = LoggerFactory.getLogger(MetricsSubmitterService::class.java)
 
-    private val lastReportedUniqueKafkaEvents = HashMap<EventType, Int>()
+    private val lastReportedNumberOfKafkaEvents = HashMap<EventType, Int>()
 
     suspend fun submitMetrics() {
         try {
@@ -59,10 +59,10 @@ class MetricsSubmitterService(
             val cacheSession = cacheSessions.getForType(eventType)
             cacheMetricsReporter.report(cacheSession as CacheCountingMetricsSession)
             kafkaMetricsReporter.report(kafkaEventSession as TopicMetricsSession)
-            lastReportedUniqueKafkaEvents[eventType] = kafkaEventSession.getNumberOfUniqueEvents()
+            lastReportedNumberOfKafkaEvents[eventType] = kafkaEventSession.getNumberOfEvents()
         } else if (!currentAndLastCountWasZero(kafkaEventSession, eventType)) {
-            val currentCount = kafkaEventSession.getNumberOfUniqueEvents()
-            val previousCount = lastReportedUniqueKafkaEvents.getOrDefault(eventType, 0)
+            val currentCount = kafkaEventSession.getNumberOfEvents()
+            val previousCount = lastReportedNumberOfKafkaEvents.getOrDefault(eventType, 0)
             val msg = "Det har oppstått en tellefeil, rapporterer derfor ikke nye $eventType-metrikker. " +
                     "Antall unike eventer ved forrige rapportering $previousCount, antall telt nå $currentCount."
             log.warn(msg)
@@ -70,12 +70,12 @@ class MetricsSubmitterService(
     }
 
     private fun countedMoreKafkaEventsThanLastCount(session: CountingMetricsSession, eventType: EventType): Boolean {
-        val currentCount = session.getNumberOfUniqueEvents()
-        return currentCount > 0 && currentCount >= lastReportedUniqueKafkaEvents.getOrDefault(eventType, 0)
+        val currentCount = session.getNumberOfEvents()
+        return currentCount > 0 && currentCount >= lastReportedNumberOfKafkaEvents.getOrDefault(eventType, 0)
     }
 
     private fun currentAndLastCountWasZero(session: CountingMetricsSession, eventType: EventType): Boolean {
-        val currentCount = session.getNumberOfUniqueEvents()
-        return currentCount == 0 && lastReportedUniqueKafkaEvents.getOrDefault(eventType, 0) == 0
+        val currentCount = session.getNumberOfEvents()
+        return currentCount == 0 && lastReportedNumberOfKafkaEvents.getOrDefault(eventType, 0) == 0
     }
 }
