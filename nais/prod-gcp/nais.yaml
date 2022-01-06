@@ -30,10 +30,10 @@ spec:
   resources:
     limits:
       cpu: "3"
-      memory: 4500Mi
+      memory: 9000Mi
     requests:
-      cpu: "1"
-      memory: 3840Mi
+      cpu: "50m"
+      memory: 1280Mi
   kafka:
     pool: nav-prod
   azure:
