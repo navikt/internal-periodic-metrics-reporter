@@ -20,7 +20,7 @@ object KafkaKeyIdentifierTransformer {
                 invalidEvent
             }
             is NokkelIntern -> {
-                KafkaEventIdentifier(key.getEventId(), key.getAppnavn(), key.getFodselsnummer())
+                KafkaEventIdentifier(key.getEventId(), key.getAppnavn())
             }
             else -> {
                 val invalidEvent = KafkaEventIdentifier.createInvalidEvent()

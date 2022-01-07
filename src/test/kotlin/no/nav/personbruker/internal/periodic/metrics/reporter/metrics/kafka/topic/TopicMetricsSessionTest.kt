@@ -46,9 +46,9 @@ internal class TopicMetricsSessionTest {
 
         val other = TopicMetricsSession(originalMetricsSession)
 
-        val produsent1Event2 = KafkaEventIdentifier("b-2", produsent1, "1")
-        val produsent2Event3 = KafkaEventIdentifier("b-13", produsent2, "2")
-        val produsent2Event4 = KafkaEventIdentifier("b-14", produsent2, "2")
+        val produsent1Event2 = KafkaEventIdentifier("b-2", produsent1)
+        val produsent2Event3 = KafkaEventIdentifier("b-13", produsent2)
+        val produsent2Event4 = KafkaEventIdentifier("b-14", produsent2)
 
         other.countEvent(produsent1Event2)
         other.countEvent(produsent2Event3)
@@ -66,12 +66,12 @@ internal class TopicMetricsSessionTest {
 
         val metricsSession = TopicMetricsSession(EventType.BESKJED_INTERN)
 
-        val produsent1Event1 = KafkaEventIdentifier("b-1", produsent1, "1")
-        val produsent2Event1 = KafkaEventIdentifier("b-11", produsent2, "2")
-        val produsent2Event2 = KafkaEventIdentifier("b-12", produsent2, "2")
-        val produsent3Event1 = KafkaEventIdentifier("b-21", produsent3, "3")
-        val produsent3Event2 = KafkaEventIdentifier("b-22", produsent3, "3")
-        val produsent3Event3 = KafkaEventIdentifier("b-23", produsent3, "3")
+        val produsent1Event1 = KafkaEventIdentifier("b-1", produsent1)
+        val produsent2Event1 = KafkaEventIdentifier("b-11", produsent2)
+        val produsent2Event2 = KafkaEventIdentifier("b-12", produsent2)
+        val produsent3Event1 = KafkaEventIdentifier("b-21", produsent3)
+        val produsent3Event2 = KafkaEventIdentifier("b-22", produsent3)
+        val produsent3Event3 = KafkaEventIdentifier("b-23", produsent3)
 
 
         metricsSession.countEvent(produsent1Event1)

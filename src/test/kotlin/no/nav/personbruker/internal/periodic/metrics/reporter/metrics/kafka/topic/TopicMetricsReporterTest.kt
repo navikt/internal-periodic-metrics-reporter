@@ -32,9 +32,9 @@ internal class TopicMetricsReporterTest {
         coEvery { metricsReporter.registerDataPoint(KAFKA_TOTAL_EVENTS_ON_TOPIC_BY_PRODUCER, capture(capturedFieldsForTotalEventsByProducer), any()) } returns Unit
 
         val session = TopicMetricsSession(EventType.BESKJED_INTERN)
-        session.countEvent(KafkaEventIdentifier("1", "producer", "123"))
-        session.countEvent(KafkaEventIdentifier("2", "producer", "123"))
-        session.countEvent(KafkaEventIdentifier("3", "producer", "123"))
+        session.countEvent(KafkaEventIdentifier("1", "producer"))
+        session.countEvent(KafkaEventIdentifier("2", "producer"))
+        session.countEvent(KafkaEventIdentifier("3", "producer"))
         runBlocking {
             topicMetricsReporter.report(session)
         }
@@ -55,7 +55,7 @@ internal class TopicMetricsReporterTest {
         coEvery { metricsReporter.registerDataPoint(KAFKA_COUNT_PROCESSING_TIME, capture(capturedFieldsForProcessingTime), any()) } returns Unit
 
         val session = TopicMetricsSession(EventType.BESKJED_INTERN)
-        session.countEvent(KafkaEventIdentifier("1", "dummyAppnavn", "123"))
+        session.countEvent(KafkaEventIdentifier("1", "dummyAppnavn"))
         runBlocking { delay(expectedProcessingTimeMs) }
         session.calculateProcessingTime()
         runBlocking {
@@ -76,8 +76,8 @@ internal class TopicMetricsReporterTest {
         coEvery { metricsReporter.registerDataPoint(KAFKA_TOTAL_EVENTS_ON_TOPIC_BY_PRODUCER, any(), capture(capturedTagsForTotalByProducer)) } returns Unit
 
         val session = TopicMetricsSession(EventType.BESKJED_INTERN)
-        session.countEvent(KafkaEventIdentifier("1", producerName, "123"))
-        session.countEvent(KafkaEventIdentifier("2", producerName, "123"))
+        session.countEvent(KafkaEventIdentifier("1", producerName))
+        session.countEvent(KafkaEventIdentifier("2", producerName))
         runBlocking {
             topicMetricsReporter.report(session)
         }

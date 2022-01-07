@@ -34,7 +34,6 @@ internal class KafkaKeyIdentifierTransformerTest {
 
         transformed.eventId `should be equal to` nokkel.getEventId()
         transformed.appnavn `should be equal to` nokkel.getAppnavn()
-        transformed.fodselsnummer `should be equal to` nokkel.getFodselsnummer()
     }
 
     @Test
@@ -48,7 +47,6 @@ internal class KafkaKeyIdentifierTransformerTest {
 
         transformed.eventId `should be equal to` nokkel.getEventId()
         transformed.appnavn `should be equal to` nokkel.getAppnavn()
-        transformed.fodselsnummer `should be equal to` nokkel.getFodselsnummer()
     }
 
     @Test
@@ -62,7 +60,6 @@ internal class KafkaKeyIdentifierTransformerTest {
 
         transformed.eventId `should be equal to` nokkel.getEventId()
         transformed.appnavn `should be equal to` nokkel.getAppnavn()
-        transformed.fodselsnummer `should be equal to` nokkel.getFodselsnummer()
     }
 
     @Test
@@ -76,7 +73,6 @@ internal class KafkaKeyIdentifierTransformerTest {
 
         transformed.eventId `should be equal to` nokkel.getEventId()
         transformed.appnavn `should be equal to` nokkel.getAppnavn()
-        transformed.fodselsnummer `should be equal to` nokkel.getFodselsnummer()
     }
 
     @Test
@@ -90,7 +86,6 @@ internal class KafkaKeyIdentifierTransformerTest {
 
         transformed.eventId `should be equal to` nokkel.getEventId()
         transformed.appnavn `should be equal to` nokkel.getAppnavn()
-        transformed.fodselsnummer `should be equal to` nokkel.getFodselsnummer()
     }
 
     @Test

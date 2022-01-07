@@ -8,6 +8,7 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.health.ActivityHea
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.ActivityHealthService
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.ActivityMonitoringToggles
 import no.nav.personbruker.internal.periodic.metrics.reporter.health.HealthService
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DiscrepancyMetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheCountingMetricsProbe
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheEventCounterService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheMetricsReporter
@@ -39,6 +40,7 @@ class ApplicationContext {
 
     val cacheMetricsReporter = CacheMetricsReporter(metricsReporter)
     val kafkaMetricsReporter = TopicMetricsReporter(metricsReporter)
+    val discrepancyMetricsReporter = DiscrepancyMetricsReporter(metricsReporter)
 
     val beskjedKafkaPropsAiven = Kafka.counterConsumerAivenProps(environment, EventType.BESKJED_INTERN)
     var beskjedCountAivenConsumer = initializeCountConsumerAiven(beskjedKafkaPropsAiven, environment.beskjedInternTopicName)
@@ -112,7 +114,8 @@ class ApplicationContext {
             cacheEventCounterService = cacheEventCounterService,
             topicEventCounterServiceAiven = topicEventCounterServiceAiven,
             cacheMetricsReporter = cacheMetricsReporter,
-            kafkaMetricsReporter = kafkaMetricsReporter
+            kafkaMetricsReporter = kafkaMetricsReporter,
+            discrepancyMetricsReporter = discrepancyMetricsReporter
     )
 
     val activityHealthServiceConfig = ActivityMonitoringToggles(

@@ -7,6 +7,7 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.common.HandlerCons
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.CountException
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.isOtherEnvironmentThanProd
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CacheCountingMetricsSessions
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSessions
 import org.slf4j.LoggerFactory
 
@@ -17,7 +18,7 @@ class CacheEventCounterService(
 
     private val log = LoggerFactory.getLogger(CacheEventCounterService::class.java)
 
-    suspend fun countAllEventTypesAsync(): CountingMetricsSessions = withContext(Dispatchers.IO) {
+    suspend fun countAllEventTypesAsync(): CacheCountingMetricsSessions = withContext(Dispatchers.IO) {
         val beskjeder = async {
             countBeskjeder()
         }
@@ -34,7 +35,7 @@ class CacheEventCounterService(
             countDoneEvents()
         }
 
-        val sessions = CountingMetricsSessions()
+        val sessions = CacheCountingMetricsSessions()
         sessions.put(EventType.BESKJED_INTERN, beskjeder.await())
         sessions.put(EventType.DONE_INTERN, done.await())
         sessions.put(EventType.INNBOKS_INTERN, innboks.await())

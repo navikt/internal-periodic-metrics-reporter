@@ -1,12 +1,13 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.submitter
 
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSessions
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CacheCountingMetricsSessions
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.TopicMetricsSessions
 import org.slf4j.LoggerFactory
 
 class SessionComparator(
-        val topic: CountingMetricsSessions,
-        val cache: CountingMetricsSessions
+        val topic: TopicMetricsSessions,
+        val cache: CacheCountingMetricsSessions
 ) {
 
     private val log = LoggerFactory.getLogger(SessionComparator::class.java)

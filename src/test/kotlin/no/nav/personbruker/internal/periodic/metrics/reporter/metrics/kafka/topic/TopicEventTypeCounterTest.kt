@@ -52,9 +52,9 @@ internal class TopicEventTypeCounterTest {
         val minimumProcessingTimeInMs: Long = 500
 
         every { TopicEventTypeCounter.countBatch(polledEvents, capture(sessionSlot)) } coAnswers {
-            sessionSlot.captured.countEvent(KafkaEventIdentifier("1", "test", "123"))
-            sessionSlot.captured.countEvent(KafkaEventIdentifier("2", "test", "123"))
-            sessionSlot.captured.countEvent(KafkaEventIdentifier("3", "test", "123"))
+            sessionSlot.captured.countEvent(KafkaEventIdentifier("1", "test"))
+            sessionSlot.captured.countEvent(KafkaEventIdentifier("2", "test"))
+            sessionSlot.captured.countEvent(KafkaEventIdentifier("3", "test"))
             delay(minimumProcessingTimeInMs)
         }
 

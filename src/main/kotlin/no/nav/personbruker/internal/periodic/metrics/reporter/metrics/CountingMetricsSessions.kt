@@ -1,12 +1,14 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics
 
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheCountingMetricsSession
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicMetricsSession
 
-class CountingMetricsSessions {
+class CountingMetricsSessions<T : CountingMetricsSession> {
 
-    private val sessions = mutableMapOf<EventType, CountingMetricsSession>()
+    private val sessions = mutableMapOf<EventType, T>()
 
-    fun put(eventType: EventType, session: CountingMetricsSession) {
+    fun put(eventType: EventType, session: T) {
         sessions[eventType] = session
     }
 
@@ -14,7 +16,7 @@ class CountingMetricsSessions {
         return sessions.keys
     }
 
-    fun getForType(eventType: EventType): CountingMetricsSession {
+    fun getForType(eventType: EventType): T {
         return sessions[eventType]
             ?: throw Exception("Det finnes ingen sesjon for '$eventType'.")
     }
@@ -28,3 +30,6 @@ class CountingMetricsSessions {
 interface CountingMetricsSession {
     fun getNumberOfEvents(): Int
 }
+
+typealias TopicMetricsSessions = CountingMetricsSessions<TopicMetricsSession>
+typealias CacheCountingMetricsSessions = CountingMetricsSessions<CacheCountingMetricsSession>
