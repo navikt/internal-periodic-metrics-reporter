@@ -8,7 +8,7 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.common.`with messa
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.MetricsReportingException
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.*
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.UniqueKafkaEventIdentifier
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.KafkaEventIdentifier
 import org.amshove.kluent.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test
 internal class TopicMetricsReporterTest {
 
     private val metricsReporter = mockk<MetricsReporter>(relaxed = true)
-    private val prometheusCollector = mockkObject(PrometheusMetricsCollector)
     private val topicMetricsReporter = TopicMetricsReporter(metricsReporter)
 
     @BeforeEach
@@ -26,39 +25,24 @@ internal class TopicMetricsReporterTest {
 
     @Test
     fun `Should report correct number of events`() {
-        val capturedFieldsForUnique = slot<Map<String, Any>>()
-        val capturedFieldsForDuplicated = slot<Map<String, Any>>()
         val capturedFieldsForTotalEvents = slot<Map<String, Any>>()
-        val capturedFieldsForUniqueByProducer = slot<Map<String, Any>>()
         val capturedFieldsForTotalEventsByProducer = slot<Map<String, Any>>()
 
-        coEvery { metricsReporter.registerDataPoint(KAFKA_UNIQUE_EVENTS_ON_TOPIC, capture(capturedFieldsForUnique), any()) } returns Unit
         coEvery { metricsReporter.registerDataPoint(KAFKA_TOTAL_EVENTS_ON_TOPIC, capture(capturedFieldsForTotalEvents), any()) } returns Unit
-        coEvery { metricsReporter.registerDataPoint(KAFKA_DUPLICATE_EVENTS_ON_TOPIC, capture(capturedFieldsForDuplicated), any()) } returns Unit
         coEvery { metricsReporter.registerDataPoint(KAFKA_TOTAL_EVENTS_ON_TOPIC_BY_PRODUCER, capture(capturedFieldsForTotalEventsByProducer), any()) } returns Unit
-        coEvery { metricsReporter.registerDataPoint(KAFKA_UNIQUE_EVENTS_ON_TOPIC_BY_PRODUCER, capture(capturedFieldsForUniqueByProducer), any()) } returns Unit
 
         val session = TopicMetricsSession(EventType.BESKJED_INTERN)
-        session.countEvent(UniqueKafkaEventIdentifier("1", "producer", "123"))
-        session.countEvent(UniqueKafkaEventIdentifier("2", "producer", "123"))
-        session.countEvent(UniqueKafkaEventIdentifier("3", "producer", "123"))
-        session.countEvent(UniqueKafkaEventIdentifier("3", "producer", "123"))
+        session.countEvent(KafkaEventIdentifier("1", "producer"))
+        session.countEvent(KafkaEventIdentifier("2", "producer"))
+        session.countEvent(KafkaEventIdentifier("3", "producer"))
         runBlocking {
             topicMetricsReporter.report(session)
         }
 
-        coVerify(exactly = 6) { metricsReporter.registerDataPoint(any(), any(), any()) }
-        verify(exactly = 1) { PrometheusMetricsCollector.registerUniqueEvents(3, any()) }
-        verify(exactly = 1) { PrometheusMetricsCollector.registerTotalNumberOfEvents(4, any()) }
-        verify(exactly = 1) { PrometheusMetricsCollector.registerUniqueEventsByProducer(3, any(), any()) }
-        verify(exactly = 1) { PrometheusMetricsCollector.registerDuplicatedEventsOnTopic(1, any(), any()) }
-        verify(exactly = 1) { PrometheusMetricsCollector.registerTotalNumberOfEventsByProducer(4, any(), any()) }
+        coVerify(exactly = 3) { metricsReporter.registerDataPoint(any(), any(), any()) }
 
-        capturedFieldsForDuplicated.captured["counter"] `should be equal to` 1
-        capturedFieldsForTotalEvents.captured["counter"] `should be equal to` 4
-        capturedFieldsForUnique.captured["counter"] `should be equal to` 3
-        capturedFieldsForUniqueByProducer.captured["counter"] `should be equal to` 3
-        capturedFieldsForTotalEventsByProducer.captured["counter"] `should be equal to` 4
+        capturedFieldsForTotalEvents.captured["counter"] `should be equal to` 3
+        capturedFieldsForTotalEventsByProducer.captured["counter"] `should be equal to` 3
     }
 
     @Test
@@ -71,7 +55,7 @@ internal class TopicMetricsReporterTest {
         coEvery { metricsReporter.registerDataPoint(KAFKA_COUNT_PROCESSING_TIME, capture(capturedFieldsForProcessingTime), any()) } returns Unit
 
         val session = TopicMetricsSession(EventType.BESKJED_INTERN)
-        session.countEvent(UniqueKafkaEventIdentifier("1", "dummyAppnavn", "123"))
+        session.countEvent(KafkaEventIdentifier("1", "dummyAppnavn"))
         runBlocking { delay(expectedProcessingTimeMs) }
         session.calculateProcessingTime()
         runBlocking {
@@ -87,35 +71,20 @@ internal class TopicMetricsReporterTest {
     fun `Should use the provided appname as producername`() {
         val producerName = "dummyAppnavn"
 
-        val producerNameForPrometheus = slot<String>()
-        val capturedTagsForUniqueByProducer = slot<Map<String, String>>()
-        val capturedTagsForDuplicates = slot<Map<String, String>>()
         val capturedTagsForTotalByProducer = slot<Map<String, String>>()
 
-        every { PrometheusMetricsCollector.registerUniqueEventsByProducer(any(), any(), capture(producerNameForPrometheus)) } returns Unit
-        coEvery { metricsReporter.registerDataPoint(KAFKA_DUPLICATE_EVENTS_ON_TOPIC, any(), capture(capturedTagsForDuplicates)) } returns Unit
         coEvery { metricsReporter.registerDataPoint(KAFKA_TOTAL_EVENTS_ON_TOPIC_BY_PRODUCER, any(), capture(capturedTagsForTotalByProducer)) } returns Unit
-        coEvery { metricsReporter.registerDataPoint(KAFKA_UNIQUE_EVENTS_ON_TOPIC_BY_PRODUCER, any(), capture(capturedTagsForUniqueByProducer)) } returns Unit
 
         val session = TopicMetricsSession(EventType.BESKJED_INTERN)
-        session.countEvent(UniqueKafkaEventIdentifier("1", producerName, "123"))
-        session.countEvent(UniqueKafkaEventIdentifier("1", producerName, "123"))
+        session.countEvent(KafkaEventIdentifier("1", producerName))
+        session.countEvent(KafkaEventIdentifier("2", producerName))
         runBlocking {
             topicMetricsReporter.report(session)
         }
 
-        coVerify(exactly = 1) { metricsReporter.registerDataPoint(KAFKA_UNIQUE_EVENTS_ON_TOPIC_BY_PRODUCER, any(), any()) }
-        coVerify(exactly = 1) { metricsReporter.registerDataPoint(KAFKA_DUPLICATE_EVENTS_ON_TOPIC, any(), any()) }
         coVerify(exactly = 1) { metricsReporter.registerDataPoint(KAFKA_TOTAL_EVENTS_ON_TOPIC_BY_PRODUCER, any(), any()) }
 
-        verify(exactly = 1) { PrometheusMetricsCollector.registerUniqueEventsByProducer(any(), any(), any()) }
-        verify(exactly = 1) { PrometheusMetricsCollector.registerDuplicatedEventsOnTopic(any(), any(), any()) }
-        verify(exactly = 1) { PrometheusMetricsCollector.registerTotalNumberOfEventsByProducer(any(), any(), any()) }
-
-        producerNameForPrometheus.captured `should be equal to` producerName
-        capturedTagsForUniqueByProducer.captured["producer"] `should be equal to` producerName
         capturedTagsForTotalByProducer.captured["producer"] `should be equal to` producerName
-        capturedTagsForDuplicates.captured["producer"] `should be equal to` producerName
     }
 
     @Test
@@ -127,10 +96,6 @@ internal class TopicMetricsReporterTest {
 
         val numberOfSuccessfulCountingSessions = 0
         coVerify(exactly = numberOfSuccessfulCountingSessions) { metricsReporter.registerDataPoint(any(), any(), any()) }
-        verify(exactly = numberOfSuccessfulCountingSessions) { PrometheusMetricsCollector.registerUniqueEvents(any(), any()) }
-        verify(exactly = numberOfSuccessfulCountingSessions) { PrometheusMetricsCollector.registerTotalNumberOfEvents(any(), any()) }
-        verify(exactly = numberOfSuccessfulCountingSessions) { PrometheusMetricsCollector.registerUniqueEventsByProducer(any(), any(), any()) }
-        verify(exactly = numberOfSuccessfulCountingSessions) { PrometheusMetricsCollector.registerTotalNumberOfEventsByProducer(any(), any(), any()) }
     }
 
     @Test

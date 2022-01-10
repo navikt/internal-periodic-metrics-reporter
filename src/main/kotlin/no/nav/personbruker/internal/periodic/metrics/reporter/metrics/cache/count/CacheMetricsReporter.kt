@@ -5,7 +5,6 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DB_COUNT_PROCESSING_TIME
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DB_TOTAL_EVENTS_IN_CACHE
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DB_TOTAL_EVENTS_IN_CACHE_BY_PRODUCER
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.PrometheusMetricsCollector
 import org.slf4j.LoggerFactory
 
 class CacheMetricsReporter(private val metricsReporter: MetricsReporter) {
@@ -38,7 +37,6 @@ class CacheMetricsReporter(private val metricsReporter: MetricsReporter) {
         val eventTypeName = session.eventType.toString()
 
         reportEvents(numberOfUniqueEvents, eventTypeName, DB_TOTAL_EVENTS_IN_CACHE)
-        PrometheusMetricsCollector.registerTotalNumberOfEventsInCache(numberOfUniqueEvents, session.eventType)
     }
 
     private suspend fun reportTotalEventsByProducer(session: CacheCountingMetricsSession) {
@@ -47,17 +45,11 @@ class CacheMetricsReporter(private val metricsReporter: MetricsReporter) {
             val eventTypeName = session.eventType.toString()
 
             reportEvents(numberOfEvents, eventTypeName, producerName, DB_TOTAL_EVENTS_IN_CACHE_BY_PRODUCER)
-            PrometheusMetricsCollector.registerTotalNumberOfEventsInCacheByProducer(
-                    numberOfEvents,
-                    session.eventType,
-                    producerName
-            )
         }
     }
 
     private suspend fun reportTimeUsed(session: CacheCountingMetricsSession) {
         reportProcessingTimeEvent(session)
-        PrometheusMetricsCollector.registerProcessingTimeInCache(session.getProcessingTime(), session.eventType)
     }
 
     private suspend fun reportEvents(count: Int, eventType: String, producerName: String, metricName: String) {

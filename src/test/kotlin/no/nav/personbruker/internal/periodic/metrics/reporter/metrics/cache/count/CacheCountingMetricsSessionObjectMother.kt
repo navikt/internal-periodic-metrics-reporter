@@ -1,12 +1,21 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count
 
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.KafkaEventIdentifier
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicMetricsSession
 
 object CacheCountingMetricsSessionObjectMother {
 
     fun giveMeBeskjedInternSessionWithOneCountedEvent(): CacheCountingMetricsSession {
         val beskjedInternSession = CacheCountingMetricsSession(EventType.BESKJED_INTERN)
         beskjedInternSession.addEventsByProducer(mapOf("produsent1" to 1))
+        return beskjedInternSession
+    }
+
+    fun giveMeBeskjedInternSessionWithTwoCountedEvent(): CacheCountingMetricsSession {
+        val beskjedInternSession = CacheCountingMetricsSession(EventType.BESKJED_INTERN)
+        beskjedInternSession.addEventsByProducer(mapOf("produsent1" to 11))
+        beskjedInternSession.addEventsByProducer(mapOf("produsent1" to 12))
         return beskjedInternSession
     }
 
@@ -43,4 +52,11 @@ object CacheCountingMetricsSessionObjectMother {
         return statusoppdateringInternSession
     }
 
+    fun giveMeACacheSessionWithConfiguration(type: EventType, config: Map<String, Int>): CacheCountingMetricsSession {
+        val session = CacheCountingMetricsSession(type)
+
+        session.addEventsByProducer(config)
+
+        return session
+    }
 }

@@ -20,12 +20,9 @@ class TopicMetricsReporter(private val metricsReporter: MetricsReporter) {
     }
 
     private suspend fun reportIfEventsCounted(session: TopicMetricsSession) {
-        if (session.getNumberOfUniqueEvents() > 0) {
-            reportUniqueEvents(session)
-            reportTotalNumberOfEvents(session)
-            reportUniqueEventsByProducer(session)
-            reportDuplicatedEventsByProducer(session)
-            reportTotalNumberOfEventsByProducer(session)
+        if (session.getNumberOfEvents() > 0) {
+            reportNumberOfEvents(session)
+            reportNumberOfEventsByProducer(session)
             reportTimeUsed(session)
 
         } else {
@@ -33,55 +30,24 @@ class TopicMetricsReporter(private val metricsReporter: MetricsReporter) {
         }
     }
 
-    private suspend fun reportUniqueEvents(session: TopicMetricsSession) {
-        val uniqueEvents = session.getNumberOfUniqueEvents()
+    private suspend fun reportNumberOfEvents(session: TopicMetricsSession) {
+        val uniqueEvents = session.getNumberOfEvents()
         val eventTypeName = session.eventType.toString()
 
-        reportEvents(uniqueEvents, eventTypeName, KAFKA_UNIQUE_EVENTS_ON_TOPIC)
-        PrometheusMetricsCollector.registerUniqueEvents(uniqueEvents, session.eventType)
+        reportEvents(uniqueEvents, eventTypeName, KAFKA_TOTAL_EVENTS_ON_TOPIC)
     }
 
-    private suspend fun reportTotalNumberOfEvents(session: TopicMetricsSession) {
-        val total = session.getTotalNumber()
-        val eventTypeName = session.eventType.toString()
-
-        reportEvents(total, eventTypeName, KAFKA_TOTAL_EVENTS_ON_TOPIC)
-        PrometheusMetricsCollector.registerTotalNumberOfEvents(total, session.eventType)
-    }
-
-    private suspend fun reportUniqueEventsByProducer(session: TopicMetricsSession) {
-        session.getProducersWithUniqueEvents().forEach { producerName ->
-            val uniqueEvents = session.getNumberOfUniqueEvents(producerName)
-            val eventTypeName = session.eventType.toString()
-
-            reportEvents(uniqueEvents, eventTypeName, producerName, KAFKA_UNIQUE_EVENTS_ON_TOPIC_BY_PRODUCER)
-            PrometheusMetricsCollector.registerUniqueEventsByProducer(uniqueEvents, session.eventType, producerName)
-        }
-    }
-
-    private suspend fun reportDuplicatedEventsByProducer(session: TopicMetricsSession) {
-        session.getProducersWithDuplicatedEvents().forEach { producerName ->
-            val duplicates = session.getDuplicates(producerName)
-            val eventTypeName = session.eventType.toString()
-
-            reportEvents(duplicates, eventTypeName, producerName, KAFKA_DUPLICATE_EVENTS_ON_TOPIC)
-            PrometheusMetricsCollector.registerDuplicatedEventsOnTopic(duplicates, session.eventType, producerName)
-        }
-    }
-
-    private suspend fun reportTotalNumberOfEventsByProducer(session: TopicMetricsSession) {
+    private suspend fun reportNumberOfEventsByProducer(session: TopicMetricsSession) {
         session.getProducersWithEvents().forEach { producerName ->
-            val total = session.getTotalNumber(producerName)
+            val total = session.getNumberOfEventsForProducer(producerName)
             val eventTypeName = session.eventType.toString()
 
             reportEvents(total, eventTypeName, producerName, KAFKA_TOTAL_EVENTS_ON_TOPIC_BY_PRODUCER)
-            PrometheusMetricsCollector.registerTotalNumberOfEventsByProducer(total, session.eventType, producerName)
         }
     }
 
     private suspend fun reportTimeUsed(session: TopicMetricsSession) {
         reportProcessingTimeEvent(session)
-        PrometheusMetricsCollector.registerProcessingTime(session.getProcessingTime(), session.eventType)
     }
 
     private suspend fun reportEvents(count: Int, eventType: String, producerName: String, metricName: String) {

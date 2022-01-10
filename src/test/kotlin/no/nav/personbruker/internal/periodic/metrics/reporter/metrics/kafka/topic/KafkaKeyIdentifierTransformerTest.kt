@@ -5,7 +5,7 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.beskjed.AvroBeskje
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.objectmother.ConsumerRecordsObjectMother
 import no.nav.personbruker.internal.periodic.metrics.reporter.done.AvroDoneInternObjectMother
 import no.nav.personbruker.internal.periodic.metrics.reporter.innboks.AvroInnboksInternObjectMother
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.UniqueKafkaEventIdentifier
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.KafkaEventIdentifier
 import no.nav.personbruker.internal.periodic.metrics.reporter.oppgave.AvroOppgaveInternObjectMother
 import no.nav.personbruker.internal.periodic.metrics.reporter.statusoppdatering.AvroStatusoppdateringInternObjectMother
 import org.amshove.kluent.`should be equal to`
@@ -14,7 +14,7 @@ import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.junit.jupiter.api.Test
 
-internal class UniqueKafkaKeyIdentifierTransformerTest {
+internal class KafkaKeyIdentifierTransformerTest {
     private val ulid = "01"
     private val eventid = "1"
     private val grupperingsId = "123"
@@ -30,11 +30,10 @@ internal class UniqueKafkaKeyIdentifierTransformerTest {
         val original: ConsumerRecord<NokkelIntern, GenericRecord> =
                 ConsumerRecordsObjectMother.createConsumerRecord(nokkel, beskjed)
 
-        val transformed = UniqueKafkaKeyIdentifierTransformer.toInternal(original)
+        val transformed = KafkaKeyIdentifierTransformer.toInternal(original)
 
         transformed.eventId `should be equal to` nokkel.getEventId()
         transformed.appnavn `should be equal to` nokkel.getAppnavn()
-        transformed.fodselsnummer `should be equal to` nokkel.getFodselsnummer()
     }
 
     @Test
@@ -44,11 +43,10 @@ internal class UniqueKafkaKeyIdentifierTransformerTest {
         val original: ConsumerRecord<NokkelIntern, GenericRecord> =
                 ConsumerRecordsObjectMother.createConsumerRecord(nokkel, innboksEvent)
 
-        val transformed = UniqueKafkaKeyIdentifierTransformer.toInternal(original)
+        val transformed = KafkaKeyIdentifierTransformer.toInternal(original)
 
         transformed.eventId `should be equal to` nokkel.getEventId()
         transformed.appnavn `should be equal to` nokkel.getAppnavn()
-        transformed.fodselsnummer `should be equal to` nokkel.getFodselsnummer()
     }
 
     @Test
@@ -58,11 +56,10 @@ internal class UniqueKafkaKeyIdentifierTransformerTest {
         val original: ConsumerRecord<NokkelIntern, GenericRecord> =
                 ConsumerRecordsObjectMother.createConsumerRecord(nokkel, oppgave)
 
-        val transformed = UniqueKafkaKeyIdentifierTransformer.toInternal(original)
+        val transformed = KafkaKeyIdentifierTransformer.toInternal(original)
 
         transformed.eventId `should be equal to` nokkel.getEventId()
         transformed.appnavn `should be equal to` nokkel.getAppnavn()
-        transformed.fodselsnummer `should be equal to` nokkel.getFodselsnummer()
     }
 
     @Test
@@ -72,11 +69,10 @@ internal class UniqueKafkaKeyIdentifierTransformerTest {
         val original: ConsumerRecord<NokkelIntern, GenericRecord> =
                 ConsumerRecordsObjectMother.createConsumerRecord(nokkel, statusoppdateringEvent)
 
-        val transformed = UniqueKafkaKeyIdentifierTransformer.toInternal(original)
+        val transformed = KafkaKeyIdentifierTransformer.toInternal(original)
 
         transformed.eventId `should be equal to` nokkel.getEventId()
         transformed.appnavn `should be equal to` nokkel.getAppnavn()
-        transformed.fodselsnummer `should be equal to` nokkel.getFodselsnummer()
     }
 
     @Test
@@ -86,11 +82,10 @@ internal class UniqueKafkaKeyIdentifierTransformerTest {
         val original: ConsumerRecord<NokkelIntern, GenericRecord> =
                 ConsumerRecordsObjectMother.createConsumerRecord(nokkel, done)
 
-        val transformed = UniqueKafkaKeyIdentifierTransformer.toInternal(original)
+        val transformed = KafkaKeyIdentifierTransformer.toInternal(original)
 
         transformed.eventId `should be equal to` nokkel.getEventId()
         transformed.appnavn `should be equal to` nokkel.getAppnavn()
-        transformed.fodselsnummer `should be equal to` nokkel.getFodselsnummer()
     }
 
     @Test
@@ -98,9 +93,9 @@ internal class UniqueKafkaKeyIdentifierTransformerTest {
         val done = AvroDoneInternObjectMother.createDone()
         val recordWithouKey: ConsumerRecord<NokkelIntern, GenericRecord> =
                 ConsumerRecordsObjectMother.createConsumerRecordWithoutNokkel(done)
-        val transformed = UniqueKafkaKeyIdentifierTransformer.toInternal(recordWithouKey)
+        val transformed = KafkaKeyIdentifierTransformer.toInternal(recordWithouKey)
 
         transformed.shouldNotBeNull()
-        transformed `should be equal to` UniqueKafkaEventIdentifier.createInvalidEvent()
+        transformed `should be equal to` KafkaEventIdentifier.createInvalidEvent()
     }
 }

@@ -1,12 +1,13 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.submitter
 
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSessions
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CacheCountingMetricsSessions
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.TopicMetricsSessions
 import org.slf4j.LoggerFactory
 
 class SessionComparator(
-        val topic: CountingMetricsSessions,
-        val cache: CountingMetricsSessions
+        val topic: TopicMetricsSessions,
+        val cache: CacheCountingMetricsSessions
 ) {
 
     private val log = LoggerFactory.getLogger(SessionComparator::class.java)
@@ -28,11 +29,11 @@ class SessionComparator(
 
     private fun logWarningWithInfoAboutWhatSourcesWasMissingTheEventType(eventType: EventType) {
         if (topic.getEventTypesWithSession().contains(eventType)) {
-            val numberOfEvents = topic.getForType(eventType).getNumberOfUniqueEvents()
+            val numberOfEvents = topic.getForType(eventType).getNumberOfEvents()
             log.warn("Eventtypen '$eventType' ble kun telt for topic, og ikke i cache. Fant $numberOfEvents eventer.")
 
         } else if (cache.getEventTypesWithSession().contains(eventType)) {
-            val numberOfEvents = cache.getForType(eventType).getNumberOfUniqueEvents()
+            val numberOfEvents = cache.getForType(eventType).getNumberOfEvents()
             log.warn("Eventtypen '$eventType' ble kun telt for cache, og ikke på topic. Fant $numberOfEvents eventer.")
         }
     }

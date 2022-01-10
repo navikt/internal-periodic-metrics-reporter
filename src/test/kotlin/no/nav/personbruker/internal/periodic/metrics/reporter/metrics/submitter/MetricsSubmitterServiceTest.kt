@@ -5,6 +5,7 @@ import kotlinx.coroutines.runBlocking
 import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSessionsObjectMother
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DiscrepancyMetricsReporter
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheCountingMetricsSession
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheEventCounterService
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheMetricsReporter
@@ -21,13 +22,15 @@ internal class MetricsSubmitterServiceTest {
     private val cacheMetricsReporter: CacheMetricsReporter = mockk(relaxed = true)
     private val kafkaMetricsReporter: TopicMetricsReporter = mockk(relaxed = true)
     private val cacheEventCounterService: CacheEventCounterService = mockk(relaxed = true)
+    private val discrepancyMetricsReporter: DiscrepancyMetricsReporter = mockk(relaxed = true)
     private val topicEventCounterServiceAiven: TopicEventCounterAivenService<NokkelIntern> = mockk(relaxed = true)
 
     private val submitter = MetricsSubmitterService(
             cacheEventCounterService = cacheEventCounterService,
             topicEventCounterServiceAiven = topicEventCounterServiceAiven,
             cacheMetricsReporter = cacheMetricsReporter,
-            kafkaMetricsReporter = kafkaMetricsReporter
+            kafkaMetricsReporter = kafkaMetricsReporter,
+            discrepancyMetricsReporter = discrepancyMetricsReporter
     )
 
     @BeforeEach

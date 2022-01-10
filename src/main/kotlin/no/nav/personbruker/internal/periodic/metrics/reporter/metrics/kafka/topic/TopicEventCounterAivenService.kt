@@ -5,6 +5,7 @@ import kotlinx.coroutines.coroutineScope
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.isOtherEnvironmentThanProd
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSessions
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.TopicMetricsSessions
 
 class TopicEventCounterAivenService<K>(
     val beskjedCounter: TopicEventTypeCounter<K>,
@@ -14,7 +15,7 @@ class TopicEventCounterAivenService<K>(
     val doneCounter: TopicEventTypeCounter<K>
     ) {
 
-        suspend fun countAllEventTypesAsync(): CountingMetricsSessions = coroutineScope {
+        suspend fun countAllEventTypesAsync(): TopicMetricsSessions = coroutineScope {
 
             val beskjeder = beskjedCounter.countEventsAsync()
             val oppgaver = oppgaveCounter.countEventsAsync()
@@ -32,7 +33,7 @@ class TopicEventCounterAivenService<K>(
                 async { TopicMetricsSession(EventType.STATUSOPPDATERING_INTERN) }
             }
 
-            val sessions = CountingMetricsSessions()
+            val sessions = TopicMetricsSessions()
 
             sessions.put(EventType.BESKJED_INTERN, beskjeder.await())
             sessions.put(EventType.DONE_INTERN, done.await())

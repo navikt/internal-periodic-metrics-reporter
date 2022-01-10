@@ -6,8 +6,8 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topi
 
 object CountingMetricsSessionsObjectMother {
 
-    fun giveMeCacheSessionsForAllInternalEventTypes(): CountingMetricsSessions {
-        return CountingMetricsSessions().apply {
+    fun giveMeCacheSessionsForAllInternalEventTypes(): CacheCountingMetricsSessions {
+        return CacheCountingMetricsSessions().apply {
             put(EventType.BESKJED_INTERN, CacheCountingMetricsSessionObjectMother.giveMeBeskjedInternSessionWithOneCountedEvent())
             put(EventType.DONE_INTERN, CacheCountingMetricsSessionObjectMother.giveMeDoneInternSessionWithTwoCountedEvents())
             put(EventType.INNBOKS_INTERN, CacheCountingMetricsSessionObjectMother.giveMeInnboksInternSessionWithThreeCountedEvents())
@@ -17,8 +17,8 @@ object CountingMetricsSessionsObjectMother {
     }
 
 
-    fun giveMeCacheSessionsForAllInternalEventTypesExceptForInnboks(): CountingMetricsSessions {
-        return CountingMetricsSessions().apply {
+    fun giveMeCacheSessionsForAllInternalEventTypesExceptForInnboks(): CacheCountingMetricsSessions {
+        return CacheCountingMetricsSessions().apply {
             put(EventType.BESKJED_INTERN, CacheCountingMetricsSessionObjectMother.giveMeBeskjedInternSessionWithOneCountedEvent())
             put(EventType.DONE_INTERN, CacheCountingMetricsSessionObjectMother.giveMeDoneInternSessionWithTwoCountedEvents())
             put(EventType.OPPGAVE_INTERN, CacheCountingMetricsSessionObjectMother.giveMeOppgaveInternSessionWithFourCountedEvents())
@@ -26,8 +26,8 @@ object CountingMetricsSessionsObjectMother {
         }
     }
 
-    fun giveMeTopicSessionsForAllInternalEventTypes(): CountingMetricsSessions {
-        return CountingMetricsSessions().apply {
+    fun giveMeTopicSessionsForAllInternalEventTypes(): TopicMetricsSessions {
+        return TopicMetricsSessions().apply {
             put(EventType.BESKJED_INTERN, TopicMetricsSessionObjectMother.giveMeBeskjedInternSessionWithTwoCountedEvents())
             put(EventType.DONE_INTERN, TopicMetricsSessionObjectMother.giveMeDoneInternSessionWithThreeCountedEvent())
             put(EventType.INNBOKS_INTERN, TopicMetricsSessionObjectMother.giveMeInnboksInternSessionWithFourCountedEvent())
@@ -37,8 +37,8 @@ object CountingMetricsSessionsObjectMother {
         }
     }
 
-    fun giveMeTopicSessionsWithSingleEventForAllInternalEventTypes(): CountingMetricsSessions {
-        return CountingMetricsSessions().apply {
+    fun giveMeTopicSessionsWithSingleEventForAllInternalEventTypes(): TopicMetricsSessions {
+        return TopicMetricsSessions().apply {
             put(EventType.BESKJED_INTERN, TopicMetricsSessionObjectMother.giveMeBeskjedSessionWithOneCountedEvent())
             put(EventType.DONE_INTERN, TopicMetricsSessionObjectMother.giveMeDoneSessionWithOneCountedEvent())
             put(EventType.INNBOKS_INTERN, TopicMetricsSessionObjectMother.giveMeInnboksSessionWithOneCountedEvent())
@@ -47,8 +47,8 @@ object CountingMetricsSessionsObjectMother {
         }
     }
 
-    fun giveMeTopicSessionsForAllInternalEventTypesExceptForInnboks(): CountingMetricsSessions {
-        return CountingMetricsSessions().apply {
+    fun giveMeTopicSessionsForAllInternalEventTypesExceptForInnboks(): TopicMetricsSessions {
+        return TopicMetricsSessions().apply {
             put(EventType.BESKJED_INTERN, TopicMetricsSessionObjectMother.giveMeBeskjedSessionWithTwoCountedEvents())
             put(EventType.DONE_INTERN, TopicMetricsSessionObjectMother.giveMeDoneSessionWithThreeCountedEvent())
             put(EventType.OPPGAVE_INTERN, TopicMetricsSessionObjectMother.giveMeOppgaveSessionWithFiveCountedEvent())

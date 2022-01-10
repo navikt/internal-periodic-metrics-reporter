@@ -29,11 +29,11 @@ spec:
   webproxy: true
   resources:
     limits:
-      cpu: "3"
-      memory: 3000Mi
-    requests:
       cpu: "1"
-      memory: 2560Mi
+      memory: 768Mi
+    requests:
+      cpu: "50m"
+      memory: 512Mi
   kafka:
     pool: nav-dev
   azure:

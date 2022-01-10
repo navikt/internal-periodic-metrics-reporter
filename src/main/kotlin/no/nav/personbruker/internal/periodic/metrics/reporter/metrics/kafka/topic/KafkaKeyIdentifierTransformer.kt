@@ -1,29 +1,29 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic
 
 import no.nav.brukernotifikasjon.schemas.internal.NokkelIntern
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.UniqueKafkaEventIdentifier
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.KafkaEventIdentifier
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
 
-object UniqueKafkaKeyIdentifierTransformer {
+object KafkaKeyIdentifierTransformer {
 
-    private val log = LoggerFactory.getLogger(UniqueKafkaKeyIdentifierTransformer::class.java)
+    private val log = LoggerFactory.getLogger(KafkaKeyIdentifierTransformer::class.java)
 
-    fun <K> toInternal(external: ConsumerRecord<K, GenericRecord>): UniqueKafkaEventIdentifier {
+    fun <K> toInternal(external: ConsumerRecord<K, GenericRecord>): KafkaEventIdentifier {
         val key = external.key()
 
         return when (key) {
             null -> {
-                val invalidEvent = UniqueKafkaEventIdentifier.createInvalidEvent()
+                val invalidEvent = KafkaEventIdentifier.createInvalidEvent()
                 log.warn("Kan ikke telle eventet, fordi kafka-key (Nokkel) er null. Transformerer til et dummy-event: $invalidEvent.")
                 invalidEvent
             }
             is NokkelIntern -> {
-                UniqueKafkaEventIdentifier(key.getEventId(), key.getAppnavn(), key.getFodselsnummer())
+                KafkaEventIdentifier(key.getEventId(), key.getAppnavn())
             }
             else -> {
-                val invalidEvent = UniqueKafkaEventIdentifier.createInvalidEvent()
+                val invalidEvent = KafkaEventIdentifier.createInvalidEvent()
                 log.warn("Kan ikke telle eventet, fordi kafka-key (Nokkel) er av ukjent type. Transformerer til et dummy-event: $invalidEvent.")
                 invalidEvent
             }
