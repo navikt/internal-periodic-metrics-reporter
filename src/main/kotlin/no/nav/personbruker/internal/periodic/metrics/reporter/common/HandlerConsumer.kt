@@ -12,7 +12,7 @@ class HandlerConsumer(private val client: HttpClient, private val azureTokenFetc
 
     suspend fun getEventCount(eventtype: EventType): List<EventCountForProducer> {
         try {
-            val pathToEndpoint = URL("$eventHandlerBaseURL/fetch/grouped/produsent/${eventtype.originalType}")
+            val pathToEndpoint = URL("$eventHandlerBaseURL/fetch/grouped/producer/${eventtype.originalType}")
 
             return client.get(pathToEndpoint, azureTokenFetcher)
         } catch (e: Exception) {
