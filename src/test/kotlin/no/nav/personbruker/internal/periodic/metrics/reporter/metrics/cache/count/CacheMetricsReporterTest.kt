@@ -9,6 +9,7 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DB_COUNT_PROCESSING_TIME
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DB_TOTAL_EVENTS_IN_CACHE_BY_PRODUCER
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.EventCountForProducer
 import org.amshove.kluent.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -25,10 +26,9 @@ internal class CacheMetricsReporterTest {
 
     @Test
     fun `Should report correct number of events`() {
-        val dummyCountResultFromDb = mutableMapOf<String, Int>().apply {
-            put("produsent1", 1)
-            put("produsent2", 2)
-        }
+        val dummyCountResultFromDb = listOf(
+            EventCountForProducer("namespace2", "produsent2", 5)
+        )
 
         val capturedTotalEventsInCacheByProducer = slot<Map<String, Any>>()
 
@@ -40,9 +40,9 @@ internal class CacheMetricsReporterTest {
             cacheMetricsReporter.report(session)
         }
 
-        coVerify(exactly = 4) { metricsReporter.registerDataPoint(any(), any(), any()) }
+        coVerify(exactly = 3) { metricsReporter.registerDataPoint(any(), any(), any()) }
 
-        capturedTotalEventsInCacheByProducer.captured["counter"] `should be equal to` 1
+        capturedTotalEventsInCacheByProducer.captured["counter"] `should be equal to` 5
     }
 
     @Test
@@ -50,10 +50,10 @@ internal class CacheMetricsReporterTest {
         val expectedProcessingTimeMs = 100L
         val expectedProcessingTimeNs = expectedProcessingTimeMs * 1000000
 
-        val dummyCountResultFromDb = mutableMapOf<String, Int>().apply {
-            put("produsent1", 1)
-            put("produsent2", 2)
-        }
+        val dummyCountResultFromDb = listOf(
+            EventCountForProducer("namespace1","produsent1", 1),
+            EventCountForProducer("namespace2", "produsent2", 2)
+        )
 
         val capturedProcessingTime = slot<Map<String, Long>>()
 
@@ -76,14 +76,15 @@ internal class CacheMetricsReporterTest {
 
     @Test
     fun `Should use the provided appname as producername`() {
-        val producerName = "dummyAppnavn"
+        val producerAppName = "dummyAppnavn"
+        val producerNamespace = "dummyNamespace"
 
         val capturedTagsForTotalByProducer = slot<Map<String, String>>()
 
         coEvery { metricsReporter.registerDataPoint(DB_TOTAL_EVENTS_IN_CACHE_BY_PRODUCER, any(), capture(capturedTagsForTotalByProducer)) } returns Unit
 
         val session = CacheCountingMetricsSession(EventType.BESKJED_INTERN)
-        session.addEventsByProducer(mapOf(Pair(producerName, 2)))
+        session.addEventsByProducer(listOf(EventCountForProducer(producerNamespace, producerAppName, 2)))
         runBlocking {
             cacheMetricsReporter.report(session)
         }
@@ -91,7 +92,7 @@ internal class CacheMetricsReporterTest {
         coVerify(exactly = 1) { metricsReporter.registerDataPoint(DB_TOTAL_EVENTS_IN_CACHE_BY_PRODUCER, any(), any()) }
 
 
-        capturedTagsForTotalByProducer.captured["producer"] `should be equal to` producerName
+        capturedTagsForTotalByProducer.captured["producer"] `should be equal to` producerAppName
     }
 
     @Test

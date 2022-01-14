@@ -46,14 +46,18 @@ class DiscrepancyMetricsReporter(private val metricsReporter: MetricsReporter) {
         }
     }
 
-    private suspend fun reportEvents(count: Int, eventType: String, producerName: String, metricName: String) {
-        metricsReporter.registerDataPoint(metricName, counterField(count), createTagMap(eventType, producerName))
+    private suspend fun reportEvents(count: Int, eventType: String, producer: Producer, metricName: String) {
+        metricsReporter.registerDataPoint(metricName, counterField(count), createTagMap(eventType, producer))
     }
 
     private fun counterField(events: Int): Map<String, Int> = listOf("counter" to events).toMap()
 
-    private fun createTagMap(eventType: String, producer: String): Map<String, String> =
-        listOf("eventType" to eventType, "producer" to producer).toMap()
+    private fun createTagMap(eventType: String, producer: Producer): Map<String, String> =
+        listOf(
+            "eventType" to eventType,
+            "producer" to producer.appName,
+            "producerNamespace" to producer.namespace
+        ).toMap()
 
     private suspend fun reportEvents(count: Int, eventType: String, metricName: String) {
         metricsReporter.registerDataPoint(metricName, counterField(count), createTagMap(eventType))

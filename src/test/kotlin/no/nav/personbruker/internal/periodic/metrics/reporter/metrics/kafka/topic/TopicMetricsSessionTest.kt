@@ -1,6 +1,7 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic
 
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.Producer
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.KafkaEventIdentifier
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should not be equal to`
@@ -8,9 +9,9 @@ import org.junit.jupiter.api.Test
 
 internal class TopicMetricsSessionTest {
 
-    val produsent1 = "p-1"
-    val produsent2 = "p-2"
-    val produsent3 = "p-3"
+    val produsent1 = Producer("namespace1", "p-1")
+    val produsent2 = Producer("namespace2", "p-2")
+    val produsent3 = Producer("namespace3", "p-3")
 
     @Test
     fun `Skal summere opp eventer riktig i hver kategori per produsent`() {
@@ -46,9 +47,9 @@ internal class TopicMetricsSessionTest {
 
         val other = TopicMetricsSession(originalMetricsSession)
 
-        val produsent1Event2 = KafkaEventIdentifier("b-2", produsent1)
-        val produsent2Event3 = KafkaEventIdentifier("b-13", produsent2)
-        val produsent2Event4 = KafkaEventIdentifier("b-14", produsent2)
+        val produsent1Event2 = KafkaEventIdentifier("b-2", produsent1.namespace, produsent1.appName)
+        val produsent2Event3 = KafkaEventIdentifier("b-13", produsent2.namespace, produsent2.appName)
+        val produsent2Event4 = KafkaEventIdentifier("b-14", produsent2.namespace, produsent2.appName)
 
         other.countEvent(produsent1Event2)
         other.countEvent(produsent2Event3)
@@ -66,12 +67,12 @@ internal class TopicMetricsSessionTest {
 
         val metricsSession = TopicMetricsSession(EventType.BESKJED_INTERN)
 
-        val produsent1Event1 = KafkaEventIdentifier("b-1", produsent1)
-        val produsent2Event1 = KafkaEventIdentifier("b-11", produsent2)
-        val produsent2Event2 = KafkaEventIdentifier("b-12", produsent2)
-        val produsent3Event1 = KafkaEventIdentifier("b-21", produsent3)
-        val produsent3Event2 = KafkaEventIdentifier("b-22", produsent3)
-        val produsent3Event3 = KafkaEventIdentifier("b-23", produsent3)
+        val produsent1Event1 = KafkaEventIdentifier("b-1", produsent1.namespace, produsent1.appName)
+        val produsent2Event1 = KafkaEventIdentifier("b-11", produsent2.namespace, produsent2.appName)
+        val produsent2Event2 = KafkaEventIdentifier("b-12", produsent2.namespace, produsent2.appName)
+        val produsent3Event1 = KafkaEventIdentifier("b-21", produsent3.namespace, produsent3.appName)
+        val produsent3Event2 = KafkaEventIdentifier("b-22", produsent3.namespace, produsent3.appName)
+        val produsent3Event3 = KafkaEventIdentifier("b-23", produsent3.namespace, produsent3.appName)
 
 
         metricsSession.countEvent(produsent1Event1)

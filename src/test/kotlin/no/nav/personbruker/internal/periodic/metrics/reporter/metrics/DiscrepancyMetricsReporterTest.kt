@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Test
 
 internal class DiscrepancyMetricsReporterTest {
 
-    private val producer1 = "producer1"
-    private val producer2 = "producer2"
+    private val producer1 = Producer("namespace1", "producer1")
+    private val producer2 = Producer("namespace2", "producer2")
 
     private val metricsReporter: MetricsReporter = mockk()
 

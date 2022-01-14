@@ -2,13 +2,15 @@ package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.top
 
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSession
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.Producer
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.KafkaEventIdentifier
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.producer
 
 class TopicMetricsSession : CountingMetricsSession {
 
     val eventType: EventType
 
-    private var numberOfEventsByProducer: MutableMap<String, Int>
+    private var numberOfEventsByProducer: MutableMap<Producer, Int>
 
     private val start = System.nanoTime()
     private var processingTime : Long = 0L
@@ -24,19 +26,19 @@ class TopicMetricsSession : CountingMetricsSession {
     }
 
     fun countEvent(event: KafkaEventIdentifier) {
-        val produsent = event.appnavn
+        val produsent = event.producer
         numberOfEventsByProducer[produsent] = numberOfEventsByProducer.getOrDefault(produsent, 0).inc()
     }
 
-    fun getNumberOfEventsForProducer(prodcer: String): Int {
-        return numberOfEventsByProducer.getOrDefault(prodcer, 0)
+    fun getNumberOfEventsForProducer(producer: Producer): Int {
+        return numberOfEventsByProducer.getOrDefault(producer, 0)
     }
 
     override fun getNumberOfEvents(): Int {
         return numberOfEventsByProducer.values.sum()
     }
 
-    fun getProducersWithEvents(): Set<String> {
+    fun getProducersWithEvents(): Set<Producer> {
         return numberOfEventsByProducer.keys
     }
 

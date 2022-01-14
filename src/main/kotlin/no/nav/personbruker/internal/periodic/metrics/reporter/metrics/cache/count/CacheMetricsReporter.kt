@@ -5,6 +5,7 @@ import no.nav.personbruker.internal.periodic.metrics.reporter.common.exceptions.
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DB_COUNT_PROCESSING_TIME
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DB_TOTAL_EVENTS_IN_CACHE
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.DB_TOTAL_EVENTS_IN_CACHE_BY_PRODUCER
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.Producer
 import org.slf4j.LoggerFactory
 
 class CacheMetricsReporter(private val metricsReporter: MetricsReporter) {
@@ -52,16 +53,20 @@ class CacheMetricsReporter(private val metricsReporter: MetricsReporter) {
         reportProcessingTimeEvent(session)
     }
 
-    private suspend fun reportEvents(count: Int, eventType: String, producerName: String, metricName: String) {
-        metricsReporter.registerDataPoint(metricName, counterField(count), createTagMap(eventType, producerName))
+    private suspend fun reportEvents(count: Int, eventType: String, producer: Producer, metricName: String) {
+        metricsReporter.registerDataPoint(metricName, counterField(count), createTagMap(eventType, producer))
     }
 
     private fun counterField(events: Int): Map<String, Int> = listOf("counter" to events).toMap()
 
     private fun counterField(events: Long): Map<String, Long> = listOf("counter" to events).toMap()
 
-    private fun createTagMap(eventType: String, producer: String): Map<String, String> =
-            listOf("eventType" to eventType, "producer" to producer).toMap()
+    private fun createTagMap(eventType: String, producer: Producer): Map<String, String> =
+            listOf(
+                "eventType" to eventType,
+                "producer" to producer.appName,
+                "producerNamespace" to producer.namespace
+            ).toMap()
 
     private suspend fun reportEvents(count: Int, eventType: String, metricName: String) {
         metricsReporter.registerDataPoint(metricName, counterField(count), createTagMap(eventType))

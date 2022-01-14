@@ -1,62 +1,60 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count
 
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.KafkaEventIdentifier
-import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.kafka.topic.TopicMetricsSession
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.EventCountForProducer
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.Producer
 
 object CacheCountingMetricsSessionObjectMother {
 
+    private const val defaultNamespace = "producerNamespace"
+
     fun giveMeBeskjedInternSessionWithOneCountedEvent(): CacheCountingMetricsSession {
         val beskjedInternSession = CacheCountingMetricsSession(EventType.BESKJED_INTERN)
-        beskjedInternSession.addEventsByProducer(mapOf("produsent1" to 1))
+        beskjedInternSession.addEventsByProducer(createCount("produsent1", 1))
         return beskjedInternSession
     }
 
     fun giveMeBeskjedInternSessionWithTwoCountedEvent(): CacheCountingMetricsSession {
         val beskjedInternSession = CacheCountingMetricsSession(EventType.BESKJED_INTERN)
-        beskjedInternSession.addEventsByProducer(mapOf("produsent1" to 11))
-        beskjedInternSession.addEventsByProducer(mapOf("produsent1" to 12))
+        beskjedInternSession.addEventsByProducer(createCount("produsent1", 2))
         return beskjedInternSession
     }
 
     fun giveMeDoneInternSessionWithTwoCountedEvents(): CacheCountingMetricsSession {
         val doneInternSession = CacheCountingMetricsSession(EventType.DONE_INTERN)
-        doneInternSession.addEventsByProducer(mapOf("produsent2" to 21))
-        doneInternSession.addEventsByProducer(mapOf("produsent2" to 22))
+        doneInternSession.addEventsByProducer(createCount("produsent2", 2))
         return doneInternSession
     }
 
     fun giveMeInnboksInternSessionWithThreeCountedEvents(): CacheCountingMetricsSession {
         val innboksInternSession = CacheCountingMetricsSession(EventType.INNBOKS_INTERN)
-        innboksInternSession.addEventsByProducer(mapOf("produsent3" to 31))
-        innboksInternSession.addEventsByProducer(mapOf("produsent3" to 32))
-        innboksInternSession.addEventsByProducer(mapOf("produsent3" to 33))
+        innboksInternSession.addEventsByProducer(createCount("produsent3", 3))
         return innboksInternSession
     }
 
     fun giveMeOppgaveInternSessionWithFourCountedEvents(): CacheCountingMetricsSession {
         val oppgaveInternSession = CacheCountingMetricsSession(EventType.OPPGAVE_INTERN)
-        oppgaveInternSession.addEventsByProducer(mapOf("produsent4" to 41))
-        oppgaveInternSession.addEventsByProducer(mapOf("produsent4" to 42))
-        oppgaveInternSession.addEventsByProducer(mapOf("produsent4" to 43))
-        oppgaveInternSession.addEventsByProducer(mapOf("produsent4" to 44))
+        oppgaveInternSession.addEventsByProducer(createCount("produsent4", 4))
         return oppgaveInternSession
     }
 
     fun giveMeStatusoppdateringInternSessionWithFourCountedEvents(): CacheCountingMetricsSession {
         val statusoppdateringInternSession = CacheCountingMetricsSession(EventType.STATUSOPPDATERING_INTERN)
-        statusoppdateringInternSession.addEventsByProducer(mapOf("produsent5" to 51))
-        statusoppdateringInternSession.addEventsByProducer(mapOf("produsent5" to 52))
-        statusoppdateringInternSession.addEventsByProducer(mapOf("produsent5" to 53))
-        statusoppdateringInternSession.addEventsByProducer(mapOf("produsent5" to 54))
+        statusoppdateringInternSession.addEventsByProducer(createCount("produsent5", 4))
         return statusoppdateringInternSession
     }
 
-    fun giveMeACacheSessionWithConfiguration(type: EventType, config: Map<String, Int>): CacheCountingMetricsSession {
+    fun giveMeACacheSessionWithConfiguration(type: EventType, config: Map<Producer, Int>): CacheCountingMetricsSession {
         val session = CacheCountingMetricsSession(type)
 
-        session.addEventsByProducer(config)
+        val counts = config.entries.map { (producer, count) ->
+            EventCountForProducer(producer.namespace, producer.appName, count)
+        }
+
+        session.addEventsByProducer(counts)
 
         return session
     }
+
+    private fun createCount(producerAppName: String, count: Int) = listOf(EventCountForProducer(defaultNamespace, producerAppName, count))
 }
