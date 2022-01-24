@@ -6,6 +6,8 @@ import io.mockk.slot
 import kotlinx.coroutines.runBlocking
 import no.nav.personbruker.internal.periodic.metrics.reporter.common.HandlerConsumer
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.EventCountForProducer
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.Producer
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheCountingMetricsProbe
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheCountingMetricsSession
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count.CacheEventCounterService
@@ -16,9 +18,11 @@ internal class EventCounterServiceTestIT {
 
     private val handlerConsumer = mockk<HandlerConsumer>()
 
+    private val commonNamespace = "namespace"
+
     @Test
     fun `Should count beskjed events`() {
-        val appnavne = listOf("b_appnavn_A", "b_appnavn_B")
+        val appnavne = createProducers("b_appnavn_A", "b_appnavn_B")
         val result = createResult(appnavne)
         coEvery { handlerConsumer.getEventCount(any()) }.returns(result)
 
@@ -38,7 +42,7 @@ internal class EventCounterServiceTestIT {
 
     @Test
     fun `Should count innboks events`() {
-        val appnavne = listOf("i_appnavn_A", "i_appnavn_B")
+        val appnavne = createProducers("i_appnavn_A", "i_appnavn_B")
         val result = createResult(appnavne)
         coEvery { handlerConsumer.getEventCount(any()) }.returns(result)
 
@@ -58,7 +62,7 @@ internal class EventCounterServiceTestIT {
 
     @Test
     fun `Should count oppgave events`() {
-        val appnavne = listOf("o_appnavn_A", "o_appnavn_B")
+        val appnavne = createProducers("o_appnavn_A", "o_appnavn_B")
         val result = createResult(appnavne)
         coEvery { handlerConsumer.getEventCount(any()) }.returns(result)
 
@@ -78,7 +82,7 @@ internal class EventCounterServiceTestIT {
 
     @Test
     fun `Should count done events`() {
-        val appnavne = listOf("d_appnavn_A", "d_appnavn_B")
+        val appnavne = createProducers("d_appnavn_A", "d_appnavn_B")
         val result = createResult(appnavne)
         coEvery { handlerConsumer.getEventCount(any()) }.returns(result)
 
@@ -112,13 +116,16 @@ internal class EventCounterServiceTestIT {
         }
     }
 
-    private fun createResult(appnavne: List<String>): Map<String, Int> {
-        val result = mutableMapOf<String, Int>()
-
-        appnavne.forEach { appnavn ->
-            result.put(appnavn, 1)
+    fun createProducers(vararg producerNames: String): List<Producer> {
+        return producerNames.map { producerName ->
+            Producer(commonNamespace, producerName)
         }
-        return result
+    }
+
+    private fun createResult(producers: List<Producer>): List<EventCountForProducer> {
+        return producers.map { producer ->
+            EventCountForProducer(producer.namespace, producer.appName, 1)
+        }
     }
 
 }

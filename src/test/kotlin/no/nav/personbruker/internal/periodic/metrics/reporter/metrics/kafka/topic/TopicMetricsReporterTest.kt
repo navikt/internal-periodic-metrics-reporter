@@ -32,9 +32,9 @@ internal class TopicMetricsReporterTest {
         coEvery { metricsReporter.registerDataPoint(KAFKA_TOTAL_EVENTS_ON_TOPIC_BY_PRODUCER, capture(capturedFieldsForTotalEventsByProducer), any()) } returns Unit
 
         val session = TopicMetricsSession(EventType.BESKJED_INTERN)
-        session.countEvent(KafkaEventIdentifier("1", "producer"))
-        session.countEvent(KafkaEventIdentifier("2", "producer"))
-        session.countEvent(KafkaEventIdentifier("3", "producer"))
+        session.countEvent(KafkaEventIdentifier("1",  "namespace", "producer"))
+        session.countEvent(KafkaEventIdentifier("2",  "namespace", "producer"))
+        session.countEvent(KafkaEventIdentifier("3",  "namespace", "producer"))
         runBlocking {
             topicMetricsReporter.report(session)
         }
@@ -55,7 +55,7 @@ internal class TopicMetricsReporterTest {
         coEvery { metricsReporter.registerDataPoint(KAFKA_COUNT_PROCESSING_TIME, capture(capturedFieldsForProcessingTime), any()) } returns Unit
 
         val session = TopicMetricsSession(EventType.BESKJED_INTERN)
-        session.countEvent(KafkaEventIdentifier("1", "dummyAppnavn"))
+        session.countEvent(KafkaEventIdentifier("1", "dummyNamespace", "dummyAppnavn"))
         runBlocking { delay(expectedProcessingTimeMs) }
         session.calculateProcessingTime()
         runBlocking {
@@ -69,22 +69,23 @@ internal class TopicMetricsReporterTest {
 
     @Test
     fun `Should use the provided appname as producername`() {
-        val producerName = "dummyAppnavn"
+        val producerApp = "dummyAppnavn"
+        val producerNamespace = "dummyAppnavn"
 
         val capturedTagsForTotalByProducer = slot<Map<String, String>>()
 
         coEvery { metricsReporter.registerDataPoint(KAFKA_TOTAL_EVENTS_ON_TOPIC_BY_PRODUCER, any(), capture(capturedTagsForTotalByProducer)) } returns Unit
 
         val session = TopicMetricsSession(EventType.BESKJED_INTERN)
-        session.countEvent(KafkaEventIdentifier("1", producerName))
-        session.countEvent(KafkaEventIdentifier("2", producerName))
+        session.countEvent(KafkaEventIdentifier("1", producerNamespace, producerApp))
+        session.countEvent(KafkaEventIdentifier("2", producerNamespace, producerApp))
         runBlocking {
             topicMetricsReporter.report(session)
         }
 
         coVerify(exactly = 1) { metricsReporter.registerDataPoint(KAFKA_TOTAL_EVENTS_ON_TOPIC_BY_PRODUCER, any(), any()) }
 
-        capturedTagsForTotalByProducer.captured["producer"] `should be equal to` producerName
+        capturedTagsForTotalByProducer.captured["producer"] `should be equal to` producerApp
     }
 
     @Test

@@ -38,11 +38,11 @@ class TopicMetricsReporter(private val metricsReporter: MetricsReporter) {
     }
 
     private suspend fun reportNumberOfEventsByProducer(session: TopicMetricsSession) {
-        session.getProducersWithEvents().forEach { producerName ->
-            val total = session.getNumberOfEventsForProducer(producerName)
+        session.getProducersWithEvents().forEach { producer ->
+            val total = session.getNumberOfEventsForProducer(producer)
             val eventTypeName = session.eventType.toString()
 
-            reportEvents(total, eventTypeName, producerName, KAFKA_TOTAL_EVENTS_ON_TOPIC_BY_PRODUCER)
+            reportEvents(total, eventTypeName, producer, KAFKA_TOTAL_EVENTS_ON_TOPIC_BY_PRODUCER)
         }
     }
 
@@ -50,8 +50,8 @@ class TopicMetricsReporter(private val metricsReporter: MetricsReporter) {
         reportProcessingTimeEvent(session)
     }
 
-    private suspend fun reportEvents(count: Int, eventType: String, producerName: String, metricName: String) {
-        metricsReporter.registerDataPoint(metricName, counterField(count), createTagMap(eventType, producerName))
+    private suspend fun reportEvents(count: Int, eventType: String, producer: Producer, metricName: String) {
+        metricsReporter.registerDataPoint(metricName, counterField(count), createTagMap(eventType, producer))
     }
 
     private suspend fun reportProcessingTimeEvent(session: TopicMetricsSession) {
@@ -66,8 +66,12 @@ class TopicMetricsReporter(private val metricsReporter: MetricsReporter) {
 
     private fun counterField(events: Long): Map<String, Long> = listOf("counter" to events).toMap()
 
-    private fun createTagMap(eventType: String, producer: String): Map<String, String> =
-            listOf("eventType" to eventType, "producer" to producer).toMap()
+    private fun createTagMap(eventType: String, producer: Producer): Map<String, String> =
+            listOf(
+                "eventType" to eventType,
+                "producer" to producer.appName,
+                "producerNamespace" to producer.namespace
+            ).toMap()
 
     private suspend fun reportEvents(count: Int, eventType: String, metricName: String) {
         metricsReporter.registerDataPoint(metricName, counterField(count), createTagMap(eventType))

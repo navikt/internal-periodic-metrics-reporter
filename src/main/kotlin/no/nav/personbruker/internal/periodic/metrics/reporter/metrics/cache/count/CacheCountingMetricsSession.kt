@@ -1,26 +1,34 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.metrics.cache.count
 
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.EventCountForProducer
 import no.nav.personbruker.internal.periodic.metrics.reporter.config.EventType
 import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.CountingMetricsSession
+import no.nav.personbruker.internal.periodic.metrics.reporter.metrics.Producer
 
 class CacheCountingMetricsSession(val eventType: EventType) : CountingMetricsSession {
 
-    private val cachedEventsByProducer = HashMap<String, Int>(50)
+    private val cachedEventsByProducer = HashMap<Producer, Int>(50)
 
     private val start = System.nanoTime()
     private var processingTime : Long = 0L
 
-    fun addEventsByProducer(eventsByProducer: Map<String, Int>) {
-        eventsByProducer.forEach { producer ->
-            cachedEventsByProducer[producer.key] = cachedEventsByProducer.getOrDefault(producer.key, 0).plus(producer.value)
+    fun addEventsByProducer(eventsByProducer: List<EventCountForProducer>) {
+        eventsByProducer.forEach { producerCount ->
+            cachedEventsByProducer.compute(producerCount.producer) { _, currentCount ->
+                if (currentCount == null) {
+                    producerCount.count
+                } else {
+                    currentCount + producerCount.count
+                }
+            }
         }
     }
 
-    fun getProducers(): Set<String> {
+    fun getProducers(): Set<Producer> {
         return cachedEventsByProducer.keys
     }
 
-    fun getNumberOfEventsFor(producer: String): Int {
+    fun getNumberOfEventsFor(producer: Producer): Int {
         return cachedEventsByProducer.getOrDefault(producer, 0)
     }
 
