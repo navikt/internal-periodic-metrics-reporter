@@ -6,7 +6,8 @@ class AzureTokenFetcher(private val eventHandlerAppEnvironmentDetails: String) {
     private val azureService = AzureServiceBuilder.buildAzureService(
             cachingEnabled = true,
             maxCachedEntries = 100,
-            cacheExpiryMarginSeconds = 10
+            cacheExpiryMarginSeconds = 10,
+            enableDefaultProxy = false
     )
 
     suspend fun getAccessToken(): String {
