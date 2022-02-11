@@ -2,9 +2,9 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: internal-periodic-metrics-reporter
-  namespace: personbruker
+  namespace: min-side
   labels:
-    team: personbruker
+    team: min-side
 spec:
   envFrom:
     - secret: internal-periodic-metrics-reporter-secrets
@@ -42,8 +42,6 @@ spec:
   accessPolicy:
     outbound:
       rules:
-        - application: "dittnav-event-handler"
-          namespace: "min-side"
-          cluster: "dev-gcp"
+        - application: dittnav-event-handler
       external:
         - host: kafka-schema-registry.nais-q.adeo.no

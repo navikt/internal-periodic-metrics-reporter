@@ -42,8 +42,6 @@ spec:
   accessPolicy:
     outbound:
       rules:
-        - application: "dittnav-event-handler"
-          namespace: "min-side"
-          cluster: "prod-gcp"
+        - application: dittnav-event-handler
       external:
         - host: kafka-schema-registry.nais.adeo.no
