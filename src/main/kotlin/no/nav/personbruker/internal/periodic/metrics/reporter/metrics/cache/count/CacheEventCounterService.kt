@@ -60,18 +60,14 @@ class CacheEventCounterService(
 
     suspend fun countInnboksEventer(): CacheCountingMetricsSession {
         val eventType = EventType.INNBOKS_INTERN
-        return if (isOtherEnvironmentThanProd()) {
-            try {
-                metricsProbe.runWithMetrics(eventType) {
-                    val grupperPerProdusent = handlerConsumer.getEventCount(eventType)
-                    addEventsByProducer(grupperPerProdusent)
-                }
-
-            } catch (e: Exception) {
-                throw CountException("Klarte ikke å hente antall ${eventType.eventType} fra handler.", e)
+        return try {
+            metricsProbe.runWithMetrics(eventType) {
+                val grupperPerProdusent = handlerConsumer.getEventCount(eventType)
+                addEventsByProducer(grupperPerProdusent)
             }
-        } else {
-            CacheCountingMetricsSession(eventType)
+
+        } catch (e: Exception) {
+            throw CountException("Klarte ikke å hente antall ${eventType.eventType} fra  handler.", e)
         }
     }
 
