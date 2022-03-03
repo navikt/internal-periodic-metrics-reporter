@@ -1,11 +1,9 @@
 package no.nav.personbruker.internal.periodic.metrics.reporter.health
 
 import io.ktor.application.*
-import io.ktor.http.ContentType
-import io.ktor.http.HttpStatusCode
+import io.ktor.http.*
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
-import io.ktor.response.respondText
-import io.ktor.response.respondTextWriter
+import io.ktor.response.*
 import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.prometheus.client.CollectorRegistry
