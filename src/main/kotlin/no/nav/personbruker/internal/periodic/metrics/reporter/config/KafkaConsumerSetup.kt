@@ -18,12 +18,12 @@ object KafkaConsumerSetup {
     fun startSubscriptionOnAllKafkaConsumersAiven(appContext: ApplicationContext) {
         appContext.beskjedCountAivenConsumer.startSubscription()
         appContext.oppgaveCountAivenConsumer.startSubscription()
+        appContext.innboksCountAivenConsumer.startSubscription()
         appContext.doneCountAivenConsumer.startSubscription()
         if (isOtherEnvironmentThanProd()) {
-            appContext.innboksCountAivenConsumer.startSubscription()
             appContext.statusoppdateringCountAivenConsumer.startSubscription()
         } else {
-            log.info("Er i produksjonsmiljø, unnlater å starte innboks- og statusoppdateringconsumer på Aiven.")
+            log.info("Er i produksjonsmiljø, unnlater å starte statusoppdateringconsumer på Aiven.")
         }
     }
 
@@ -31,9 +31,9 @@ object KafkaConsumerSetup {
         log.info("Begynner å stoppe kafka-pollerne på Aiven...")
         appContext.beskjedCountAivenConsumer.stop()
         appContext.oppgaveCountAivenConsumer.stop()
+        appContext.innboksCountAivenConsumer.stop()
         appContext.doneCountAivenConsumer.stop()
         if (isOtherEnvironmentThanProd()) {
-            appContext.innboksCountAivenConsumer.stop()
             appContext.statusoppdateringCountAivenConsumer.stop()
         }
         log.info("...ferdig med å stoppe kafka-pollerne på Aiven.")
