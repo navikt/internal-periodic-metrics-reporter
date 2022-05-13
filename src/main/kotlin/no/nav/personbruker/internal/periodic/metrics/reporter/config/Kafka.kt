@@ -19,11 +19,11 @@ object Kafka {
 
     fun counterConsumerAivenProps(env: Environment, eventTypeToConsume: EventType): Properties {
         val groupIdAndEventType = "${env.groupIdBase}_${eventTypeToConsume.eventType}"
-        val sixMinutes = 6 * 60 * 1000
+        val sevenMinutes = 7 * 60 * 1000
         return Properties().apply {
             put(ConsumerConfig.GROUP_ID_CONFIG, groupIdAndEventType)
             put(ConsumerConfig.CLIENT_ID_CONFIG, groupIdAndEventType + getHostname(InetSocketAddress(0)))
-            put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, sixMinutes)
+            put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, sevenMinutes)
             putAll(consumerProps(env, eventTypeToConsume))
         }
     }
